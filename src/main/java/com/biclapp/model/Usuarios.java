@@ -57,7 +57,7 @@ public class Usuarios {
     }
 
     //@JsonBackReference
-    @JsonIgnore
+    //@JsonIgnore
     public Roles getRol() {
         return rol;
     }

@@ -40,8 +40,8 @@ public class Roles {
         this.rol = rol;
     }
 
-    @JsonManagedReference
-    //@JsonIgnore
+    //@JsonManagedReference
+    @JsonIgnore
     public Usuarios getUsuario() {
         return usuario;
     }
