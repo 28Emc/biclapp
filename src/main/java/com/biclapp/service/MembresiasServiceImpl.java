@@ -19,4 +19,21 @@ public class MembresiasServiceImpl implements IMembresiasService {
     public List<Membresias> findAll() {
         return (List<Membresias>) repository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Membresias findById(Long id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new Exception("La membresía con el id ".concat(id.toString()).concat(" no existe.")));
+    }
+
+    @Override
+    public void save(Membresias membresia) throws Exception {
+        repository.save(membresia);
+    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+        findById(id);
+        repository.deleteById(id);
+    }
 }

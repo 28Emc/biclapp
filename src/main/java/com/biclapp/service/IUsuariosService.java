@@ -8,4 +8,10 @@ public interface IUsuariosService {
 
     List<Usuarios> findAll();
 
+    Usuarios findById(Long id) throws Exception;
+
+    void save(Usuarios usuario) throws Exception;
+
+    void delete(Long id) throws Exception;
+
 }

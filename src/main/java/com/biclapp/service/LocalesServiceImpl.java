@@ -19,4 +19,21 @@ public class LocalesServiceImpl implements ILocalesService {
     public List<Locales> findAll() {
         return (List<Locales>) repository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Locales findById(Long id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new Exception("El local con el id ".concat(id.toString()).concat(" no existe.")));
+    }
+
+    @Override
+    public void save(Locales local) throws Exception {
+        repository.save(local);
+    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+        findById(id);
+        repository.deleteById(id);
+    }
 }

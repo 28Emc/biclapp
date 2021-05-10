@@ -8,4 +8,10 @@ public interface IRutasService {
 
     List<Rutas> findAll();
 
+    Rutas findById(Long id) throws Exception;
+
+    void save(Rutas ruta) throws Exception;
+
+    void delete(Long id) throws Exception;
+
 }

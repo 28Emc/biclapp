@@ -19,4 +19,21 @@ public class UsuariosServiceImpl implements IUsuariosService {
     public List<Usuarios> findAll() {
         return (List<Usuarios>) repository.findAll();
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Usuarios findById(Long id) throws Exception {
+        return repository.findById(id).orElseThrow(() -> new Exception("El usuario con el id ".concat(id.toString()).concat(" no existe.")));
+    }
+
+    @Override
+    public void save(Usuarios usuario) throws Exception {
+        repository.save(usuario);
+    }
+
+    @Override
+    public void delete(Long id) throws Exception {
+        findById(id);
+        repository.deleteById(id);
+    }
 }

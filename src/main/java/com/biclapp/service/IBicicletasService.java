@@ -8,4 +8,10 @@ public interface IBicicletasService {
 
     List<Bicicletas> findAll();
 
+    Bicicletas findById(Long id) throws Exception;
+
+    void save(Bicicletas bicicletas) throws Exception;
+
+    void delete(Long id) throws Exception;
+
 }

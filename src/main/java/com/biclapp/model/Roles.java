@@ -1,20 +1,19 @@
 package com.biclapp.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Roles {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String rol;
 
-    @OneToOne(mappedBy = "rol")
-    private Usuarios usuario;
+    @OneToMany(mappedBy = "rol")
+    private List<Usuarios> usuarios;
 
     public Roles() {
     }
@@ -40,13 +39,12 @@ public class Roles {
         this.rol = rol;
     }
 
-    //@JsonManagedReference
-    @JsonIgnore
-    public Usuarios getUsuario() {
-        return usuario;
+    @JsonBackReference
+    public List<Usuarios> getUsuarios() {
+        return usuarios;
     }
 
-    public void setUsuario(Usuarios usuario) {
-        this.usuario = usuario;
+    public void setUsuarios(List<Usuarios> usuarios) {
+        this.usuarios = usuarios;
     }
 }
