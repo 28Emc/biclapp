@@ -70,7 +70,6 @@ public class Usuarios {
         this.id = id;
     }
 
-    @JsonBackReference
     public Roles getRol() {
         return rol;
     }

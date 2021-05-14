@@ -26,7 +26,8 @@ public class Accesorios {
     public Accesorios() {
     }
 
-    public Accesorios(String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+    public Accesorios(Long id, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+        this.id = id;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.foto = foto;
