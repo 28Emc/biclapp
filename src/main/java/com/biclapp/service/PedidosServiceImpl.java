@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Pedidos;
+import com.biclapp.model.entity.Pedidos;
 import com.biclapp.repository.IPedidosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

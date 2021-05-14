@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Rutas;
+import com.biclapp.model.entity.Rutas;
 
 import java.util.List;
 

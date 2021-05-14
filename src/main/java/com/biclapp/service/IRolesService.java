@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Roles;
+import com.biclapp.model.entity.Roles;
 
 import java.util.List;
 

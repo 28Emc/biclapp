@@ -1,6 +1,6 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.Locales;
+import com.biclapp.model.entity.Locales;
 import com.biclapp.service.ILocalesService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

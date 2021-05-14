@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Usuarios;
+import com.biclapp.model.entity.Usuarios;
 
 import java.util.List;
 

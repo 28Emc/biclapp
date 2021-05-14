@@ -1,13 +1,13 @@
 package com.biclapp.model.DTO;
 
-public class BicicletaUpdateDTO {
+public class DTOUpdate {
     private Long id;
     private String estado;
 
-    public BicicletaUpdateDTO() {
+    public DTOUpdate() {
     }
 
-    public BicicletaUpdateDTO(Long id, String estado) {
+    public DTOUpdate(Long id, String estado) {
         this.id = id;
         this.estado = estado;
     }

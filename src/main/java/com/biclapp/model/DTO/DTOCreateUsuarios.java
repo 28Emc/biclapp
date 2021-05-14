@@ -1,19 +1,7 @@
-package com.biclapp.model;
+package com.biclapp.model.DTO;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import javax.persistence.*;
-
-@Entity
-public class Usuarios {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "id_rol")
-    private Roles rol;
-
+public class DTOCreateUsuarios {
+    private Long id_rol;
     private Long id_membresia;
     private String nombres;
     private String apellidos;
@@ -26,12 +14,11 @@ public class Usuarios {
     private boolean isActivo;
     private String foto;
 
-    public Usuarios() {
+    public DTOCreateUsuarios() {
     }
 
-    public Usuarios(Long id, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, boolean isActivo, String foto) {
-        this.id = id;
-        this.rol = rol;
+    public DTOCreateUsuarios(Long id_rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, boolean isActivo, String foto) {
+        this.id_rol = id_rol;
         this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -45,36 +32,12 @@ public class Usuarios {
         this.foto = foto;
     }
 
-    public Usuarios(Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, boolean isActivo, String foto) {
-        this.rol = rol;
-        this.id_membresia = id_membresia;
-        this.nombres = nombres;
-        this.apellidos = apellidos;
-        this.nro_documento = nro_documento;
-        this.celular = celular;
-        this.direccion = direccion;
-        this.username = username;
-        this.password = password;
-        this.estado = estado;
-        this.isActivo = isActivo;
-        this.foto = foto;
+    public Long getId_rol() {
+        return id_rol;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @JsonManagedReference
-    public Roles getRol() {
-        return rol;
-    }
-
-    public void setRol(Roles rol) {
-        this.rol = rol;
+    public void setId_rol(Long id_rol) {
+        this.id_rol = id_rol;
     }
 
     public Long getId_membresia() {

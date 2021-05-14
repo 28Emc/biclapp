@@ -1,4 +1,4 @@
-package com.biclapp.model;
+package com.biclapp.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,15 +10,15 @@ public class Membresias {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nombre;
+    private String tipo;
     private Double cuota;
 
     public Membresias() {
     }
 
-    public Membresias(Long id, String nombre, Double cuota) {
+    public Membresias(Long id, String tipo, Double cuota) {
         this.id = id;
-        this.nombre = nombre;
+        this.tipo = tipo;
         this.cuota = cuota;
     }
 
@@ -30,12 +30,12 @@ public class Membresias {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getTipo() {
+        return tipo;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public Double getCuota() {

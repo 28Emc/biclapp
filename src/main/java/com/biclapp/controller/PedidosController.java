@@ -1,8 +1,8 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.Bicicletas;
-import com.biclapp.model.DTO.PedidoUpdateDTO;
-import com.biclapp.model.Pedidos;
+import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.entity.Bicicletas;
+import com.biclapp.model.entity.Pedidos;
 import com.biclapp.service.IBicicletasService;
 import com.biclapp.service.IPedidosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -95,11 +95,11 @@ public class PedidosController {
     }
 
     @PutMapping("/pedidos/estado/{id}")
-    public ResponseEntity<?> changeEstadoPedido(@PathVariable Long id, @RequestBody PedidoUpdateDTO updateDTO) {
+    public ResponseEntity<?> changeEstadoPedido(@PathVariable Long id, @RequestBody DTOUpdate DTOUpdate) {
         Map<String, Object> response = new HashMap<>();
         try {
             Pedidos pedidoFound = pedidosService.findById(id);
-            pedidoFound.setEstado((updateDTO.getEstado()));
+            pedidoFound.setEstado((DTOUpdate.getEstado()));
             pedidosService.save(pedidoFound);
             response.put("message", "¡Estado del pedido actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);

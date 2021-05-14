@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Rutas;
+import com.biclapp.model.entity.Rutas;
 import com.biclapp.repository.IRutasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.biclapp.model;
+package com.biclapp.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,22 +14,24 @@ public class Bicicletas {
     private String marca;
     private String modelo;
     private Integer stock;
-    private String caracteristicas;
+    private String descripcion;
     private String estado;
     private String foto;
+    private String color;
 
     public Bicicletas() {
     }
 
-    public Bicicletas(Long id, Long id_local, String marca, String modelo, Integer stock, String caracteristicas, String estado, String foto) {
+    public Bicicletas(Long id, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, String foto, String color) {
         this.id = id;
         this.id_local = id_local;
         this.marca = marca;
         this.modelo = modelo;
         this.stock = stock;
-        this.caracteristicas = caracteristicas;
+        this.descripcion = descripcion;
         this.estado = estado;
         this.foto = foto;
+        this.color = color;
     }
 
     public Long getId() {
@@ -72,12 +74,12 @@ public class Bicicletas {
         this.stock = stock;
     }
 
-    public String getCaracteristicas() {
-        return caracteristicas;
+    public String getDescripcion() {
+        return descripcion;
     }
 
-    public void setCaracteristicas(String caracteristicas) {
-        this.caracteristicas = caracteristicas;
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public String getEstado() {
@@ -94,5 +96,13 @@ public class Bicicletas {
 
     public void setFoto(String foto) {
         this.foto = foto;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

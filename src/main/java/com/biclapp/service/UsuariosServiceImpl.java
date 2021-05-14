@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Usuarios;
+import com.biclapp.model.entity.Usuarios;
 import com.biclapp.repository.IUsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Bicicletas;
+import com.biclapp.model.entity.Bicicletas;
 import com.biclapp.repository.IBicicletasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.biclapp.model;
+package com.biclapp.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,21 +11,25 @@ public class Rutas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long id_usuario;
-    private Long id_bicicleta;
     private String nombre;
     private String ruta;
     private String estado;
+    private String tipo_ruta;
+    private String datos_origen;
+    private String datos_destino;
 
     public Rutas() {
     }
 
-    public Rutas(Long id, Long id_usuario, Long id_bicicleta, String nombre, String ruta, String estado) {
+    public Rutas(Long id, Long id_usuario, String nombre, String ruta, String estado, String tipo_ruta, String datos_origen, String datos_destino) {
         this.id = id;
         this.id_usuario = id_usuario;
-        this.id_bicicleta = id_bicicleta;
         this.nombre = nombre;
         this.ruta = ruta;
         this.estado = estado;
+        this.tipo_ruta = tipo_ruta;
+        this.datos_origen = datos_origen;
+        this.datos_destino = datos_destino;
     }
 
     public Long getId() {
@@ -42,14 +46,6 @@ public class Rutas {
 
     public void setId_usuario(Long id_usuario) {
         this.id_usuario = id_usuario;
-    }
-
-    public Long getId_bicicleta() {
-        return id_bicicleta;
-    }
-
-    public void setId_bicicleta(Long id_bicicleta) {
-        this.id_bicicleta = id_bicicleta;
     }
 
     public String getNombre() {
@@ -74,5 +70,29 @@ public class Rutas {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public String getTipo_ruta() {
+        return tipo_ruta;
+    }
+
+    public void setTipo_ruta(String tipo_ruta) {
+        this.tipo_ruta = tipo_ruta;
+    }
+
+    public String getDatos_origen() {
+        return datos_origen;
+    }
+
+    public void setDatos_origen(String datos_origen) {
+        this.datos_origen = datos_origen;
+    }
+
+    public String getDatos_destino() {
+        return datos_destino;
+    }
+
+    public void setDatos_destino(String datos_destino) {
+        this.datos_destino = datos_destino;
     }
 }

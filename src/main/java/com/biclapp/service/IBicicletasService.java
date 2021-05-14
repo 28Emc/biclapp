@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Bicicletas;
+import com.biclapp.model.entity.Bicicletas;
 
 import java.util.List;
 

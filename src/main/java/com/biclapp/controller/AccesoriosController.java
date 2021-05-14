@@ -1,10 +1,11 @@
 package com.biclapp.controller;
 
+import com.biclapp.model.DTO.DTOCreateAccesorios;
 import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.entity.Accesorios;
 import com.biclapp.model.entity.Bicicletas;
 import com.biclapp.model.entity.Locales;
-import com.biclapp.service.IBicicletasService;
-import com.biclapp.service.ILocalesService;
+import com.biclapp.service.IAccesoriosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,20 +18,17 @@ import java.util.Map;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class BicicletasController {
+public class AccesoriosController {
 
     @Autowired
-    private IBicicletasService bicicletasService;
+    private IAccesoriosService accesoriosService;
 
-    @Autowired
-    private ILocalesService localesService;
-
-    @GetMapping("/bicicletas")
-    public ResponseEntity<?> getAllBicicletas() {
+    @GetMapping("/accesorios")
+    public ResponseEntity<?> getAllAccesorios() {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Bicicletas> bicicletas = bicicletasService.findAll();
-            response.put("bicicletas", bicicletas);
+            List<Accesorios> accesorios = accesoriosService.findAll();
+            response.put("accesorios", accesorios);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -39,12 +37,12 @@ public class BicicletasController {
         }
     }
 
-    @GetMapping("/bicicletas/{id}")
-    public ResponseEntity<?> getBicicleta(@PathVariable Long id) {
+    @GetMapping("/accesorios/{id}")
+    public ResponseEntity<?> getAccesorios(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Bicicletas bicicleta = bicicletasService.findById(id);
-            response.put("bicicleta", bicicleta);
+            Accesorios accesorio = accesoriosService.findById(id);
+            response.put("accesorio", accesorio);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -53,13 +51,12 @@ public class BicicletasController {
         }
     }
 
-    @PostMapping("/bicicletas")
-    public ResponseEntity<?> createBicicleta(@RequestBody Bicicletas bicicleta) {
+    @PostMapping("/accesorios")
+    public ResponseEntity<?> createAccesorio(@RequestBody DTOCreateAccesorios createAccesorios) {
         Map<String, Object> response = new HashMap<>();
         try {
-            localesService.findById(bicicleta.getId_local());
-            bicicletasService.save(bicicleta);
-            response.put("message", "¡Bicicleta registrada!");
+            accesoriosService.save(createAccesorios);
+            response.put("message", "¡Accesorio registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -68,21 +65,12 @@ public class BicicletasController {
         }
     }
 
-    @PutMapping("/bicicletas/{id}")
-    public ResponseEntity<?> editBicicleta(@PathVariable Long id, @RequestBody Bicicletas bicicletas) {
+    @PutMapping("/accesorios/{id}")
+    public ResponseEntity<?> editAccesorio(@PathVariable Long id, @RequestBody DTOCreateAccesorios updateAccesorio) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Bicicletas bicicletaFound = bicicletasService.findById(id);
-            Locales local = localesService.findById(bicicletas.getId_local());
-            bicicletaFound.setId_local(local.getId());
-            bicicletaFound.setMarca(bicicletas.getMarca());
-            bicicletaFound.setModelo(bicicletas.getModelo());
-            bicicletaFound.setStock(bicicletas.getStock());
-            bicicletaFound.setDescripcion(bicicletas.getDescripcion());
-            bicicletaFound.setEstado(bicicletas.getEstado());
-            bicicletaFound.setFoto(bicicletas.getFoto());
-            bicicletasService.save(bicicletaFound);
-            response.put("message", "¡Bicicleta actualizada!");
+            accesoriosService.update(id, updateAccesorio);
+            response.put("message", "¡Accesorio actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -91,14 +79,12 @@ public class BicicletasController {
         }
     }
 
-    @PutMapping("/bicicletas/estado/{id}")
-    public ResponseEntity<?> changeEstadoBicicleta(@PathVariable Long id, @RequestBody DTOUpdate DTOUpdate) {
+    @PutMapping("/accesorios/estado/{id}")
+    public ResponseEntity<?> changeEstadoAccesorio(@PathVariable Long id, @RequestBody DTOUpdate update) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Bicicletas bicicletaFound = bicicletasService.findById(id);
-            bicicletaFound.setEstado((DTOUpdate.getEstado()));
-            bicicletasService.save(bicicletaFound);
-            response.put("message", "¡Estado de bicicleta actualizada!");
+            accesoriosService.updateEstado(id, update);
+            response.put("message", "¡Estado de accesorio actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -107,12 +93,12 @@ public class BicicletasController {
         }
     }
 
-    @DeleteMapping("/bicicletas/{id}")
-    public ResponseEntity<?> deleteBicicleta(@PathVariable Long id) {
+    @DeleteMapping("/accesorios/{id}")
+    public ResponseEntity<?> deleteAccesorio(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            bicicletasService.delete(id);
-            response.put("message", "¡Bicicleta eliminada!");
+            accesoriosService.delete(id);
+            response.put("message", "¡Accesorio eliminado!");
             return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));

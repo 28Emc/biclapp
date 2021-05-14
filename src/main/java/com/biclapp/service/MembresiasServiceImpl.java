@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Membresias;
+import com.biclapp.model.entity.Membresias;
 import com.biclapp.repository.IMembresiasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

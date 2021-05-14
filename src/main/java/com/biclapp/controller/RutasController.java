@@ -1,9 +1,8 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.Bicicletas;
-import com.biclapp.model.DTO.RutaUpdateDTO;
-import com.biclapp.model.Rutas;
-import com.biclapp.model.Usuarios;
+import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.entity.Rutas;
+import com.biclapp.model.entity.Usuarios;
 import com.biclapp.service.IBicicletasService;
 import com.biclapp.service.IRutasService;
 import com.biclapp.service.IUsuariosService;
@@ -80,8 +79,6 @@ public class RutasController {
             rutaFound.setId(ruta.getId());
             Usuarios usuarioFound = usuariosService.findById(ruta.getId_usuario());
             rutaFound.setId_usuario(usuarioFound.getId());
-            Bicicletas bicicletaFound = bicicletasService.findById(ruta.getId_bicicleta());
-            rutaFound.setId_bicicleta(bicicletaFound.getId());
             rutaFound.setNombre(ruta.getNombre());
             rutaFound.setEstado(ruta.getEstado());
             rutasService.save(rutaFound);
@@ -95,11 +92,11 @@ public class RutasController {
     }
 
     @PutMapping("/rutas/estado/{id}")
-    public ResponseEntity<?> changeEstadoRuta(@PathVariable Long id, @RequestBody RutaUpdateDTO updateDTO) {
+    public ResponseEntity<?> changeEstadoRuta(@PathVariable Long id, @RequestBody DTOUpdate DTOUpdate) {
         Map<String, Object> response = new HashMap<>();
         try {
             Rutas rutaFound = rutasService.findById(id);
-            rutaFound.setEstado((updateDTO.getEstado()));
+            rutaFound.setEstado((DTOUpdate.getEstado()));
             rutasService.save(rutaFound);
             response.put("message", "¡Estado de ruta actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);

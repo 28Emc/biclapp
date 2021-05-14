@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Locales;
+import com.biclapp.model.entity.Locales;
 import com.biclapp.repository.ILocalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

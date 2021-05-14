@@ -1,9 +1,9 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.DTO.UsuarioCreateDTO;
-import com.biclapp.model.Membresias;
-import com.biclapp.model.Roles;
-import com.biclapp.model.Usuarios;
+import com.biclapp.model.DTO.DTOCreateUsuarios;
+import com.biclapp.model.entity.Membresias;
+import com.biclapp.model.entity.Roles;
+import com.biclapp.model.entity.Usuarios;
 import com.biclapp.service.IMembresiasService;
 import com.biclapp.service.IRolesService;
 import com.biclapp.service.IUsuariosService;
@@ -59,7 +59,7 @@ public class UsuariosController {
     }
 
     @PostMapping("/usuarios")
-    public ResponseEntity<?> createUsuario(@RequestBody UsuarioCreateDTO createDTO) {
+    public ResponseEntity<?> createUsuario(@RequestBody DTOCreateUsuarios createDTO) {
         Map<String, Object> response = new HashMap<>();
         try {
             // TODO: POR MIENTRAS SE ESTÁ VALIDANDO EL USUARIO CON ESTADO "ACTIVO", SE DEBERÍA VALIDAR MEDIANTE
@@ -68,7 +68,7 @@ public class UsuariosController {
             Usuarios usuarioNew = new Usuarios(rolFound, createDTO.getId_membresia(), createDTO.getNombres(),
                     createDTO.getApellidos(), createDTO.getNro_documento(), createDTO.getCelular(),
                     createDTO.getDireccion(), createDTO.getUsername(), createDTO.getPassword(),
-                    createDTO.getEstado(), true, createDTO.getFoto());
+                    createDTO.getEstado(), createDTO.getFoto(), true);
             usuariosService.save(usuarioNew);
             response.put("message", "¡Usuario registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);

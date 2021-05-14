@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Membresias;
+import com.biclapp.model.entity.Membresias;
 
 import java.util.List;
 

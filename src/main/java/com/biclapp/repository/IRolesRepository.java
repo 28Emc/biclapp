@@ -1,6 +1,6 @@
 package com.biclapp.repository;
 
-import com.biclapp.model.Roles;
+import com.biclapp.model.entity.Roles;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

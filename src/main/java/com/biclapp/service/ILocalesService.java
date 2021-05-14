@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.Locales;
+import com.biclapp.model.entity.Locales;
 
 import java.util.List;
 

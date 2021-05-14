@@ -1,6 +1,6 @@
 package com.biclapp.repository;
 
-import com.biclapp.model.Membresias;
+import com.biclapp.model.entity.Membresias;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

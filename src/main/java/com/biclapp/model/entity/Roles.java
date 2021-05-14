@@ -1,4 +1,4 @@
-package com.biclapp.model;
+package com.biclapp.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 

@@ -1,6 +1,6 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.Membresias;
+import com.biclapp.model.entity.Membresias;
 import com.biclapp.service.IMembresiasService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,7 @@ public class MembresiasController {
         try {
             Membresias membresiaFound = membresiasService.findById(id);
             membresiaFound.setId(membresia.getId());
-            membresiaFound.setNombre(membresia.getNombre());
+            membresiaFound.setTipo(membresia.getTipo());
             membresiaFound.setCuota(membresia.getCuota());
             membresiasService.save(membresiaFound);
             response.put("message", "¡Membresia actualizada!");

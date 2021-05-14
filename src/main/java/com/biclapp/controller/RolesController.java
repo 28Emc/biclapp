@@ -1,6 +1,6 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.Roles;
+import com.biclapp.model.entity.Roles;
 import com.biclapp.service.IRolesService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;

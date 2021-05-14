@@ -1,9 +1,9 @@
 package com.biclapp.repository;
 
-import com.biclapp.model.entity.Pedidos;
+import com.biclapp.model.entity.Accesorios;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IPedidosRepository extends CrudRepository<Pedidos, Long> {
+public interface IAccesoriosRepository extends CrudRepository<Accesorios, Long> {
 }
