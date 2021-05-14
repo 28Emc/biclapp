@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "empleados")
 public class Empleados {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,15 +16,25 @@ public class Empleados {
     private Roles rol;
 
     private Long id_membresia;
+
     private String nombres;
+
     private String apellidos;
+
     private String nro_documento;
+
     private String celular;
+
     private String direccion;
+
     private String username;
+
     private String password;
+
     private String estado;
+
     private String foto;
+
     private boolean isActivo;
 
     public Empleados() {

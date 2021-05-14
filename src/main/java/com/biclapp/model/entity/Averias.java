@@ -1,20 +1,23 @@
 package com.biclapp.model.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "averias")
 public class Averias {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long id_usuario;
+
     private String direccion;
+
     private String motivo;
+
     private Date fecha_registro;
+
     private String estado;
 
     public Averias() {

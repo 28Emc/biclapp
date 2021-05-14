@@ -3,14 +3,18 @@ package com.biclapp.model.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "detalle_pedido")
+@Table(name = "detalles_pedido")
 public class DetallePedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long id_pedido;
+
     private Integer cantidad;
+
     private Double precio;
+
     private Double total;
 
     public DetallePedido() {

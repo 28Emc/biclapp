@@ -1,18 +1,20 @@
 package com.biclapp.model.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
+@Table(name = "favoritos")
 public class Favoritos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long id_usuario;
+
     private String tipo_destino;
+
     private String nombre_coordenadas;
+
     private String descripcion;
 
     public Favoritos() {
