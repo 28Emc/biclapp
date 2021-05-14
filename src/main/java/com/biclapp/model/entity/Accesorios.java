@@ -2,13 +2,12 @@ package com.biclapp.model.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Accesorios {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
     private String nombre;
     private String descripcion;
