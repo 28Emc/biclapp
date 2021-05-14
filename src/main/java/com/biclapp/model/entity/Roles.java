@@ -1,6 +1,7 @@
 package com.biclapp.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Roles {
         this.rol = rol;
     }
 
-    @JsonBackReference
+    @JsonManagedReference
     public List<Usuarios> getUsuarios() {
         return usuarios;
     }
