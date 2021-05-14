@@ -1,10 +1,8 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.DTO.DTOCreateAccesorios;
+import com.biclapp.model.DTO.DTOUpdateAccesorios;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Accesorios;
-import com.biclapp.model.entity.Bicicletas;
-import com.biclapp.model.entity.Locales;
 import com.biclapp.service.IAccesoriosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,10 +50,10 @@ public class AccesoriosController {
     }
 
     @PostMapping("/accesorios")
-    public ResponseEntity<?> createAccesorio(@RequestBody DTOCreateAccesorios createAccesorios) {
+    public ResponseEntity<?> createAccesorio(@RequestBody Accesorios accesorio) {
         Map<String, Object> response = new HashMap<>();
         try {
-            accesoriosService.save(createAccesorios);
+            accesoriosService.save(accesorio);
             response.put("message", "¡Accesorio registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -66,7 +64,7 @@ public class AccesoriosController {
     }
 
     @PutMapping("/accesorios/{id}")
-    public ResponseEntity<?> editAccesorio(@PathVariable Long id, @RequestBody DTOCreateAccesorios updateAccesorio) {
+    public ResponseEntity<?> editAccesorio(@PathVariable Long id, @RequestBody DTOUpdateAccesorios updateAccesorio) {
         Map<String, Object> response = new HashMap<>();
         try {
             accesoriosService.update(id, updateAccesorio);

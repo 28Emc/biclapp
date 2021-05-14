@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.DTO.DTOCreateAccesorios;
+import com.biclapp.model.DTO.DTOUpdateAccesorios;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Accesorios;
 import com.biclapp.repository.IAccesoriosRepository;
@@ -31,14 +31,12 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
     }
 
     @Override
-    public void save(DTOCreateAccesorios createAccesorio) throws Exception {
-        repository.save(new Accesorios(createAccesorio.getNombre(), createAccesorio.getDescripcion(),
-                createAccesorio.getFoto(), createAccesorio.getTipo(), createAccesorio.getStock(),
-                createAccesorio.getPrecio(), createAccesorio.getEstado()));
+    public void save(Accesorios accesorio) throws Exception {
+        repository.save(accesorio);
     }
 
     @Override
-    public void update(Long id, DTOCreateAccesorios createAccesorio) throws Exception {
+    public void update(Long id, DTOUpdateAccesorios createAccesorio) throws Exception {
         Accesorios accesorioFound = findById(id);
         accesorioFound.setNombre(createAccesorio.getNombre());
         accesorioFound.setDescripcion(createAccesorio.getDescripcion());

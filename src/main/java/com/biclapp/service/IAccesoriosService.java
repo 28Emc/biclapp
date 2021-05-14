@@ -1,6 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.DTO.DTOCreateAccesorios;
+import com.biclapp.model.DTO.DTOUpdateAccesorios;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Accesorios;
 
@@ -12,9 +12,9 @@ public interface IAccesoriosService {
 
     Accesorios findById(Long id) throws Exception;
 
-    void save(DTOCreateAccesorios createAccesorio) throws Exception;
+    void save(Accesorios accesorio) throws Exception;
 
-    void update(Long id, DTOCreateAccesorios updateAccesorio) throws Exception;
+    void update(Long id, DTOUpdateAccesorios updateAccesorio) throws Exception;
 
     void updateEstado(Long id, DTOUpdate update) throws Exception;
 
