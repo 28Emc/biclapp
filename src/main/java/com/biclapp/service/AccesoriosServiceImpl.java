@@ -32,12 +32,15 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
 
     @Override
     public void save(Accesorios accesorio) throws Exception {
+        int contador = findAll().toArray().length;
+        accesorio.setCodigo("A-".concat(String.valueOf(contador + 1)));
         repository.save(accesorio);
     }
 
     @Override
     public void update(Long id, DTOUpdateAccesorios createAccesorio) throws Exception {
         Accesorios accesorioFound = findById(id);
+        accesorioFound.setCodigo(createAccesorio.getCodigo());
         accesorioFound.setNombre(createAccesorio.getNombre());
         accesorioFound.setDescripcion(createAccesorio.getDescripcion());
         accesorioFound.setFoto(createAccesorio.getFoto());

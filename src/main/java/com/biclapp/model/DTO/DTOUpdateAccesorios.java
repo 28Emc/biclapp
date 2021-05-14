@@ -1,6 +1,7 @@
 package com.biclapp.model.DTO;
 
 public class DTOUpdateAccesorios {
+    private String codigo;
     private String nombre;
     private String descripcion;
     private String foto;
@@ -12,7 +13,8 @@ public class DTOUpdateAccesorios {
     public DTOUpdateAccesorios() {
     }
 
-    public DTOUpdateAccesorios(String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+    public DTOUpdateAccesorios(String codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+        this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.foto = foto;
@@ -20,6 +22,14 @@ public class DTOUpdateAccesorios {
         this.stock = stock;
         this.precio = precio;
         this.estado = estado;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {

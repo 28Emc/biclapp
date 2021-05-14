@@ -9,6 +9,8 @@ public class Accesorios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String codigo;
+
     private String nombre;
 
     private String descripcion;
@@ -26,8 +28,9 @@ public class Accesorios {
     public Accesorios() {
     }
 
-    public Accesorios(Long id, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+    public Accesorios(Long id, String codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
         this.id = id;
+        this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.foto = foto;
@@ -43,6 +46,14 @@ public class Accesorios {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombre() {
