@@ -13,13 +13,13 @@ public interface IPedidosService {
 
     Pedidos findById(Long id) throws Exception;
 
-    List<Pedidos> findAllWithDetails(); // TODO: CREAR SP
+    //List<Pedidos> findAllWithDetails(); // TODO: CREAR SP
 
-    Pedidos findByIdWithDetails(Long id_pedido); // TODO: CREAR SP
+    //Pedidos findByIdWithDetails(Long id_pedido); // TODO: CREAR SP
 
-    List<Pedidos> findByUserWithDetails(Long id_usuario); // TODO: CREAR SP
+    //List<Pedidos> findByUserWithDetails(Long id_usuario); // TODO: CREAR SP
 
-    Pedidos findOneByUserWithDetails(Long id_pedido, Long id_usuario); // TODO: CREAR SP
+    //Pedidos findOneByUserWithDetails(Long id_pedido, Long id_usuario); // TODO: CREAR SP
 
     void save(DTOCreatePedidos createPedidos) throws Exception;
 

@@ -13,7 +13,8 @@ public class Rutas {
     private Long id;
 
     @NotNull(message = "Usuario requerido")
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     @NotEmpty(message = "Nombre requerido")
     @Size(min = 1, max = 255, message = "El nombre debe tener entre 1 y 255 caracteres")
@@ -37,9 +38,9 @@ public class Rutas {
     public Rutas() {
     }
 
-    public Rutas(Long id, Long id_usuario, String nombre, String ruta, String estado, String tipo_ruta, String datos_origen, String datos_destino) {
+    public Rutas(Long id, Long idUsuario, String nombre, String ruta, String estado, String tipo_ruta, String datos_origen, String datos_destino) {
         this.id = id;
-        this.id_usuario = id_usuario;
+        this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.ruta = ruta;
         this.estado = estado;
@@ -56,12 +57,12 @@ public class Rutas {
         this.id = id;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long id_usuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNombre() {

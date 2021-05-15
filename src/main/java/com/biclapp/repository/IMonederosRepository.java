@@ -5,5 +5,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface IMonederosRepository extends CrudRepository<Monederos, Long> {
 
-    Monederos findById_usuario(Long id_usuario);
+    Monederos findByIdUsuario(Long id_usuario);
 }

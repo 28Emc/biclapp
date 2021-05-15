@@ -12,7 +12,8 @@ public class Recorridos {
     private Long id;
 
     @NotNull(message = "Usuario requerido")
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     @NotEmpty(message = "Fecha de registro requerida")
     @PastOrPresent(message = "La fecha de registro es inválida")
@@ -40,9 +41,9 @@ public class Recorridos {
     public Recorridos() {
     }
 
-    public Recorridos(Long id, Long id_usuario, Date fecha_registro, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado) {
+    public Recorridos(Long id, Long idUsuario, Date fecha_registro, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado) {
         this.id = id;
-        this.id_usuario = id_usuario;
+        this.idUsuario = idUsuario;
         this.fecha_registro = fecha_registro;
         this.kilometros = kilometros;
         this.ritmo_cardiaco = ritmo_cardiaco;
@@ -60,12 +61,12 @@ public class Recorridos {
         this.id = id;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Date getFecha_registro() {

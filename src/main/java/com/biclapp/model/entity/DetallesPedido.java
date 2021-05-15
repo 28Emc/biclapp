@@ -14,7 +14,8 @@ public class DetallesPedido {
     private Long id;
 
     @NotNull(message = "Pedido requerido")
-    private Long id_pedido;
+    @Column(name = "id_pedido")
+    private Long idPedido;
 
     @Positive(message = "El valor del stock debe ser mayor o igual a 1")
     private Integer cantidad;
@@ -30,9 +31,9 @@ public class DetallesPedido {
     public DetallesPedido() {
     }
 
-    public DetallesPedido(Long id, Long id_pedido, Integer cantidad, Double precio, Double total) {
+    public DetallesPedido(Long id, Long idPedido, Integer cantidad, Double precio, Double total) {
         this.id = id;
-        this.id_pedido = id_pedido;
+        this.idPedido = idPedido;
         this.cantidad = cantidad;
         this.precio = precio;
         this.total = total;
@@ -46,12 +47,12 @@ public class DetallesPedido {
         this.id = id;
     }
 
-    public Long getId_pedido() {
-        return id_pedido;
+    public Long getIdPedido() {
+        return idPedido;
     }
 
-    public void setId_pedido(Long id_pedido) {
-        this.id_pedido = id_pedido;
+    public void setIdPedido(Long idPedido) {
+        this.idPedido = idPedido;
     }
 
     public Integer getCantidad() {

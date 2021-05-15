@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface IRutasRepository extends CrudRepository<Rutas, Long> {
 
-    List<Rutas> findById_usuario(Long id_usuario);
+    List<Rutas> findByIdUsuario(Long id_usuario);
 }

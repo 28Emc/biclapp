@@ -28,7 +28,7 @@ public class LocalesServiceImpl implements ILocalesService {
     @Transactional(readOnly = true)
     public List<Locales> findByEmpresa(Long id_empresa) throws Exception {
         empresaService.findById(id_empresa);
-        return repository.findById_empresa(id_empresa);
+        return repository.findByIdEmpresa(id_empresa);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LocalesServiceImpl implements ILocalesService {
     @Override
     public void update(Long id, Locales local) throws Exception {
         Locales localFound = findById(id);
-        empresaService.findById(local.getId_empresa());
+        empresaService.findById(local.getIdEmpresa());
         localFound.setDireccion(local.getDireccion());
         repository.save(localFound);
     }

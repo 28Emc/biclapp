@@ -36,13 +36,13 @@ public class MonederoServiceImpl implements IMonederosService {
     @Transactional(readOnly = true)
     public Monederos findByUser(Long id_usuario) throws Exception {
         usuariosService.findById(id_usuario);
-        return monederosRepository.findById_usuario(id_usuario);
+        return monederosRepository.findByIdUsuario(id_usuario);
     }
 
     @Override
     public void save(Monederos monedero) throws Exception {
         // COMO REGLA DE NEGOCIO, EL USUARIO SOLO PUEDE TENER 1 MONEDERO
-        Monederos monederoExist = monederosRepository.findById_usuario(monedero.getId_usuario());
+        Monederos monederoExist = monederosRepository.findByIdUsuario(monedero.getId_usuario());
         if (monederoExist != null) {
             throw new Exception("El usuario actual ya tiene un monedero creado. Máximo permitido: 1.");
         }

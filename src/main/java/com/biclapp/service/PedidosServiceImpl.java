@@ -49,6 +49,7 @@ public class PedidosServiceImpl implements IPedidosService {
         return repository.findById(id).orElseThrow(() -> new Exception("El pedido con el id ".concat(id.toString()).concat(" no existe.")));
     }
 
+    /*
     @Override
     @Transactional(readOnly = true)
     public List<Pedidos> findAllWithDetails() {
@@ -72,6 +73,7 @@ public class PedidosServiceImpl implements IPedidosService {
     public Pedidos findOneByUserWithDetails(Long id_pedido, Long id_usuario) {
         return repository.findOneByUserWithDetails(id_pedido, id_usuario);
     }
+    */
 
     @Override
     public void save(DTOCreatePedidos createPedidos) throws Exception {
@@ -96,7 +98,7 @@ public class PedidosServiceImpl implements IPedidosService {
 
         createPedidos.getDetalles_pedido().forEach(p -> {
             DetallesPedido detallesPedido = new DetallesPedido();
-            detallesPedido.setId_pedido(pedidoNew.getId());
+            detallesPedido.setIdPedido(pedidoNew.getId());
             detallesPedido.setCantidad(p.getCantidad());
             detallesPedido.setPrecio(p.getPrecio());
             detallesPedido.setTotal(p.getTotal());
@@ -135,7 +137,7 @@ public class PedidosServiceImpl implements IPedidosService {
                     DetallesPedido detallesPedidoFound = detallesPedidoRepository.findById(p.getId()).orElseThrow(
                             () -> new Exception("El detalle pedido con el id ".concat(p.getId().toString()).concat(" no existe."))
                     );
-                    detallesPedidoFound.setId_pedido(p.getId());
+                    detallesPedidoFound.setIdPedido(p.getId());
                     detallesPedidoFound.setCantidad(p.getCantidad());
                     detallesPedidoFound.setPrecio(p.getPrecio());
                     detallesPedidoFound.setTotal(p.getTotal());

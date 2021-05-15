@@ -29,7 +29,7 @@ public class FavoritosServiceImpl implements IFavoritosService {
     @Transactional(readOnly = true)
     public List<Favoritos> findByUser(Long id_usuario) throws Exception {
         usuariosService.findById(id_usuario);
-        return favoritosRepository.findById_usuario(id_usuario);
+        return favoritosRepository.findByIdUsuario(id_usuario);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FavoritosServiceImpl implements IFavoritosService {
     public void update(Long id, DTOUpdateFavoritos updateFavorito) throws Exception {
         Favoritos favoritoFound = findById(id);
         Usuarios usuarioFound = usuariosService.findById(updateFavorito.getId_usuario());
-        favoritoFound.setId_usuario(usuarioFound.getId());
+        favoritoFound.setIdUsuario(usuarioFound.getId());
         favoritoFound.setTipo_destino(updateFavorito.getTipo_destino());
         favoritoFound.setNombre_coordenadas(updateFavorito.getNombre_coordenadas());
         favoritoFound.setDescripcion(updateFavorito.getDescripcion());

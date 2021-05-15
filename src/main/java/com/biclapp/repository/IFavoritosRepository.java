@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface IFavoritosRepository extends CrudRepository<Favoritos, Long> {
 
-    List<Favoritos> findById_usuario(Long id_usuario);
+    List<Favoritos> findByIdUsuario(Long id_usuario);
 }

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface IDetallesPedidoRepository extends CrudRepository<DetallesPedido, Long> {
-    List<DetallesPedido> findById_Pedido(Long id_pedido);
+    List<DetallesPedido> findByIdPedido(Long id_pedido);
 }

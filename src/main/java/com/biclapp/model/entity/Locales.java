@@ -13,7 +13,8 @@ public class Locales {
     private Long id;
 
     @NotNull(message = "Empresa requerida")
-    private Long id_empresa;
+    @Column(name = "id_empresa")
+    private Long idEmpresa;
 
     @NotEmpty(message = "Dirección requerida")
     @Size(min = 1, max = 100, message = "La dirección debe tener entre 1 y 100 caracteres")
@@ -22,9 +23,9 @@ public class Locales {
     public Locales() {
     }
 
-    public Locales(Long id, Long id_empresa, String direccion) {
+    public Locales(Long id, Long idEmpresa, String direccion) {
         this.id = id;
-        this.id_empresa = id_empresa;
+        this.idEmpresa = idEmpresa;
         this.direccion = direccion;
     }
 
@@ -36,12 +37,12 @@ public class Locales {
         this.id = id;
     }
 
-    public Long getId_empresa() {
-        return id_empresa;
+    public Long getIdEmpresa() {
+        return idEmpresa;
     }
 
-    public void setId_empresa(Long id_empresa) {
-        this.id_empresa = id_empresa;
+    public void setIdEmpresa(Long idEmpresa) {
+        this.idEmpresa = idEmpresa;
     }
 
     public String getDireccion() {

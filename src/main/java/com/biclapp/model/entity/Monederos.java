@@ -13,7 +13,8 @@ public class Monederos {
     private Long id;
 
     @NotNull(message = "Usuario requerido")
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     @PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
     private Integer puntos;
@@ -21,9 +22,9 @@ public class Monederos {
     public Monederos() {
     }
 
-    public Monederos(Long id, Long id_usuario, Integer puntos) {
+    public Monederos(Long id, Long idUsuario, Integer puntos) {
         this.id = id;
-        this.id_usuario = id_usuario;
+        this.idUsuario = idUsuario;
         this.puntos = puntos;
     }
 
@@ -36,11 +37,11 @@ public class Monederos {
     }
 
     public Long getId_usuario() {
-        return id_usuario;
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Integer getPuntos() {

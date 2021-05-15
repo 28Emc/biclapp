@@ -27,7 +27,7 @@ public class RutasServiceImpl implements IRutasService {
     @Override
     @Transactional(readOnly = true)
     public List<Rutas> findById_usuario(Long id_usuario) {
-        return repository.findById_usuario(id_usuario);
+        return repository.findByIdUsuario(id_usuario);
     }
 
     @Override

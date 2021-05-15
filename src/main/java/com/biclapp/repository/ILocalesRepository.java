@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface ILocalesRepository extends CrudRepository<Locales, Long> {
 
-    List<Locales> findById_empresa(Long id_empresa);
+    List<Locales> findByIdEmpresa(Long id_empresa);
 }

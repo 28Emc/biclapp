@@ -58,6 +58,7 @@ public class PedidosController {
         }
     }
 
+    /*
     @GetMapping("/pedidos-details")
     public ResponseEntity<?> getAllPedidosWithDetails() {
         Map<String, Object> response = new HashMap<>();
@@ -113,6 +114,7 @@ public class PedidosController {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         }
     }
+    */
 
     @PostMapping("/pedidos")
     public ResponseEntity<?> createPedido(@Valid @RequestBody DTOCreatePedidos createPedidos, BindingResult result) {

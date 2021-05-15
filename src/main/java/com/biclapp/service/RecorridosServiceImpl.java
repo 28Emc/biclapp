@@ -28,7 +28,7 @@ public class RecorridosServiceImpl implements IRecorridosService {
     @Override
     @Transactional(readOnly = true)
     public List<Recorridos> findByUser(Long id_usuario) {
-        return recorridosRepository.findById_usuario(id_usuario);
+        return recorridosRepository.findByIdUsuario(id_usuario);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class RecorridosServiceImpl implements IRecorridosService {
     @Override
     @Transactional(readOnly = true)
     public Recorridos findByIdAndUser(Long id, Long id_usuario) {
-        return recorridosRepository.findByIdAndId_usuario(id, id_usuario);
+        return recorridosRepository.findByIdAndIdUsuario(id, id_usuario);
     }
 
     @Override
