@@ -9,13 +9,17 @@ import com.biclapp.service.IRolesService;
 import com.biclapp.service.IUsuariosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -59,17 +63,20 @@ public class UsuariosController {
     }
 
     @PostMapping("/usuarios")
-    public ResponseEntity<?> createUsuario(@RequestBody DTOCreateUsuarios createDTO) {
+    public ResponseEntity<?> createUsuario(@Valid @RequestBody DTOCreateUsuarios createDTO, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            // TODO: POR MIENTRAS SE ESTÁ VALIDANDO EL USUARIO CON ESTADO "ACTIVO", SE DEBERÍA VALIDAR MEDIANTE
-            // TODO: TOKEN/CELULAR/EMAIL.
-            Roles rolFound = rolesService.findById(createDTO.getId_rol());
-            Usuarios usuarioNew = new Usuarios(rolFound, createDTO.getId_membresia(), createDTO.getNombres(),
-                    createDTO.getApellidos(), createDTO.getNro_documento(), createDTO.getCelular(),
-                    createDTO.getDireccion(), createDTO.getUsername(), createDTO.getPassword(),
-                    createDTO.getEstado(), createDTO.getFoto(), true);
-            usuariosService.save(usuarioNew);
+            usuariosService.save(createDTO);
             response.put("message", "¡Usuario registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -80,26 +87,20 @@ public class UsuariosController {
     }
 
     @PutMapping("/usuarios/{id}")
-    public ResponseEntity<?> editUsuario(@PathVariable Long id, @RequestBody Usuarios usuario) {
+    public ResponseEntity<?> editUsuario(@PathVariable Long id, @Valid @RequestBody DTOCreateUsuarios createUsuarios, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            Usuarios usuarioFound = usuariosService.findById(id);
-            usuarioFound.setId(usuario.getId());
-            Roles roleFound = rolesService.findById(usuario.getRol().getId());
-            usuarioFound.setRol(roleFound);
-            Membresias membresiaFound = membresiasService.findById(usuario.getId_membresia());
-            usuarioFound.setId_membresia(membresiaFound.getId());
-            usuarioFound.setNombres(usuarioFound.getNombres());
-            usuarioFound.setApellidos(usuarioFound.getApellidos());
-            usuarioFound.setNro_documento(usuarioFound.getNro_documento());
-            usuarioFound.setCelular(usuarioFound.getCelular());
-            usuarioFound.setDireccion(usuario.getDireccion());
-            usuarioFound.setUsername(usuarioFound.getUsername());
-            usuarioFound.setPassword(usuarioFound.getPassword());
-            usuarioFound.setEstado(usuarioFound.getEstado());
-            usuarioFound.setFoto(usuarioFound.getFoto());
-            usuarioFound.setActivo(usuarioFound.isActivo());
-            usuariosService.save(usuarioFound);
+            usuariosService.update(id, createUsuarios);
             response.put("message", "¡Usuario actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {

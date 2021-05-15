@@ -1,9 +1,9 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.DTO.DTOUpdateAccesorios;
 import com.biclapp.model.DTO.DTOUpdate;
-import com.biclapp.model.entity.Accesorios;
-import com.biclapp.service.IAccesoriosService;
+import com.biclapp.model.DTO.DTOUpdateAverias;
+import com.biclapp.model.entity.Averias;
+import com.biclapp.service.IAveriasService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class AccesoriosController {
+public class AveriasController {
 
     @Autowired
-    private IAccesoriosService accesoriosService;
+    private IAveriasService averiasService;
 
-    @GetMapping("/accesorios")
-    public ResponseEntity<?> getAllAccesorios() {
+    @GetMapping("/averias")
+    public ResponseEntity<?> getAllAverias() {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Accesorios> accesorios = accesoriosService.findAll();
-            response.put("accesorios", accesorios);
+            List<Averias> averias = averiasService.findAll();
+            response.put("averias", averias);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -39,12 +39,12 @@ public class AccesoriosController {
         }
     }
 
-    @GetMapping("/accesorios/{id}")
-    public ResponseEntity<?> getAccesorio(@PathVariable Long id) {
+    @GetMapping("/averias/{id}")
+    public ResponseEntity<?> getAverias(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Accesorios accesorio = accesoriosService.findById(id);
-            response.put("accesorio", accesorio);
+            Averias averia = averiasService.findById(id);
+            response.put("averia", averia);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -53,8 +53,8 @@ public class AccesoriosController {
         }
     }
 
-    @PostMapping("/accesorios")
-    public ResponseEntity<?> createAccesorio(@Valid @RequestBody Accesorios accesorio, BindingResult result) {
+    @PostMapping("/averias")
+    public ResponseEntity<?> createAveria(@Valid @RequestBody Averias averia, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -67,8 +67,8 @@ public class AccesoriosController {
         }
 
         try {
-            accesoriosService.save(accesorio);
-            response.put("message", "¡Accesorio registrado!");
+            averiasService.save(averia);
+            response.put("message", "¡Avería registrada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -77,8 +77,8 @@ public class AccesoriosController {
         }
     }
 
-    @PutMapping("/accesorios/{id}")
-    public ResponseEntity<?> editAccesorio(@PathVariable Long id, @Valid @RequestBody DTOUpdateAccesorios updateAccesorio, BindingResult result) {
+    @PutMapping("/averias/{id}")
+    public ResponseEntity<?> editAveria(@PathVariable Long id, @Valid @RequestBody DTOUpdateAverias updateAveria, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -91,8 +91,8 @@ public class AccesoriosController {
         }
 
         try {
-            accesoriosService.update(id, updateAccesorio);
-            response.put("message", "¡Accesorio actualizado!");
+            averiasService.update(id, updateAveria);
+            response.put("message", "¡Avería actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -101,8 +101,8 @@ public class AccesoriosController {
         }
     }
 
-    @PutMapping("/accesorios/estado/{id}")
-    public ResponseEntity<?> changeEstadoAccesorio(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
+    @PutMapping("/averias/estado/{id}")
+    public ResponseEntity<?> changeEstadoAveria(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -115,8 +115,8 @@ public class AccesoriosController {
         }
 
         try {
-            accesoriosService.updateEstado(id, update);
-            response.put("message", "¡Estado de accesorio actualizado!");
+            averiasService.updateEstado(id, update);
+            response.put("message", "¡Estado de avería actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -125,12 +125,12 @@ public class AccesoriosController {
         }
     }
 
-    @DeleteMapping("/accesorios/{id}")
-    public ResponseEntity<?> deleteAccesorio(@PathVariable Long id) {
+    @DeleteMapping("/averias/{id}")
+    public ResponseEntity<?> deleteAveria(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            accesoriosService.delete(id);
-            response.put("message", "¡Accesorio eliminado!");
+            averiasService.delete(id);
+            response.put("message", "¡Avería eliminada!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));

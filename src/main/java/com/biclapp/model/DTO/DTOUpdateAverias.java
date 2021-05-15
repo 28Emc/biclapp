@@ -1,17 +1,11 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-@Entity
-@Table(name = "averias")
-public class Averias {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOUpdateAverias {
 
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
@@ -29,24 +23,15 @@ public class Averias {
 
     private String estado;
 
-    public Averias() {
+    public DTOUpdateAverias() {
     }
 
-    public Averias(Long id, Long id_usuario, String direccion, String motivo, Date fecha_registro, String estado) {
-        this.id = id;
+    public DTOUpdateAverias(Long id_usuario, String direccion, String motivo, Date fecha_registro, String estado) {
         this.id_usuario = id_usuario;
         this.direccion = direccion;
         this.motivo = motivo;
         this.fecha_registro = fecha_registro;
         this.estado = estado;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId_usuario() {

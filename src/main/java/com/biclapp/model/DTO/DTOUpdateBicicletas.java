@@ -1,17 +1,11 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "bicicletas")
-public class Bicicletas {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOUpdateBicicletas {
 
     @NotNull(message = "Local requerido")
     private Long id_local;
@@ -30,35 +24,23 @@ public class Bicicletas {
     @Size(max = 255, message = "La descripción debe tener como máximo 255 caracteres")
     private String descripcion;
 
-    private String estado;
-
     @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
     private String foto;
 
     @Size(max = 45, message = "El color debe tener como máximo 45 caracteres")
     private String color;
 
-    public Bicicletas() {
+    public DTOUpdateBicicletas() {
     }
 
-    public Bicicletas(Long id, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, String foto, String color) {
-        this.id = id;
+    public DTOUpdateBicicletas(Long id_local, String marca, String modelo, Integer stock, String descripcion, String foto, String color) {
         this.id_local = id_local;
         this.marca = marca;
         this.modelo = modelo;
         this.stock = stock;
         this.descripcion = descripcion;
-        this.estado = estado;
         this.foto = foto;
         this.color = color;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId_local() {
@@ -99,14 +81,6 @@ public class Bicicletas {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public String getFoto() {

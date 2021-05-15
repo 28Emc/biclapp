@@ -3,6 +3,9 @@ package com.biclapp.model.entity;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "empleados")
@@ -11,28 +14,44 @@ public class Empleados {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Rol requerido")
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private Roles rol;
 
     private Long id_membresia;
 
+    @NotEmpty(message = "Nombres requeridos")
+    @Size(min = 1, max = 100, message = "Los nombres deben tener entre 1 y 100 caracteres")
     private String nombres;
 
+    @NotEmpty(message = "Apellidos requeridos")
+    @Size(min = 1, max = 100, message = "Los apellidos deben tener entre 1 y 100 caracteres")
     private String apellidos;
 
+    @NotEmpty(message = "DNI requerido")
+    @Size(min = 8, max = 8, message = "El DNI debe tener 8 caracteres")
     private String nro_documento;
 
+    @NotEmpty(message = "Celular requerido")
+    @Size(min = 9, max = 9, message = "El celular debe tener 9 caracteres")
     private String celular;
 
+    @NotEmpty(message = "Dirección requerida")
+    @Size(min = 1, max = 200, message = "La dirección debe tener entre 1 y 200 caracteres")
     private String direccion;
 
+    @NotEmpty(message = "Nombre de usuario requerido")
+    @Size(min = 1, max = 50, message = "El nombre de usuario debe tener entre 1 y 50 caracteres")
     private String username;
 
+    @NotEmpty(message = "Contraseña requerido")
+    @Size(min = 1, max = 255, message = "La contraseña debe tener entre 1 y 255 caracteres")
     private String password;
 
     private String estado;
 
+    @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
     private String foto;
 
     private boolean isActivo;

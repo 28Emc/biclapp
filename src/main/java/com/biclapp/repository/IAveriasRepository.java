@@ -1,10 +1,9 @@
 package com.biclapp.repository;
 
-import com.biclapp.model.entity.Roles;
+import com.biclapp.model.entity.Averias;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IRolesRepository extends CrudRepository<Roles, Long> {
-    Roles findByRol(String rol);
+public interface IAveriasRepository extends CrudRepository<Averias, Long> {
 }

@@ -3,10 +3,7 @@ package com.biclapp.model.DTO;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-public class DTOCreateUsuarios {
-
-    @NotEmpty(message = "Membresía requerida")
-    private Long id_membresia;
+public class DTOCreateEmpleados {
 
     @NotEmpty(message = "Nombres requeridos")
     @Size(min = 1, max = 100, message = "Los nombres deben tener entre 1 y 100 caracteres")
@@ -43,11 +40,10 @@ public class DTOCreateUsuarios {
     @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
     private String foto;
 
-    public DTOCreateUsuarios() {
+    public DTOCreateEmpleados() {
     }
 
-    public DTOCreateUsuarios(Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, boolean isActivo, String foto) {
-        this.id_membresia = id_membresia;
+    public DTOCreateEmpleados(String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, boolean isActivo, String foto) {
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -58,14 +54,6 @@ public class DTOCreateUsuarios {
         this.estado = estado;
         this.isActivo = isActivo;
         this.foto = foto;
-    }
-
-    public Long getId_membresia() {
-        return id_membresia;
-    }
-
-    public void setId_membresia(Long id_membresia) {
-        this.id_membresia = id_membresia;
     }
 
     public String getNombres() {

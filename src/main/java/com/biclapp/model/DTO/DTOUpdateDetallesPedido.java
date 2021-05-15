@@ -1,39 +1,34 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
-@Entity
-@Table(name = "detalles_pedido")
-public class DetallePedido {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOUpdateDetallesPedido {
 
+    @NotNull(message = "Pedido requerido")
     private Long id_pedido;
 
+    @Positive(message = "El valor del stock debe ser mayor o igual a 1")
     private Integer cantidad;
 
+    @PositiveOrZero(message = "El valor del precio debe ser mayor o igual a 0")
+    @DecimalMax(value = "999999.99", message = "El precio tiene un valor no admitido")
     private Double precio;
 
+    @PositiveOrZero(message = "El valor del total debe ser mayor o igual a 0")
+    @DecimalMax(value = "999999.99", message = "El total tiene un valor no admitido")
     private Double total;
 
-    public DetallePedido() {
+    public DTOUpdateDetallesPedido() {
     }
 
-    public DetallePedido(Long id, Long id_pedido, Integer cantidad, Double precio, Double total) {
-        this.id = id;
+    public DTOUpdateDetallesPedido(Long id_pedido, Integer cantidad, Double precio, Double total) {
         this.id_pedido = id_pedido;
         this.cantidad = cantidad;
         this.precio = precio;
         this.total = total;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId_pedido() {

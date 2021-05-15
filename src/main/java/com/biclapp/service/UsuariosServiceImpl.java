@@ -1,5 +1,9 @@
 package com.biclapp.service;
 
+import com.biclapp.model.DTO.DTOCreateUsuarios;
+import com.biclapp.model.entity.Empleados;
+import com.biclapp.model.entity.Membresias;
+import com.biclapp.model.entity.Roles;
 import com.biclapp.model.entity.Usuarios;
 import com.biclapp.repository.IUsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,12 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Autowired
     private IUsuariosRepository repository;
 
+    @Autowired
+    private IRolesService rolesService;
+
+    @Autowired
+    private IMembresiasService membresiasService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Usuarios> findAll() {
@@ -27,8 +37,34 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
-    public void save(Usuarios usuario) throws Exception {
-        repository.save(usuario);
+    public void save(DTOCreateUsuarios createUsuarios) throws Exception {
+        // TODO: POR MIENTRAS SE ESTÁ VALIDANDO EL USUARIO CON ESTADO "ACTIVO", SE DEBERÍA VALIDAR MEDIANTE
+        // TODO: TOKEN/CELULAR/EMAIL.
+        Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
+        Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
+        Usuarios usuariosNew = new Usuarios(rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
+                createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
+                createUsuarios.getDireccion(), createUsuarios.getUsername(), createUsuarios.getPassword(),
+                createUsuarios.getEstado(), createUsuarios.getFoto(), true);
+        repository.save(usuariosNew);
+    }
+
+    @Override
+    public void update(Long id, DTOCreateUsuarios createUsuarios) throws Exception {
+        Usuarios usuarioFound = findById(id);
+        Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
+        usuarioFound.setId_membresia(membresiaFound.getId());
+        usuarioFound.setNombres(usuarioFound.getNombres());
+        usuarioFound.setApellidos(usuarioFound.getApellidos());
+        usuarioFound.setNro_documento(usuarioFound.getNro_documento());
+        usuarioFound.setCelular(usuarioFound.getCelular());
+        usuarioFound.setDireccion(usuarioFound.getDireccion());
+        usuarioFound.setUsername(usuarioFound.getUsername());
+        usuarioFound.setPassword(usuarioFound.getPassword());
+        usuarioFound.setEstado(usuarioFound.getEstado());
+        usuarioFound.setFoto(usuarioFound.getFoto());
+        usuarioFound.setActivo(usuarioFound.isActivo());
+        repository.save(usuarioFound);
     }
 
     @Override

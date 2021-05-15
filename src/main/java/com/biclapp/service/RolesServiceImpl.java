@@ -27,6 +27,12 @@ public class RolesServiceImpl implements IRolesService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Roles findByRol(String rol) {
+        return repository.findByRol(rol);
+    }
+
+    @Override
     public void save(Roles rol) throws Exception {
         repository.save(rol);
     }

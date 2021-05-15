@@ -14,7 +14,7 @@ public class Pedidos {
 
     private Long id_empleado;
 
-    private Long id_bicicleta;
+    private Long id_producto;
 
     private String codigo;
 
@@ -29,11 +29,11 @@ public class Pedidos {
     public Pedidos() {
     }
 
-    public Pedidos(Long id, Long id_usuario, Long id_empleado, Long id_bicicleta, String codigo, String estado, String tipo_pedido, String direccion, Date fecha_registro) {
+    public Pedidos(Long id, Long id_usuario, Long id_empleado, Long id_producto, String codigo, String estado, String tipo_pedido, String direccion, Date fecha_registro) {
         this.id = id;
         this.id_usuario = id_usuario;
         this.id_empleado = id_empleado;
-        this.id_bicicleta = id_bicicleta;
+        this.id_producto = id_producto;
         this.codigo = codigo;
         this.estado = estado;
         this.tipo_pedido = tipo_pedido;
@@ -65,12 +65,12 @@ public class Pedidos {
         this.id_empleado = id_empleado;
     }
 
-    public Long getId_bicicleta() {
-        return id_bicicleta;
+    public Long getId_producto() {
+        return id_producto;
     }
 
-    public void setId_bicicleta(Long id_bicicleta) {
-        this.id_bicicleta = id_bicicleta;
+    public void setId_producto(Long id_producto) {
+        this.id_producto = id_producto;
     }
 
     public String getCodigo() {

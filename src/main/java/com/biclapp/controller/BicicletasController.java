@@ -1,19 +1,24 @@
 package com.biclapp.controller;
 
 import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.DTO.DTOUpdateBicicletas;
 import com.biclapp.model.entity.Bicicletas;
 import com.biclapp.model.entity.Locales;
 import com.biclapp.service.IBicicletasService;
 import com.biclapp.service.ILocalesService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -54,8 +59,18 @@ public class BicicletasController {
     }
 
     @PostMapping("/bicicletas")
-    public ResponseEntity<?> createBicicleta(@RequestBody Bicicletas bicicleta) {
+    public ResponseEntity<?> createBicicleta(@Valid @RequestBody Bicicletas bicicleta, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             localesService.findById(bicicleta.getId_local());
             bicicletasService.save(bicicleta);
@@ -69,19 +84,20 @@ public class BicicletasController {
     }
 
     @PutMapping("/bicicletas/{id}")
-    public ResponseEntity<?> editBicicleta(@PathVariable Long id, @RequestBody Bicicletas bicicletas) {
+    public ResponseEntity<?> editBicicleta(@PathVariable Long id, @Valid @RequestBody DTOUpdateBicicletas updateBicicleta, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            Bicicletas bicicletaFound = bicicletasService.findById(id);
-            Locales local = localesService.findById(bicicletas.getId_local());
-            bicicletaFound.setId_local(local.getId());
-            bicicletaFound.setMarca(bicicletas.getMarca());
-            bicicletaFound.setModelo(bicicletas.getModelo());
-            bicicletaFound.setStock(bicicletas.getStock());
-            bicicletaFound.setDescripcion(bicicletas.getDescripcion());
-            bicicletaFound.setEstado(bicicletas.getEstado());
-            bicicletaFound.setFoto(bicicletas.getFoto());
-            bicicletasService.save(bicicletaFound);
+            bicicletasService.update(id, updateBicicleta);
             response.put("message", "¡Bicicleta actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -92,12 +108,20 @@ public class BicicletasController {
     }
 
     @PutMapping("/bicicletas/estado/{id}")
-    public ResponseEntity<?> changeEstadoBicicleta(@PathVariable Long id, @RequestBody DTOUpdate DTOUpdate) {
+    public ResponseEntity<?> changeEstadoBicicleta(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            Bicicletas bicicletaFound = bicicletasService.findById(id);
-            bicicletaFound.setEstado((DTOUpdate.getEstado()));
-            bicicletasService.save(bicicletaFound);
+            bicicletasService.updateEstado(id, update);
             response.put("message", "¡Estado de bicicleta actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -113,7 +137,7 @@ public class BicicletasController {
         try {
             bicicletasService.delete(id);
             response.put("message", "¡Bicicleta eliminada!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
