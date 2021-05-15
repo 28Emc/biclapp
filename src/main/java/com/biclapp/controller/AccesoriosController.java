@@ -6,13 +6,17 @@ import com.biclapp.model.entity.Accesorios;
 import com.biclapp.service.IAccesoriosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -50,8 +54,18 @@ public class AccesoriosController {
     }
 
     @PostMapping("/accesorios")
-    public ResponseEntity<?> createAccesorio(@RequestBody Accesorios accesorio) {
+    public ResponseEntity<?> createAccesorio(@Valid @RequestBody Accesorios accesorio, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             accesoriosService.save(accesorio);
             response.put("message", "¡Accesorio registrado!");
@@ -64,8 +78,18 @@ public class AccesoriosController {
     }
 
     @PutMapping("/accesorios/{id}")
-    public ResponseEntity<?> editAccesorio(@PathVariable Long id, @RequestBody DTOUpdateAccesorios updateAccesorio) {
+    public ResponseEntity<?> editAccesorio(@PathVariable Long id, @Valid @RequestBody DTOUpdateAccesorios updateAccesorio, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             accesoriosService.update(id, updateAccesorio);
             response.put("message", "¡Accesorio actualizado!");
@@ -78,8 +102,18 @@ public class AccesoriosController {
     }
 
     @PutMapping("/accesorios/estado/{id}")
-    public ResponseEntity<?> changeEstadoAccesorio(@PathVariable Long id, @RequestBody DTOUpdate update) {
+    public ResponseEntity<?> changeEstadoAccesorio(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             accesoriosService.updateEstado(id, update);
             response.put("message", "¡Estado de accesorio actualizado!");
@@ -97,7 +131,7 @@ public class AccesoriosController {
         try {
             accesoriosService.delete(id);
             response.put("message", "¡Accesorio eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

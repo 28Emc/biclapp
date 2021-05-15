@@ -1,6 +1,10 @@
 package com.biclapp.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.PositiveOrZero;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "accesorios")
@@ -9,18 +13,29 @@ public class Accesorios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Size(min = 3, max = 10, message = "El código debe tener entre 3 y 10 caracteres")
     private String codigo;
 
+    @NotEmpty(message = "Nombre de accesorio requerido")
+    @Size(min = 1, max = 100, message = "El nombre debe tener entre 1 y 100 caracteres")
     private String nombre;
 
+    @NotEmpty(message = "Descripción de accesorio requerida")
+    @Size(min = 1, max = 255, message = "La descripción debe tener entre 1 y 255 caracteres")
     private String descripcion;
 
+    @Size(max = 255, message = "La foto tiene demasiados caracteres")
     private String foto;
 
+    @NotEmpty(message = "Tipo de accesorio requerido")
+    @Size(min = 1, max = 50, message = "El tipo debe tener entre 1 y 50 caracteres")
     private String tipo;
 
+    @PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
     private Integer stock;
 
+    @PositiveOrZero(message = "El valor del precio debe ser mayor o igual a 0")
+    @DecimalMax(value = "999999.99", message = "El precio tiene un valor no admitido")
     private Double precio;
 
     private String estado;
