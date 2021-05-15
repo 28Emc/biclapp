@@ -33,6 +33,20 @@ public class LocalesController {
         }
     }
 
+    @GetMapping("/locales-empresa/{id}")
+    public ResponseEntity<?> getLocalesByEmpresa(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<Locales> locales = localesService.findByEmpresa(id);
+            response.put("locales", locales);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/locales/{id}")
     public ResponseEntity<?> getLocal(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
@@ -65,10 +79,7 @@ public class LocalesController {
     public ResponseEntity<?> editLocal(@PathVariable Long id, @RequestBody Locales local) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Locales localFound = localesService.findById(id);
-            localFound.setId(local.getId());
-            localFound.setDireccion(local.getDireccion());
-            localesService.save(localFound);
+            localesService.update(id, local);
             response.put("message", "¡Local actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {

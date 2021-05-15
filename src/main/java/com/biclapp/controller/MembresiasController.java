@@ -65,11 +65,7 @@ public class MembresiasController {
     public ResponseEntity<?> editMembresia(@PathVariable Long id, @RequestBody Membresias membresia) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Membresias membresiaFound = membresiasService.findById(id);
-            membresiaFound.setId(membresia.getId());
-            membresiaFound.setTipo(membresia.getTipo());
-            membresiaFound.setCuota(membresia.getCuota());
-            membresiasService.save(membresiaFound);
+            membresiasService.update(id, membresia);
             response.put("message", "¡Membresia actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {

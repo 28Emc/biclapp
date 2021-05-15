@@ -32,6 +32,14 @@ public class MembresiasServiceImpl implements IMembresiasService {
     }
 
     @Override
+    public void update(Long id, Membresias membresia) throws Exception {
+        Membresias membresiaFound = findById(id);
+        membresiaFound.setTipo(membresiaFound.getTipo());
+        membresiaFound.setCuota(membresia.getCuota());
+        repository.save(membresiaFound);
+    }
+
+    @Override
     public void delete(Long id) throws Exception {
         findById(id);
         repository.deleteById(id);

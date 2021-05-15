@@ -1,6 +1,7 @@
 package com.biclapp.controller;
 
 import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.DTO.DTOUpdateRutas;
 import com.biclapp.model.entity.Rutas;
 import com.biclapp.model.entity.Usuarios;
 import com.biclapp.service.IBicicletasService;
@@ -8,13 +9,17 @@ import com.biclapp.service.IRutasService;
 import com.biclapp.service.IUsuariosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -58,8 +63,18 @@ public class RutasController {
     }
 
     @PostMapping("/rutas")
-    public ResponseEntity<?> createRuta(@RequestBody Rutas ruta) {
+    public ResponseEntity<?> createRuta(@Valid @RequestBody Rutas ruta, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             rutasService.save(ruta);
             response.put("message", "¡Ruta registrada!");
@@ -72,16 +87,20 @@ public class RutasController {
     }
 
     @PutMapping("/rutas/{id}")
-    public ResponseEntity<?> editRuta(@PathVariable Long id, @RequestBody Rutas ruta) {
+    public ResponseEntity<?> editRuta(@PathVariable Long id, @Valid @RequestBody DTOUpdateRutas updateRutas, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
-            Rutas rutaFound = rutasService.findById(id);
-            rutaFound.setId(ruta.getId());
-            Usuarios usuarioFound = usuariosService.findById(ruta.getId_usuario());
-            rutaFound.setId_usuario(usuarioFound.getId());
-            rutaFound.setNombre(ruta.getNombre());
-            rutaFound.setEstado(ruta.getEstado());
-            rutasService.save(rutaFound);
+            rutasService.update(id, updateRutas);
             response.put("message", "¡Ruta actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -92,8 +111,18 @@ public class RutasController {
     }
 
     @PutMapping("/rutas/estado/{id}")
-    public ResponseEntity<?> changeEstadoRuta(@PathVariable Long id, @RequestBody DTOUpdate DTOUpdate) {
+    public ResponseEntity<?> changeEstadoRuta(@PathVariable Long id, @Valid @RequestBody DTOUpdate DTOUpdate, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             Rutas rutaFound = rutasService.findById(id);
             rutaFound.setEstado((DTOUpdate.getEstado()));

@@ -1,13 +1,13 @@
 package com.biclapp.repository;
 
-import com.biclapp.model.entity.Rutas;
+import com.biclapp.model.entity.Favoritos;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface IRutasRepository extends CrudRepository<Rutas, Long> {
+public interface IFavoritosRepository extends CrudRepository<Favoritos, Long> {
 
-    List<Rutas> findById_usuario(Long id_usuario);
+    List<Favoritos> findById_usuario(Long id_usuario);
 }

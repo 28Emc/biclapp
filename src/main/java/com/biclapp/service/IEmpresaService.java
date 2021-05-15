@@ -1,4 +1,4 @@
-package com.biclapp.repository;
+package com.biclapp.service;
 
 import com.biclapp.model.entity.Empresas;
 

@@ -1,16 +1,10 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "favoritos")
-public class Favoritos {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOUpdateFavoritos {
 
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
@@ -26,23 +20,14 @@ public class Favoritos {
     @Size(max = 255, message = "La descripción debe tener entre 1 y 255 caracteres")
     private String descripcion;
 
-    public Favoritos() {
+    public DTOUpdateFavoritos() {
     }
 
-    public Favoritos(Long id, Long id_usuario, String tipo_destino, String nombre_coordenadas, String descripcion) {
-        this.id = id;
+    public DTOUpdateFavoritos(Long id_usuario, String tipo_destino, String nombre_coordenadas, String descripcion) {
         this.id_usuario = id_usuario;
         this.tipo_destino = tipo_destino;
         this.nombre_coordenadas = nombre_coordenadas;
         this.descripcion = descripcion;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId_usuario() {

@@ -1,5 +1,6 @@
 package com.biclapp.service;
 
+import com.biclapp.model.DTO.DTOUpdateRutas;
 import com.biclapp.model.entity.Rutas;
 import com.biclapp.repository.IRutasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,19 @@ public class RutasServiceImpl implements IRutasService {
     @Autowired
     private IRutasRepository repository;
 
+    @Autowired
+    private IUsuariosService usuariosService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Rutas> findAll() {
         return (List<Rutas>) repository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Rutas> findById_usuario(Long id_usuario) {
+        return repository.findById_usuario(id_usuario);
     }
 
     @Override
@@ -29,6 +39,18 @@ public class RutasServiceImpl implements IRutasService {
     @Override
     public void save(Rutas ruta) throws Exception {
         repository.save(ruta);
+    }
+
+    @Override
+    public void update(Long id, DTOUpdateRutas updateRuta) throws Exception {
+        Rutas rutafound = findById(id);
+        usuariosService.findById(updateRuta.getId_usuario());
+        rutafound.setNombre(updateRuta.getNombre());
+        rutafound.setRuta(updateRuta.getRuta());
+        rutafound.setTipo_ruta(updateRuta.getTipo_ruta());
+        rutafound.setDatos_origen(updateRuta.getDatos_origen());
+        rutafound.setDatos_destino(updateRuta.getDatos_destino());
+        repository.save(rutafound);
     }
 
     @Override

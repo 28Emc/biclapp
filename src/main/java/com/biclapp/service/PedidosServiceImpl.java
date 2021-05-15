@@ -27,8 +27,8 @@ public class PedidosServiceImpl implements IPedidosService {
     @Autowired
     private IUsuariosService usuariosService;
 
-    //@Autowired
-    //private IEmpleadosService empleadosService;
+    @Autowired
+    private IEmpleadosService empleadosService;
 
     @Autowired
     private IBicicletasService bicicletasService;
@@ -42,6 +42,7 @@ public class PedidosServiceImpl implements IPedidosService {
         return (List<Pedidos>) repository.findAll();
     }
 
+
     @Override
     @Transactional(readOnly = true)
     public Pedidos findById(Long id) throws Exception {
@@ -49,11 +50,34 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Pedidos> findAllWithDetails() {
+        return repository.findAllWithDetails();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Pedidos findByIdWithDetails(Long id_pedido) {
+        return repository.findByIdWithDetails(id_pedido);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Pedidos> findByUserWithDetails(Long id_usuario) {
+        return repository.findByUserWithDetails(id_usuario);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Pedidos findOneByUserWithDetails(Long id_pedido, Long id_usuario) {
+        return repository.findOneByUserWithDetails(id_pedido, id_usuario);
+    }
+
+    @Override
     public void save(DTOCreatePedidos createPedidos) throws Exception {
-        // TODO: BUSCAR EMPLEADO POR ID
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
-        //Empleados empleadoFound = empleadosService.findById(createPedidos.getId_empleado());
+        Empleados empleadoFound = empleadosService.findById(createPedidos.getId_empleado());
         if (createPedidos.getTipo_pedido().equals("A")) {
             Accesorios accesorioFound = accesoriosService.findById(createPedidos.getId_producto());
             pedidoNew.setId_producto(accesorioFound.getId());
@@ -64,7 +88,7 @@ public class PedidosServiceImpl implements IPedidosService {
         int contador = findAll().toArray().length;
         pedidoNew.setId_usuario(usuarioFound.getId());
         pedidoNew.setCodigo("P-".concat(String.valueOf(contador)));
-        //pedidoNew.setId_empleado(empleadoFound.getId());
+        pedidoNew.setId_empleado(empleadoFound.getId());
         pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
         pedidoNew.setDireccion(createPedidos.getDireccion());
         pedidoNew.setFecha_registro(createPedidos.getFecha_registro());
@@ -85,11 +109,11 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoFound = findById(id);
         if (pedidoFound.getEstado().equals("R")) {
             pedidoFound.setId(updatePedidos.getId_pedido());
-            // TODO: LA EDICIÓN SE PUEDE HACER SOLO EN ESTADO "REGISTRADO"
-            // TODO: EN TODO CASO, SE DEBERÍA DAR DE BAJA EL PEDIDO ACTUAL Y
-            // TODO: REGISTRAR OTRO PEDIDO
+            // LA EDICIÓN SE PUEDE HACER SOLO EN ESTADO "REGISTRADO"
+            // DE TODAS MANERAS, SE DEBERÍA DAR DE BAJA EL PEDIDO ACTUAL Y
+            // REGISTRAR OTRO PEDIDO
             Usuarios usuarioFound = usuariosService.findById(updatePedidos.getId_usuario());
-            //Empleados empleadoFound = empleadosService.findById(updatePedidos.getId_empleado());
+            Empleados empleadoFound = empleadosService.findById(updatePedidos.getId_empleado());
             if (updatePedidos.getTipo_pedido().equals("A")) {
                 Accesorios accesorioFound = accesoriosService.findById(updatePedidos.getId_producto());
                 pedidoFound.setId_producto(accesorioFound.getId());
@@ -100,7 +124,7 @@ public class PedidosServiceImpl implements IPedidosService {
             int contador = findAll().toArray().length;
             pedidoFound.setId_usuario(usuarioFound.getId());
             pedidoFound.setCodigo(updatePedidos.getCodigo());
-            //pedidoNew.setId_empleado(empleadoFound.getId());
+            pedidoFound.setId_empleado(empleadoFound.getId());
             pedidoFound.setTipo_pedido(updatePedidos.getTipo_pedido());
             pedidoFound.setDireccion(updatePedidos.getDireccion());
             pedidoFound.setFecha_registro(updatePedidos.getFecha_registro());

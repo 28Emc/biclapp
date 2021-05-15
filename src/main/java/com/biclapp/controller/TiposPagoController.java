@@ -1,7 +1,10 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.entity.Roles;
-import com.biclapp.service.IRolesService;
+import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.DTO.DTOUpdateAccesorios;
+import com.biclapp.model.entity.Accesorios;
+import com.biclapp.model.entity.TiposPago;
+import com.biclapp.service.ITiposPagoService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,17 +21,17 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class RolesController {
+public class TiposPagoController {
 
     @Autowired
-    private IRolesService rolesService;
+    private ITiposPagoService tiposPagoService;
 
-    @GetMapping("/roles")
-    public ResponseEntity<?> getAllRoles() {
+    @GetMapping("/tipos-pago")
+    public ResponseEntity<?> getAllTiposPago() {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Roles> roles = rolesService.findAll();
-            response.put("roles", roles);
+            List<TiposPago> tiposPago = tiposPagoService.findAll();
+            response.put("tipos-pago", tiposPago);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -37,12 +40,74 @@ public class RolesController {
         }
     }
 
-    @GetMapping("/roles/{id}")
-    public ResponseEntity<?> getRol(@PathVariable Long id) {
+    @GetMapping("/tipos-pago/{id}")
+    public ResponseEntity<?> getTipoPago(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Roles rol = rolesService.findById(id);
-            response.put("rol", rol);
+            TiposPago tipoPago = tiposPagoService.findById(id);
+            response.put("tipo-pago", tipoPago);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/tipos-pago")
+    public ResponseEntity<?> createTipoPago(@Valid @RequestBody TiposPago tipoPago, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            tiposPagoService.save(tipoPago);
+            response.put("message", "¡Tipo de pago registrado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/tipos-pago/{id}")
+    public ResponseEntity<?> editTipoPago(@PathVariable Long id, @Valid @RequestBody TiposPago tipoPago, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            tiposPagoService.update(id, tipoPago);
+            response.put("message", "¡Tipo de pago actualizado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/tipos-pago/{id}")
+    public ResponseEntity<?> deleteTipoPago(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            tiposPagoService.delete(id);
+            response.put("message", "¡Tipo de pago eliminado!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -50,71 +115,4 @@ public class RolesController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/roles")
-    public ResponseEntity<?> createRol(@Valid @RequestBody Roles rol, BindingResult result) {
-        Map<String, Object> response = new HashMap<>();
-
-        if (result.hasErrors()) {
-            List<String> errores = result.getFieldErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            response.put("errores", errores);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            rolesService.save(rol);
-            response.put("message", "¡Rol registrado!");
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/roles/{id}")
-    public ResponseEntity<?> editRoles(@PathVariable Long id, @Valid @RequestBody Roles rol, BindingResult result) {
-        Map<String, Object> response = new HashMap<>();
-
-        if (result.hasErrors()) {
-            List<String> errores = result.getFieldErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            response.put("errores", errores);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            Roles rolFound = rolesService.findById(id);
-            rolFound.setId(rol.getId());
-            rolFound.setRol(rol.getRol());
-            rolesService.save(rolFound);
-            response.put("message", "¡Rol actualizado!");
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("/roles/{id}")
-    public ResponseEntity<?> deleteRol(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            rolesService.delete(id);
-            response.put("message", "¡Rol eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
 }

@@ -1,16 +1,10 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "rutas")
-public class Rutas {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOUpdateRutas {
 
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
@@ -23,8 +17,6 @@ public class Rutas {
     @Size(min = 1, max = 255, message = "La ruta debe tener entre 1 y 255 caracteres")
     private String ruta;
 
-    private String estado;
-
     @Size(max = 100, message = "La ruta debe tener entre 1 y 100 caracteres")
     private String tipo_ruta;
 
@@ -34,26 +26,16 @@ public class Rutas {
     @Size(max = 255, message = "El destino debe tener entre 1 y 255 caracteres")
     private String datos_destino;
 
-    public Rutas() {
+    public DTOUpdateRutas() {
     }
 
-    public Rutas(Long id, Long id_usuario, String nombre, String ruta, String estado, String tipo_ruta, String datos_origen, String datos_destino) {
-        this.id = id;
+    public DTOUpdateRutas(Long id_usuario, String nombre, String ruta, String tipo_ruta, String datos_origen, String datos_destino) {
         this.id_usuario = id_usuario;
         this.nombre = nombre;
         this.ruta = ruta;
-        this.estado = estado;
         this.tipo_ruta = tipo_ruta;
         this.datos_origen = datos_origen;
         this.datos_destino = datos_destino;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Long getId_usuario() {
@@ -78,14 +60,6 @@ public class Rutas {
 
     public void setRuta(String ruta) {
         this.ruta = ruta;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
     }
 
     public String getTipo_ruta() {

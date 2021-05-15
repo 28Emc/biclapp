@@ -1,7 +1,11 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.entity.Roles;
-import com.biclapp.service.IRolesService;
+import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.DTO.DTOUpdateAccesorios;
+import com.biclapp.model.DTO.DTOUpdateMonederos;
+import com.biclapp.model.entity.Accesorios;
+import com.biclapp.model.entity.Monederos;
+import com.biclapp.service.IMonederosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -18,17 +22,17 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class RolesController {
+public class MonederosController {
 
     @Autowired
-    private IRolesService rolesService;
+    private IMonederosService monederosService;
 
-    @GetMapping("/roles")
-    public ResponseEntity<?> getAllRoles() {
+    @GetMapping("/monederos")
+    public ResponseEntity<?> getAllMonederos() {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Roles> roles = rolesService.findAll();
-            response.put("roles", roles);
+            List<Monederos> monederos = monederosService.findAll();
+            response.put("monederos", monederos);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -37,12 +41,74 @@ public class RolesController {
         }
     }
 
-    @GetMapping("/roles/{id}")
-    public ResponseEntity<?> getRol(@PathVariable Long id) {
+    @GetMapping("/monederos/{id}")
+    public ResponseEntity<?> getMonedero(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Roles rol = rolesService.findById(id);
-            response.put("rol", rol);
+            Monederos monedero = monederosService.findById(id);
+            response.put("monedero", monedero);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/monederos")
+    public ResponseEntity<?> createMonedero(@Valid @RequestBody Monederos monedero, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            monederosService.save(monedero);
+            response.put("message", "¡Monedero registrado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/monederos/{id}")
+    public ResponseEntity<?> editPuntosMonedero(@PathVariable Long id, @Valid @RequestBody DTOUpdateMonederos updateMonedero, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            monederosService.editPuntos(id, updateMonedero);
+            response.put("message", "¡Monedero actualizado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @DeleteMapping("/monederos/{id}")
+    public ResponseEntity<?> deleteMonedero(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            monederosService.delete(id);
+            response.put("message", "¡Monedero eliminado!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -50,71 +116,4 @@ public class RolesController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @PostMapping("/roles")
-    public ResponseEntity<?> createRol(@Valid @RequestBody Roles rol, BindingResult result) {
-        Map<String, Object> response = new HashMap<>();
-
-        if (result.hasErrors()) {
-            List<String> errores = result.getFieldErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            response.put("errores", errores);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            rolesService.save(rol);
-            response.put("message", "¡Rol registrado!");
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PutMapping("/roles/{id}")
-    public ResponseEntity<?> editRoles(@PathVariable Long id, @Valid @RequestBody Roles rol, BindingResult result) {
-        Map<String, Object> response = new HashMap<>();
-
-        if (result.hasErrors()) {
-            List<String> errores = result.getFieldErrors()
-                    .stream()
-                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
-                    .collect(Collectors.toList());
-            response.put("errores", errores);
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            Roles rolFound = rolesService.findById(id);
-            rolFound.setId(rol.getId());
-            rolFound.setRol(rol.getRol());
-            rolesService.save(rolFound);
-            response.put("message", "¡Rol actualizado!");
-            return new ResponseEntity<>(response, HttpStatus.CREATED);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @DeleteMapping("/roles/{id}")
-    public ResponseEntity<?> deleteRol(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            rolesService.delete(id);
-            response.put("message", "¡Rol eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
-
-        }
-    }
-
 }

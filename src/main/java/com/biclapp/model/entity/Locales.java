@@ -1,6 +1,9 @@
 package com.biclapp.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "locales")
@@ -9,8 +12,11 @@ public class Locales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Empresa requerida")
     private Long id_empresa;
 
+    @NotEmpty(message = "Dirección requerida")
+    @Size(min = 1, max = 100, message = "La dirección debe tener entre 1 y 100 caracteres")
     private String direccion;
 
     public Locales() {

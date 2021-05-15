@@ -1,5 +1,6 @@
 package com.biclapp.service;
 
+import com.biclapp.model.entity.Empresas;
 import com.biclapp.model.entity.Locales;
 import com.biclapp.repository.ILocalesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,20 @@ public class LocalesServiceImpl implements ILocalesService {
     @Autowired
     private ILocalesRepository repository;
 
+    @Autowired
+    private IEmpresaService empresaService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Locales> findAll() {
         return (List<Locales>) repository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Locales> findByEmpresa(Long id_empresa) throws Exception {
+        empresaService.findById(id_empresa);
+        return repository.findById_empresa(id_empresa);
     }
 
     @Override
@@ -29,6 +40,14 @@ public class LocalesServiceImpl implements ILocalesService {
     @Override
     public void save(Locales local) throws Exception {
         repository.save(local);
+    }
+
+    @Override
+    public void update(Long id, Locales local) throws Exception {
+        Locales localFound = findById(id);
+        empresaService.findById(local.getId_empresa());
+        localFound.setDireccion(local.getDireccion());
+        repository.save(localFound);
     }
 
     @Override

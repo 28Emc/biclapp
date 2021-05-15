@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -14,6 +16,8 @@ public class Roles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotEmpty(message = "Nombre de rol requerido")
+    @Size(min = 1, max = 50, message = "El nombre del rol debe tener entre 1 y 50 caracteres")
     private String rol;
 
     @OneToMany(mappedBy = "rol")

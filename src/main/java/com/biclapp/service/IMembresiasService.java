@@ -12,6 +12,8 @@ public interface IMembresiasService {
 
     void save(Membresias membresia) throws Exception;
 
+    void update(Long id, Membresias membresia) throws Exception;
+
     void delete(Long id) throws Exception;
 
 }

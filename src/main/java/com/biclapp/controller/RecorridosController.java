@@ -1,11 +1,11 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.DTO.DTOCreatePedidos;
 import com.biclapp.model.DTO.DTOUpdate;
-import com.biclapp.model.DTO.DTOUpdatePedidos;
-import com.biclapp.model.entity.Pedidos;
-import com.biclapp.service.IDetallesPedidoService;
-import com.biclapp.service.IPedidosService;
+import com.biclapp.model.DTO.DTOUpdateAccesorios;
+import com.biclapp.model.DTO.DTOUpdateRecorridos;
+import com.biclapp.model.entity.Accesorios;
+import com.biclapp.model.entity.Recorridos;
+import com.biclapp.service.IRecorridosService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -22,20 +22,17 @@ import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class PedidosController {
+public class RecorridosController {
 
     @Autowired
-    private IPedidosService pedidosService;
+    private IRecorridosService recorridosService;
 
-    @Autowired
-    private IDetallesPedidoService detallesPedidoService;
-
-    @GetMapping("/pedidos")
-    public ResponseEntity<?> getAllPedidos() {
+    @GetMapping("/recorridos")
+    public ResponseEntity<?> getAllRecorridos() {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Pedidos> pedidos = pedidosService.findAll();
-            response.put("pedidos", pedidos);
+            List<Recorridos> recorridos = recorridosService.findAll();
+            response.put("recorridos", recorridos);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -44,12 +41,12 @@ public class PedidosController {
         }
     }
 
-    @GetMapping("/pedidos/{id}")
-    public ResponseEntity<?> getPedido(@PathVariable Long id) {
+    @GetMapping("/recorridos/{id}")
+    public ResponseEntity<?> getRecorrido(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Pedidos pedido = pedidosService.findById(id);
-            response.put("pedido", pedido);
+            Recorridos recorrido = recorridosService.findById(id);
+            response.put("recorrido", recorrido);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -58,12 +55,12 @@ public class PedidosController {
         }
     }
 
-    @GetMapping("/pedidos-details")
-    public ResponseEntity<?> getAllPedidosWithDetails() {
+    @GetMapping("/recorridos-user/{id}")
+    public ResponseEntity<?> getAllRecorridosByUser(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Pedidos> pedidos = pedidosService.findAllWithDetails();
-            response.put("pedidos", pedidos);
+            List<Recorridos> recorridos = recorridosService.findByUser(id);
+            response.put("recorridos", recorridos);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -72,12 +69,12 @@ public class PedidosController {
         }
     }
 
-    @GetMapping("/pedidos-details/{id}")
-    public ResponseEntity<?> getOnePedidoWithDetails(@PathVariable Long id) {
+    @GetMapping("/recorridos-user/{id_recorrido}/{id_usuario}")
+    public ResponseEntity<?> getOneRecorridoByIdAndUser(@PathVariable Long id_recorrido, @PathVariable Long id_usuario) {
         Map<String, Object> response = new HashMap<>();
         try {
-            Pedidos pedido = pedidosService.findByIdWithDetails(id);
-            response.put("pedido", pedido);
+            Recorridos recorrido = recorridosService.findByIdAndUser(id_recorrido, id_usuario);
+            response.put("recorrido", recorrido);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -86,36 +83,8 @@ public class PedidosController {
         }
     }
 
-    @GetMapping("/pedidos-user/{id}")
-    public ResponseEntity<?> getPedidosByUser(@PathVariable Long id) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            List<Pedidos> pedidos = pedidosService.findByUserWithDetails(id);
-            response.put("pedidos", pedidos);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/pedidos-user/{id_pedido}/{id_usuario}")
-    public ResponseEntity<?> getPedidoByUserWithDetails(@PathVariable Long id_pedido, @PathVariable Long id_usuario) {
-        Map<String, Object> response = new HashMap<>();
-        try {
-            Pedidos pedido = pedidosService.findOneByUserWithDetails(id_pedido, id_usuario);
-            response.put("pedido", pedido);
-            return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (Exception e) {
-            response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
-            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @PostMapping("/pedidos")
-    public ResponseEntity<?> createPedido(@Valid @RequestBody DTOCreatePedidos createPedidos, BindingResult result) {
+    @PostMapping("/recorridos")
+    public ResponseEntity<?> createRecorrido(@Valid @RequestBody Recorridos recorrido, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -128,8 +97,8 @@ public class PedidosController {
         }
 
         try {
-            pedidosService.save(createPedidos);
-            response.put("message", "¡Pedido registrado!");
+            recorridosService.save(recorrido);
+            response.put("message", "¡Recorrido registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -138,8 +107,8 @@ public class PedidosController {
         }
     }
 
-    @PutMapping("/pedidos/{id}")
-    public ResponseEntity<?> editPedido(@PathVariable Long id, @Valid @RequestBody DTOUpdatePedidos updatePedidos, BindingResult result) {
+    @PutMapping("/recorridos/{id}")
+    public ResponseEntity<?> editRecorrido(@PathVariable Long id, @Valid @RequestBody DTOUpdateRecorridos updateRecorrido, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -152,8 +121,8 @@ public class PedidosController {
         }
 
         try {
-            pedidosService.update(id, updatePedidos);
-            response.put("message", "¡Pedido actualizado!");
+            recorridosService.update(id, updateRecorrido);
+            response.put("message", "¡Recorrido actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -162,8 +131,8 @@ public class PedidosController {
         }
     }
 
-    @PutMapping("/pedidos/estado/{id}")
-    public ResponseEntity<?> changeEstadoPedido(@PathVariable Long id, @RequestBody DTOUpdate update, BindingResult result) {
+    @PutMapping("/recorridos/estado/{id}")
+    public ResponseEntity<?> changeEstadoRecorrido(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -176,8 +145,8 @@ public class PedidosController {
         }
 
         try {
-            pedidosService.updateEstado(id, update);
-            response.put("message", "¡Estado del pedido actualizado!");
+            recorridosService.updateEstado(id, update);
+            response.put("message", "¡Estado de recorrido actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
@@ -186,18 +155,17 @@ public class PedidosController {
         }
     }
 
-    @DeleteMapping("/pedidos/{id}")
-    public ResponseEntity<?> deletePedido(@PathVariable Long id) {
+    @DeleteMapping("/recorridos/{id}")
+    public ResponseEntity<?> deleteRecorrido(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
-            pedidosService.delete(id);
-            response.put("message", "¡Pedido eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            recorridosService.delete(id);
+            response.put("message", "¡Recorrido eliminado!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

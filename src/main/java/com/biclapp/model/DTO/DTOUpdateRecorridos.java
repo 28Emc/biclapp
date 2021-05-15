@@ -1,22 +1,12 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.Date;
 
-@Entity
-@Table(name = "recorridos")
-public class Recorridos {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOUpdateRecorridos {
 
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
-
-    @NotEmpty(message = "Fecha de registro requerida")
-    @PastOrPresent(message = "La fecha de registro es inválida")
-    private Date fecha_registro;
 
     @PositiveOrZero(message = "El valor de los kilómetros debe ser mayor o igual a 0")
     private Integer kilometros;
@@ -35,29 +25,19 @@ public class Recorridos {
     @Size(max = 20, message = "El tiempo debe tener entre 1 y 20 caracteres")
     private String tiempo;
 
-    private String estado;
+    private String etsado;
 
-    public Recorridos() {
+    public DTOUpdateRecorridos() {
     }
 
-    public Recorridos(Long id, Long id_usuario, Date fecha_registro, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado) {
-        this.id = id;
+    public DTOUpdateRecorridos(Long id_usuario, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado) {
         this.id_usuario = id_usuario;
-        this.fecha_registro = fecha_registro;
         this.kilometros = kilometros;
         this.ritmo_cardiaco = ritmo_cardiaco;
         this.kcal = kcal;
         this.peso = peso;
         this.tiempo = tiempo;
-        this.estado = estado;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+        this.etsado = estado;
     }
 
     public Long getId_usuario() {
@@ -66,14 +46,6 @@ public class Recorridos {
 
     public void setId_usuario(Long id_usuario) {
         this.id_usuario = id_usuario;
-    }
-
-    public Date getFecha_registro() {
-        return fecha_registro;
-    }
-
-    public void setFecha_registro(Date fecha_registro) {
-        this.fecha_registro = fecha_registro;
     }
 
     public Integer getKilometros() {
@@ -116,11 +88,11 @@ public class Recorridos {
         this.tiempo = tiempo;
     }
 
-    public String getEstado() {
-        return estado;
+    public String getEtsado() {
+        return etsado;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setEtsado(String etsado) {
+        this.etsado = etsado;
     }
 }

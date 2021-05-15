@@ -1,8 +1,7 @@
 package com.biclapp.controller;
 
-import com.biclapp.model.entity.Accesorios;
 import com.biclapp.model.entity.Empresas;
-import com.biclapp.repository.IEmpresaService;
+import com.biclapp.service.IEmpresaService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
