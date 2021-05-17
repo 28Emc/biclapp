@@ -1,6 +1,7 @@
 package com.biclapp.controller;
 
 import com.biclapp.model.DTO.DTOCreateUsuarios;
+import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Membresias;
 import com.biclapp.model.entity.Roles;
 import com.biclapp.model.entity.Usuarios;
@@ -110,13 +111,37 @@ public class UsuariosController {
         }
     }
 
+    @PutMapping("/usuarios/estados/{id}")
+    public ResponseEntity<?> cambiarEstadoUsuario(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            usuariosService.updateEstado(id, update);
+            response.put("message", "¡Estado del usuario actualizado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @DeleteMapping("/usuarios/{id}")
     public ResponseEntity<?> deleteUsuario(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             usuariosService.delete(id);
             response.put("message", "¡Usuario eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

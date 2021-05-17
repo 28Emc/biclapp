@@ -34,7 +34,16 @@ public class RolesServiceImpl implements IRolesService {
 
     @Override
     public void save(Roles rol) throws Exception {
+        int contador = findAll().toArray().length;
+        rol.setCodigo(contador + 1);
         repository.save(rol);
+    }
+
+    @Override
+    public void update(Long id, Roles rol) throws Exception {
+        Roles rolFound = findById(id);
+        rolFound.setRol(rol.getRol());
+        repository.save(rolFound);
     }
 
     @Override

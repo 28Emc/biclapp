@@ -12,6 +12,8 @@ public class Favoritos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer codigo;
+
     @NotNull(message = "Usuario requerido")
     @Column(name = "id_usuario")
     private Long idUsuario;
@@ -30,8 +32,9 @@ public class Favoritos {
     public Favoritos() {
     }
 
-    public Favoritos(Long id, Long idUsuario, String tipo_destino, String nombre_coordenadas, String descripcion) {
+    public Favoritos(Long id, Integer codigo, Long idUsuario, String tipo_destino, String nombre_coordenadas, String descripcion) {
         this.id = id;
+        this.codigo = codigo;
         this.idUsuario = idUsuario;
         this.tipo_destino = tipo_destino;
         this.nombre_coordenadas = nombre_coordenadas;
@@ -44,6 +47,14 @@ public class Favoritos {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public Long getIdUsuario() {

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -47,18 +48,23 @@ public class RecorridosServiceImpl implements IRecorridosService {
 
     @Override
     public void save(Recorridos recorrido) throws Exception {
+        int contador = findAll().toArray().length;
+        recorrido.setCodigo(contador + 1);
+        recorrido.setEstado("R");
         recorridosRepository.save(recorrido);
     }
 
     @Override
     public void update(Long id, DTOUpdateRecorridos updateRecorrido) throws Exception {
         Recorridos recorridoFound = findById(id);
-        usuariosService.findById(updateRecorrido.getId_usuario());
+        usuariosService.findById(updateRecorrido.getIdUsuario());
         recorridoFound.setKilometros(updateRecorrido.getKilometros());
         recorridoFound.setRitmo_cardiaco(updateRecorrido.getRitmo_cardiaco());
         recorridoFound.setKcal(updateRecorrido.getKcal());
         recorridoFound.setPeso(updateRecorrido.getPeso());
         recorridoFound.setTiempo(updateRecorrido.getTiempo());
+        //recorridoFound.setFecha_actualizacion(LocalDateTime.now());
+        recorridoFound.setFecha_actualizacion(updateRecorrido.getFecha_actualizacion());
         recorridosRepository.save(recorridoFound);
     }
 
@@ -66,6 +72,7 @@ public class RecorridosServiceImpl implements IRecorridosService {
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Recorridos recorridoFound = findById(id);
         recorridoFound.setEstado(update.getEstado());
+        // TODO: SEGÚN EL ESTADO, REALIZAR EL CÁLCULO DE LOS DEMÁS CAMPOS (KCAL, TIEMPO, ETC)
         recorridosRepository.save(recorridoFound);
     }
 

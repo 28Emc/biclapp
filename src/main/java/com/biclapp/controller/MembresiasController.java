@@ -4,13 +4,17 @@ import com.biclapp.model.entity.Membresias;
 import com.biclapp.service.IMembresiasService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -48,8 +52,18 @@ public class MembresiasController {
     }
 
     @PostMapping("/membresias")
-    public ResponseEntity<?> createMembresia(@RequestBody Membresias membresia) {
+    public ResponseEntity<?> createMembresia(@Valid @RequestBody Membresias membresia, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             membresiasService.save(membresia);
             response.put("message", "¡Membresia registrada!");
@@ -62,8 +76,18 @@ public class MembresiasController {
     }
 
     @PutMapping("/membresias/{id}")
-    public ResponseEntity<?> editMembresia(@PathVariable Long id, @RequestBody Membresias membresia) {
+    public ResponseEntity<?> editMembresia(@PathVariable Long id, @Valid @RequestBody Membresias membresia, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             membresiasService.update(id, membresia);
             response.put("message", "¡Membresia actualizada!");
@@ -81,7 +105,7 @@ public class MembresiasController {
         try {
             membresiasService.delete(id);
             response.put("message", "¡Membresia eliminada!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

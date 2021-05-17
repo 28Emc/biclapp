@@ -30,6 +30,8 @@ public class TiposPagoServiceImpl implements ITiposPagoService {
 
     @Override
     public void save(TiposPago tipoPago) throws Exception {
+        int contador = findAll().toArray().length;
+        tipoPago.setCodigo(contador + 1);
         tiposPagoRepository.save(tipoPago);
     }
 

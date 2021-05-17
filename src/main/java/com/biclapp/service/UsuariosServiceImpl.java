@@ -1,6 +1,7 @@
 package com.biclapp.service;
 
 import com.biclapp.model.DTO.DTOCreateUsuarios;
+import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Empleados;
 import com.biclapp.model.entity.Membresias;
 import com.biclapp.model.entity.Roles;
@@ -42,10 +43,13 @@ public class UsuariosServiceImpl implements IUsuariosService {
         // TODO: TOKEN/CELULAR/EMAIL.
         Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
         Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
-        Usuarios usuariosNew = new Usuarios(rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
+        int contador = findAll().toArray().length;
+        Usuarios
+                usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
                 createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
                 createUsuarios.getDireccion(), createUsuarios.getUsername(), createUsuarios.getPassword(),
-                createUsuarios.getEstado(), createUsuarios.getFoto(), true);
+                "A", createUsuarios.getFoto(), true);
+        // TODO: SE DEBERÍA CREAR UN MONEDERO AL CREAR EL USUARIO, O SE CREA A PARTE ?
         repository.save(usuariosNew);
     }
 
@@ -54,16 +58,24 @@ public class UsuariosServiceImpl implements IUsuariosService {
         Usuarios usuarioFound = findById(id);
         Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
         usuarioFound.setId_membresia(membresiaFound.getId());
-        usuarioFound.setNombres(usuarioFound.getNombres());
-        usuarioFound.setApellidos(usuarioFound.getApellidos());
-        usuarioFound.setNro_documento(usuarioFound.getNro_documento());
-        usuarioFound.setCelular(usuarioFound.getCelular());
-        usuarioFound.setDireccion(usuarioFound.getDireccion());
-        usuarioFound.setUsername(usuarioFound.getUsername());
-        usuarioFound.setPassword(usuarioFound.getPassword());
-        usuarioFound.setEstado(usuarioFound.getEstado());
-        usuarioFound.setFoto(usuarioFound.getFoto());
-        usuarioFound.setActivo(usuarioFound.isActivo());
+        usuarioFound.setNombres(createUsuarios.getNombres());
+        usuarioFound.setApellidos(createUsuarios.getApellidos());
+        usuarioFound.setNro_documento(createUsuarios.getNro_documento());
+        usuarioFound.setCelular(createUsuarios.getCelular());
+        usuarioFound.setDireccion(createUsuarios.getDireccion());
+        usuarioFound.setUsername(createUsuarios.getUsername());
+        usuarioFound.setPassword(createUsuarios.getPassword());
+        usuarioFound.setEstado(createUsuarios.getEstado());
+        usuarioFound.setFoto(createUsuarios.getFoto());
+        usuarioFound.setActivo(true);
+        repository.save(usuarioFound);
+    }
+
+    @Override
+    public void updateEstado(Long id, DTOUpdate update) throws Exception {
+        Usuarios usuarioFound = findById(id);
+        usuarioFound.setActivo(update.getEstado().equals("A"));
+        usuarioFound.setEstado(update.getEstado());
         repository.save(usuarioFound);
     }
 

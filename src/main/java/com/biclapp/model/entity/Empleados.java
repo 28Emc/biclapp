@@ -14,12 +14,13 @@ public class Empleados {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Código requerido")
+    private Integer codigo;
+
     @NotNull(message = "Rol requerido")
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private Roles rol;
-
-    private Long id_membresia;
 
     @NotEmpty(message = "Nombres requeridos")
     @Size(min = 1, max = 100, message = "Los nombres deben tener entre 1 y 100 caracteres")
@@ -49,6 +50,7 @@ public class Empleados {
     @Size(min = 1, max = 255, message = "La contraseña debe tener entre 1 y 255 caracteres")
     private String password;
 
+    @NotNull(message = "Estado requerido")
     private String estado;
 
     @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
@@ -59,10 +61,10 @@ public class Empleados {
     public Empleados() {
     }
 
-    public Empleados(Long id, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Empleados(Long id, Integer codigo, Roles rol, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
         this.id = id;
+        this.codigo = codigo;
         this.rol = rol;
-        this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -75,9 +77,9 @@ public class Empleados {
         this.isActivo = isActivo;
     }
 
-    public Empleados(Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Empleados(Integer codigo, Roles rol, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+        this.codigo = codigo;
         this.rol = rol;
-        this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -98,6 +100,14 @@ public class Empleados {
         this.id = id;
     }
 
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
     @JsonManagedReference
     public Roles getRol() {
         return rol;
@@ -105,14 +115,6 @@ public class Empleados {
 
     public void setRol(Roles rol) {
         this.rol = rol;
-    }
-
-    public Long getId_membresia() {
-        return id_membresia;
-    }
-
-    public void setId_membresia(Long id_membresia) {
-        this.id_membresia = id_membresia;
     }
 
     public String getNombres() {

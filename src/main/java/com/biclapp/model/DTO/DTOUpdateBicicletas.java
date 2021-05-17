@@ -1,11 +1,11 @@
 package com.biclapp.model.DTO;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class DTOUpdateBicicletas {
+
+    @Positive(message = "El valor del stock debe ser mayor a 0")
+    private Integer codigo;
 
     @NotNull(message = "Local requerido")
     private Long id_local;
@@ -18,6 +18,7 @@ public class DTOUpdateBicicletas {
     @Size(min = 1, max = 50, message = "El modelo debe tener entre 1 y 50 caracteres")
     private String modelo;
 
+    @NotNull(message = "Stock requerido")
     @PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
     private Integer stock;
 
@@ -30,10 +31,14 @@ public class DTOUpdateBicicletas {
     @Size(max = 45, message = "El color debe tener como máximo 45 caracteres")
     private String color;
 
+    @NotNull(message = "Estado requerido")
+    private String estado;
+
     public DTOUpdateBicicletas() {
     }
 
-    public DTOUpdateBicicletas(Long id_local, String marca, String modelo, Integer stock, String descripcion, String foto, String color) {
+    public DTOUpdateBicicletas(Integer codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String foto, String color, String estado) {
+        this.codigo = codigo;
         this.id_local = id_local;
         this.marca = marca;
         this.modelo = modelo;
@@ -41,6 +46,15 @@ public class DTOUpdateBicicletas {
         this.descripcion = descripcion;
         this.foto = foto;
         this.color = color;
+        this.estado = estado;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public Long getId_local() {
@@ -97,5 +111,13 @@ public class DTOUpdateBicicletas {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

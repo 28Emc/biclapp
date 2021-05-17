@@ -12,6 +12,8 @@ public class Usuarios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer codigo;
+
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private Roles rol;
@@ -31,8 +33,9 @@ public class Usuarios {
     public Usuarios() {
     }
 
-    public Usuarios(Long id, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Usuarios(Long id, Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
         this.id = id;
+        this.codigo = codigo;
         this.rol = rol;
         this.id_membresia = id_membresia;
         this.nombres = nombres;
@@ -47,7 +50,8 @@ public class Usuarios {
         this.isActivo = isActivo;
     }
 
-    public Usuarios(Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Usuarios(Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+        this.codigo = codigo;
         this.rol = rol;
         this.id_membresia = id_membresia;
         this.nombres = nombres;
@@ -68,6 +72,14 @@ public class Usuarios {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public Roles getRol() {

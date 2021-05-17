@@ -4,13 +4,17 @@ import com.biclapp.model.entity.Locales;
 import com.biclapp.service.ILocalesService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -62,8 +66,18 @@ public class LocalesController {
     }
 
     @PostMapping("/locales")
-    public ResponseEntity<?> createLocal(@RequestBody Locales local) {
+    public ResponseEntity<?> createLocal(@Valid @RequestBody Locales local, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             localesService.save(local);
             response.put("message", "¡Local registrado!");
@@ -76,8 +90,18 @@ public class LocalesController {
     }
 
     @PutMapping("/locales/{id}")
-    public ResponseEntity<?> editLocal(@PathVariable Long id, @RequestBody Locales local) {
+    public ResponseEntity<?> editLocal(@PathVariable Long id, @Valid @RequestBody Locales local, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
         try {
             localesService.update(id, local);
             response.put("message", "¡Local actualizado!");
@@ -89,18 +113,19 @@ public class LocalesController {
         }
     }
 
+    /*
     @DeleteMapping("/locales/{id}")
     public ResponseEntity<?> deleteLocal(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
         try {
             localesService.delete(id);
             response.put("message", "¡Local eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    */
 }

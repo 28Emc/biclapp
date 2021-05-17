@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,29 +81,34 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         Empleados empleadoFound = empleadosService.findById(createPedidos.getId_empleado());
-        if (createPedidos.getTipo_pedido().equals("A")) {
-            Accesorios accesorioFound = accesoriosService.findById(createPedidos.getId_producto());
-            pedidoNew.setId_producto(accesorioFound.getId());
-        } else if (createPedidos.getTipo_pedido().equals("B")) {
-            Bicicletas bicicletaFound = bicicletasService.findById(createPedidos.getId_producto());
-            pedidoNew.setId_producto(bicicletaFound.getId());
-        }
-        int contador = findAll().toArray().length;
         pedidoNew.setId_usuario(usuarioFound.getId());
-        pedidoNew.setCodigo("P-".concat(String.valueOf(contador)));
+        int contador = findAll().toArray().length;
+        pedidoNew.setCodigo(contador + 1);
         pedidoNew.setId_empleado(empleadoFound.getId());
         pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
         pedidoNew.setDireccion(createPedidos.getDireccion());
-        pedidoNew.setFecha_registro(createPedidos.getFecha_registro());
+        pedidoNew.setFecha_registro(LocalDateTime.now());
+        pedidoNew.setEstado("R");
         repository.save(pedidoNew);
 
         createPedidos.getDetalles_pedido().forEach(p -> {
-            DetallesPedido detallesPedido = new DetallesPedido();
-            detallesPedido.setIdPedido(pedidoNew.getId());
-            detallesPedido.setCantidad(p.getCantidad());
-            detallesPedido.setPrecio(p.getPrecio());
-            detallesPedido.setTotal(p.getTotal());
-            detallesPedidoRepository.save(detallesPedido);
+            try {
+                DetallesPedido detallesPedido = new DetallesPedido();
+                if (createPedidos.getTipo_pedido().equals("A")) {
+                    Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                    detallesPedido.setId_producto(accesorioFound.getId());
+                } else if (createPedidos.getTipo_pedido().equals("B")) {
+                    Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
+                    detallesPedido.setId_producto(bicicletaFound.getId());
+                }
+                detallesPedido.setIdPedido(pedidoNew.getId());
+                detallesPedido.setCantidad(p.getCantidad());
+                detallesPedido.setPrecio(p.getPrecio());
+                detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                detallesPedidoRepository.save(detallesPedido);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         });
     }
 
@@ -116,16 +122,8 @@ public class PedidosServiceImpl implements IPedidosService {
             // REGISTRAR OTRO PEDIDO
             Usuarios usuarioFound = usuariosService.findById(updatePedidos.getId_usuario());
             Empleados empleadoFound = empleadosService.findById(updatePedidos.getId_empleado());
-            if (updatePedidos.getTipo_pedido().equals("A")) {
-                Accesorios accesorioFound = accesoriosService.findById(updatePedidos.getId_producto());
-                pedidoFound.setId_producto(accesorioFound.getId());
-            } else if (updatePedidos.getTipo_pedido().equals("B")) {
-                Bicicletas bicicletaFound = bicicletasService.findById(updatePedidos.getId_producto());
-                pedidoFound.setId_producto(bicicletaFound.getId());
-            }
             int contador = findAll().toArray().length;
             pedidoFound.setId_usuario(usuarioFound.getId());
-            pedidoFound.setCodigo(updatePedidos.getCodigo());
             pedidoFound.setId_empleado(empleadoFound.getId());
             pedidoFound.setTipo_pedido(updatePedidos.getTipo_pedido());
             pedidoFound.setDireccion(updatePedidos.getDireccion());
@@ -137,10 +135,17 @@ public class PedidosServiceImpl implements IPedidosService {
                     DetallesPedido detallesPedidoFound = detallesPedidoRepository.findById(p.getId()).orElseThrow(
                             () -> new Exception("El detalle pedido con el id ".concat(p.getId().toString()).concat(" no existe."))
                     );
+                    if (updatePedidos.getTipo_pedido().equals("A")) {
+                        Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                        p.setId_producto(accesorioFound.getId());
+                    } else if (updatePedidos.getTipo_pedido().equals("B")) {
+                        Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
+                        p.setId_producto(bicicletaFound.getId());
+                    }
                     detallesPedidoFound.setIdPedido(p.getId());
                     detallesPedidoFound.setCantidad(p.getCantidad());
                     detallesPedidoFound.setPrecio(p.getPrecio());
-                    detallesPedidoFound.setTotal(p.getTotal());
+                    detallesPedidoFound.setTotal(p.getCantidad() * p.getPrecio());
                     detallesPedidoRepository.save(detallesPedidoFound);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -162,6 +167,8 @@ public class PedidosServiceImpl implements IPedidosService {
     @Override
     public void delete(Long id) throws Exception {
         findById(id);
+        List<DetallesPedido> detallesPedidos = detallesPedidoRepository.findByIdPedido(id);
+        detallesPedidos.forEach(p -> detallesPedidoRepository.deleteById(p.getId()));
         repository.deleteById(id);
     }
 }

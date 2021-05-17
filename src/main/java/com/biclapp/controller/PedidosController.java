@@ -165,7 +165,7 @@ public class PedidosController {
     }
 
     @PutMapping("/pedidos/estado/{id}")
-    public ResponseEntity<?> changeEstadoPedido(@PathVariable Long id, @RequestBody DTOUpdate update, BindingResult result) {
+    public ResponseEntity<?> changeEstadoPedido(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -194,7 +194,7 @@ public class PedidosController {
         try {
             pedidosService.delete(id);
             response.put("message", "¡Pedido eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

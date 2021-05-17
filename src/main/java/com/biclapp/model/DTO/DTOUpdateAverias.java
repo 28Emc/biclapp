@@ -2,6 +2,7 @@ package com.biclapp.model.DTO;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -9,6 +10,9 @@ public class DTOUpdateAverias {
 
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
+
+    @Positive(message = "El código debe ser mayor a 0")
+    private Integer codigo;
 
     @NotEmpty(message = "Dirección requerida")
     @Size(min = 1, max = 150, message = "La dirección debe tener entre 1 y 150 caracteres")
@@ -18,7 +22,7 @@ public class DTOUpdateAverias {
     @Size(min = 1, max = 255, message = "El motivo debe tener entre 1 y 255 caracteres")
     private String motivo;
 
-    @NotEmpty(message = "Fecha registro requerida")
+    @NotNull(message = "Fecha registro requerida")
     private Date fecha_registro;
 
     private String estado;
@@ -26,8 +30,9 @@ public class DTOUpdateAverias {
     public DTOUpdateAverias() {
     }
 
-    public DTOUpdateAverias(Long id_usuario, String direccion, String motivo, Date fecha_registro, String estado) {
+    public DTOUpdateAverias(Long id_usuario, Integer codigo, String direccion, String motivo, Date fecha_registro, String estado) {
         this.id_usuario = id_usuario;
+        this.codigo = codigo;
         this.direccion = direccion;
         this.motivo = motivo;
         this.fecha_registro = fecha_registro;
@@ -40,6 +45,14 @@ public class DTOUpdateAverias {
 
     public void setId_usuario(Long id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public String getDireccion() {

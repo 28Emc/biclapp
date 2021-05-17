@@ -12,18 +12,22 @@ public class Monederos {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer codigo;
+
     @NotNull(message = "Usuario requerido")
     @Column(name = "id_usuario")
     private Long idUsuario;
 
+    @NotNull(message = "Puntos requeridos")
     @PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
     private Integer puntos;
 
     public Monederos() {
     }
 
-    public Monederos(Long id, Long idUsuario, Integer puntos) {
+    public Monederos(Long id, Integer codigo, Long idUsuario, Integer puntos) {
         this.id = id;
+        this.codigo = codigo;
         this.idUsuario = idUsuario;
         this.puntos = puntos;
     }
@@ -36,7 +40,15 @@ public class Monederos {
         this.id = id;
     }
 
-    public Long getId_usuario() {
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
+    public Long getIdUsuario() {
         return idUsuario;
     }
 

@@ -33,7 +33,7 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
     @Override
     public void save(Accesorios accesorio) throws Exception {
         int contador = findAll().toArray().length;
-        accesorio.setCodigo("A-".concat(String.valueOf(contador + 1)));
+        accesorio.setCodigo(contador + 1);
         repository.save(accesorio);
     }
 

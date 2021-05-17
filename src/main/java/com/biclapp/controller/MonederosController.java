@@ -55,6 +55,20 @@ public class MonederosController {
         }
     }
 
+    @GetMapping("/monedero-user/{id_usuario}")
+    public ResponseEntity<?> getMonederoUser(@PathVariable Long id_usuario) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            Monederos monedero = monederosService.findByUser(id_usuario);
+            response.put("monedero", monedero);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/monederos")
     public ResponseEntity<?> createMonedero(@Valid @RequestBody Monederos monedero, BindingResult result) {
         Map<String, Object> response = new HashMap<>();

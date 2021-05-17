@@ -34,6 +34,10 @@ public class BicicletasServiceImpl implements IBicicletasService {
 
     @Override
     public void save(Bicicletas bicicleta) throws Exception {
+        localesService.findById(bicicleta.getId_local());
+        int contador = findAll().toArray().length;
+        bicicleta.setCodigo(contador + 1);
+        bicicleta.setEstado("D");
         bicicletasRepository.save(bicicleta);
     }
 
@@ -42,12 +46,14 @@ public class BicicletasServiceImpl implements IBicicletasService {
         Bicicletas bicicletaFound = findById(id);
         Locales localFound = localesService.findById(updateBicicleta.getId_local());
         bicicletaFound.setId_local(localFound.getId());
+        bicicletaFound.setCodigo(updateBicicleta.getCodigo());
         bicicletaFound.setMarca(updateBicicleta.getMarca());
         bicicletaFound.setModelo(updateBicicleta.getModelo());
         bicicletaFound.setStock(updateBicicleta.getStock());
         bicicletaFound.setDescripcion(updateBicicleta.getDescripcion());
         bicicletaFound.setFoto(updateBicicleta.getFoto());
         bicicletaFound.setColor(updateBicicleta.getColor());
+        bicicletaFound.setEstado(updateBicicleta.getEstado());
         bicicletasRepository.save(bicicletaFound);
     }
 

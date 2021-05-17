@@ -7,7 +7,9 @@ import javax.validation.constraints.PositiveOrZero;
 
 public class DTOUpdateDetallesPedido {
 
-    @NotNull(message = "Pedido requerido")
+    @NotNull(message = "Producto requerido")
+    private Long id_producto;
+
     private Long id_pedido;
 
     @Positive(message = "El valor del stock debe ser mayor o igual a 1")
@@ -24,11 +26,20 @@ public class DTOUpdateDetallesPedido {
     public DTOUpdateDetallesPedido() {
     }
 
-    public DTOUpdateDetallesPedido(Long id_pedido, Integer cantidad, Double precio, Double total) {
+    public DTOUpdateDetallesPedido(Long id_producto, Long id_pedido, Integer cantidad, Double precio, Double total) {
+        this.id_producto = id_producto;
         this.id_pedido = id_pedido;
         this.cantidad = cantidad;
         this.precio = precio;
         this.total = total;
+    }
+
+    public Long getId_producto() {
+        return id_producto;
+    }
+
+    public void setId_producto(Long id_producto) {
+        this.id_producto = id_producto;
     }
 
     public Long getId_pedido() {

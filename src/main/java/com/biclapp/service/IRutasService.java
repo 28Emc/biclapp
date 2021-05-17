@@ -1,5 +1,6 @@
 package com.biclapp.service;
 
+import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateRutas;
 import com.biclapp.model.entity.Rutas;
 
@@ -16,6 +17,8 @@ public interface IRutasService {
     void save(Rutas ruta) throws Exception;
 
     void update(Long id, DTOUpdateRutas updateRuta) throws Exception;
+
+    void updateEstado(Long id, DTOUpdate update) throws Exception;
 
     void delete(Long id) throws Exception;
 

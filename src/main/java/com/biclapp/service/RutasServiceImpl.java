@@ -1,5 +1,6 @@
 package com.biclapp.service;
 
+import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateRutas;
 import com.biclapp.model.entity.Rutas;
 import com.biclapp.repository.IRutasRepository;
@@ -38,19 +39,29 @@ public class RutasServiceImpl implements IRutasService {
 
     @Override
     public void save(Rutas ruta) throws Exception {
+        int contador = findAll().toArray().length;
+        ruta.setCodigo(contador + 1);
+        ruta.setEstado("P");
         repository.save(ruta);
     }
 
     @Override
     public void update(Long id, DTOUpdateRutas updateRuta) throws Exception {
         Rutas rutafound = findById(id);
-        usuariosService.findById(updateRuta.getId_usuario());
+        usuariosService.findById(updateRuta.getIdUsuario());
         rutafound.setNombre(updateRuta.getNombre());
         rutafound.setRuta(updateRuta.getRuta());
         rutafound.setTipo_ruta(updateRuta.getTipo_ruta());
         rutafound.setDatos_origen(updateRuta.getDatos_origen());
         rutafound.setDatos_destino(updateRuta.getDatos_destino());
         repository.save(rutafound);
+    }
+
+    @Override
+    public void updateEstado(Long id, DTOUpdate update) throws Exception {
+        Rutas rutaFound = findById(id);
+        rutaFound.setEstado((update.getEstado()));
+        repository.save(rutaFound);
     }
 
     @Override

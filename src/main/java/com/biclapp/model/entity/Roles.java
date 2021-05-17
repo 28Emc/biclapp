@@ -16,6 +16,8 @@ public class Roles {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer codigo;
+
     @NotEmpty(message = "Nombre de rol requerido")
     @Size(min = 1, max = 50, message = "El nombre del rol debe tener entre 1 y 50 caracteres")
     private String rol;
@@ -26,8 +28,9 @@ public class Roles {
     public Roles() {
     }
 
-    public Roles(Long id, String rol) {
+    public Roles(Long id, Integer codigo, String rol) {
         this.id = id;
+        this.codigo = codigo;
         this.rol = rol;
     }
 
@@ -37,6 +40,14 @@ public class Roles {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public String getRol() {

@@ -89,10 +89,7 @@ public class RolesController {
         }
 
         try {
-            Roles rolFound = rolesService.findById(id);
-            rolFound.setId(rol.getId());
-            rolFound.setRol(rol.getRol());
-            rolesService.save(rolFound);
+            rolesService.update(id, rol);
             response.put("message", "¡Rol actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -108,7 +105,7 @@ public class RolesController {
         try {
             rolesService.delete(id);
             response.put("message", "¡Rol eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

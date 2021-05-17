@@ -7,7 +7,7 @@ import javax.validation.constraints.Size;
 public class DTOUpdateRutas {
 
     @NotNull(message = "Usuario requerido")
-    private Long id_usuario;
+    private Long idUsuario;
 
     @NotEmpty(message = "Nombre requerido")
     @Size(min = 1, max = 255, message = "El nombre debe tener entre 1 y 255 caracteres")
@@ -29,8 +29,8 @@ public class DTOUpdateRutas {
     public DTOUpdateRutas() {
     }
 
-    public DTOUpdateRutas(Long id_usuario, String nombre, String ruta, String tipo_ruta, String datos_origen, String datos_destino) {
-        this.id_usuario = id_usuario;
+    public DTOUpdateRutas(Long idUsuario, String nombre, String ruta, String tipo_ruta, String datos_origen, String datos_destino) {
+        this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.ruta = ruta;
         this.tipo_ruta = tipo_ruta;
@@ -38,12 +38,12 @@ public class DTOUpdateRutas {
         this.datos_destino = datos_destino;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getNombre() {

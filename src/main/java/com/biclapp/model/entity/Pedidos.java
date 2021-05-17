@@ -1,6 +1,7 @@
 package com.biclapp.model.entity;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -14,9 +15,7 @@ public class Pedidos {
 
     private Long id_empleado;
 
-    private Long id_producto;
-
-    private String codigo;
+    private Integer codigo;
 
     private String estado;
 
@@ -24,16 +23,15 @@ public class Pedidos {
 
     private String direccion;
 
-    private Date fecha_registro;
+    private LocalDateTime fecha_registro;
 
     public Pedidos() {
     }
 
-    public Pedidos(Long id, Long id_usuario, Long id_empleado, Long id_producto, String codigo, String estado, String tipo_pedido, String direccion, Date fecha_registro) {
+    public Pedidos(Long id, Long id_usuario, Long id_empleado, Integer codigo, String estado, String tipo_pedido, String direccion, LocalDateTime fecha_registro) {
         this.id = id;
         this.id_usuario = id_usuario;
         this.id_empleado = id_empleado;
-        this.id_producto = id_producto;
         this.codigo = codigo;
         this.estado = estado;
         this.tipo_pedido = tipo_pedido;
@@ -65,19 +63,11 @@ public class Pedidos {
         this.id_empleado = id_empleado;
     }
 
-    public Long getId_producto() {
-        return id_producto;
-    }
-
-    public void setId_producto(Long id_producto) {
-        this.id_producto = id_producto;
-    }
-
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 
@@ -105,11 +95,11 @@ public class Pedidos {
         this.direccion = direccion;
     }
 
-    public Date getFecha_registro() {
+    public LocalDateTime getFecha_registro() {
         return fecha_registro;
     }
 
-    public void setFecha_registro(Date fecha_registro) {
+    public void setFecha_registro(LocalDateTime fecha_registro) {
         this.fecha_registro = fecha_registro;
     }
 }

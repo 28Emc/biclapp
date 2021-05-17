@@ -2,6 +2,7 @@ package com.biclapp.model.entity;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -10,6 +11,9 @@ public class Empresas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @NotNull(message = "Código requerido")
+    private Integer codigo;
 
     @NotEmpty(message = "RUC requerido")
     @Size(min = 11, max = 11, message = "El RUC debe tener 11 caracteres")
@@ -29,8 +33,9 @@ public class Empresas {
     public Empresas() {
     }
 
-    public Empresas(Long id, String ruc, String razon_social, String direccion, String telefono) {
+    public Empresas(Long id, Integer codigo, String ruc, String razon_social, String direccion, String telefono) {
         this.id = id;
+        this.codigo = codigo;
         this.ruc = ruc;
         this.razon_social = razon_social;
         this.direccion = direccion;
@@ -43,6 +48,14 @@ public class Empresas {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public String getRuc() {

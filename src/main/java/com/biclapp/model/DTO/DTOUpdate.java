@@ -1,11 +1,14 @@
 package com.biclapp.model.DTO;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 public class DTOUpdate {
 
     @NotNull(message = "Id requerido")
     private Long id;
+
+    @NotEmpty(message = "Estado requerido")
     private String estado;
 
     public DTOUpdate() {

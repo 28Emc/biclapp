@@ -55,11 +55,11 @@ public class RecorridosController {
         }
     }
 
-    @GetMapping("/recorridos-user/{id}")
-    public ResponseEntity<?> getAllRecorridosByUser(@PathVariable Long id) {
+    @GetMapping("/recorridos-user/{id_usuario}")
+    public ResponseEntity<?> getAllRecorridosByUser(@PathVariable Long id_usuario) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Recorridos> recorridos = recorridosService.findByUser(id);
+            List<Recorridos> recorridos = recorridosService.findByUser(id_usuario);
             response.put("recorridos", recorridos);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

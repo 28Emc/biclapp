@@ -42,13 +42,16 @@ public class FavoritosServiceImpl implements IFavoritosService {
 
     @Override
     public void save(Favoritos favorito) throws Exception {
+        int contador = findAll().toArray().length;
+        favorito.setCodigo(contador + 1);
         favoritosRepository.save(favorito);
     }
 
     @Override
     public void update(Long id, DTOUpdateFavoritos updateFavorito) throws Exception {
         Favoritos favoritoFound = findById(id);
-        Usuarios usuarioFound = usuariosService.findById(updateFavorito.getId_usuario());
+        Usuarios usuarioFound = usuariosService.findById(updateFavorito.getIdUsuario());
+        favoritoFound.setCodigo(updateFavorito.getCodigo());
         favoritoFound.setIdUsuario(usuarioFound.getId());
         favoritoFound.setTipo_destino(updateFavorito.getTipo_destino());
         favoritoFound.setNombre_coordenadas(updateFavorito.getNombre_coordenadas());

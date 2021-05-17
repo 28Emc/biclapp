@@ -72,7 +72,6 @@ public class BicicletasController {
         }
 
         try {
-            localesService.findById(bicicleta.getId_local());
             bicicletasService.save(bicicleta);
             response.put("message", "¡Bicicleta registrada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);

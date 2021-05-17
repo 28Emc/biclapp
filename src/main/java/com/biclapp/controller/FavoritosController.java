@@ -41,11 +41,11 @@ public class FavoritosController {
         }
     }
 
-    @GetMapping("/favoritos-user/{id}")
-    public ResponseEntity<?> getFavoritoByUser(@PathVariable Long id) {
+    @GetMapping("/favoritos-user/{id_usuario}")
+    public ResponseEntity<?> getFavoritoByUser(@PathVariable Long id_usuario) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<Favoritos> favoritos = favoritosService.findByUser(id);
+            List<Favoritos> favoritos = favoritosService.findByUser(id_usuario);
             response.put("favoritos-user", favoritos);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

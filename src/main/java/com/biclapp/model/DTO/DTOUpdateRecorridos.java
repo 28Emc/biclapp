@@ -1,12 +1,13 @@
 package com.biclapp.model.DTO;
 
 import javax.validation.constraints.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class DTOUpdateRecorridos {
 
     @NotNull(message = "Usuario requerido")
-    private Long id_usuario;
+    private Long idUsuario;
 
     @PositiveOrZero(message = "El valor de los kilómetros debe ser mayor o igual a 0")
     private Integer kilometros;
@@ -25,27 +26,31 @@ public class DTOUpdateRecorridos {
     @Size(max = 20, message = "El tiempo debe tener entre 1 y 20 caracteres")
     private String tiempo;
 
-    private String etsado;
+    private String estado;
+
+    @FutureOrPresent(message = "La fecha de actualización debe ser mayor o igual a la fecha actual")
+    private LocalDateTime fecha_actualizacion;
 
     public DTOUpdateRecorridos() {
     }
 
-    public DTOUpdateRecorridos(Long id_usuario, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado) {
-        this.id_usuario = id_usuario;
+    public DTOUpdateRecorridos(Long idUsuario, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado, LocalDateTime fecha_actualizacion) {
+        this.idUsuario = idUsuario;
         this.kilometros = kilometros;
         this.ritmo_cardiaco = ritmo_cardiaco;
         this.kcal = kcal;
         this.peso = peso;
         this.tiempo = tiempo;
-        this.etsado = estado;
+        this.estado = estado;
+        this.fecha_actualizacion = fecha_actualizacion;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Integer getKilometros() {
@@ -88,11 +93,19 @@ public class DTOUpdateRecorridos {
         this.tiempo = tiempo;
     }
 
-    public String getEtsado() {
-        return etsado;
+    public String getEstado() {
+        return estado;
     }
 
-    public void setEtsado(String etsado) {
-        this.etsado = etsado;
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public LocalDateTime getFecha_actualizacion() {
+        return fecha_actualizacion;
+    }
+
+    public void setFecha_actualizacion(LocalDateTime fecha_actualizacion) {
+        this.fecha_actualizacion = fecha_actualizacion;
     }
 }

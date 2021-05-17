@@ -14,5 +14,7 @@ public interface IRolesService {
 
     void save(Roles rol) throws Exception;
 
+    void update(Long id, Roles rol) throws Exception;
+
     void delete(Long id) throws Exception;
 }

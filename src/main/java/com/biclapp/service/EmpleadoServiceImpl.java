@@ -34,7 +34,8 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
     @Override
     public void save(DTOCreateEmpleados createEmpleados) throws Exception {
         Roles rolFound = rolesService.findByRol("ROLE_EMPLEADO");
-        Empleados empleadosNew = new Empleados(rolFound, null, createEmpleados.getNombres(),
+        int contador = findAll().toArray().length;
+        Empleados empleadosNew = new Empleados(contador + 1, rolFound, createEmpleados.getNombres(),
                 createEmpleados.getApellidos(), createEmpleados.getNro_documento(), createEmpleados.getCelular(),
                 createEmpleados.getDireccion(), createEmpleados.getUsername(), createEmpleados.getPassword(),
                 createEmpleados.getEstado(), createEmpleados.getFoto(), true);
@@ -44,6 +45,7 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
     @Override
     public void update(Long id, DTOCreateEmpleados createEmpleados) throws Exception {
         Empleados empleadoFound = findById(id);
+        empleadoFound.setCodigo(createEmpleados.getCodigo());
         empleadoFound.setNombres(createEmpleados.getNombres());
         empleadoFound.setApellidos(createEmpleados.getApellidos());
         empleadoFound.setNro_documento(createEmpleados.getNro_documento());
@@ -53,7 +55,7 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
         empleadoFound.setPassword(createEmpleados.getPassword());
         empleadoFound.setEstado(createEmpleados.getEstado());
         empleadoFound.setFoto(createEmpleados.getFoto());
-        empleadoFound.setActivo(createEmpleados.isActivo());
+        empleadoFound.setActivo(true);
         empleadosRepository.save(empleadoFound);
     }
 

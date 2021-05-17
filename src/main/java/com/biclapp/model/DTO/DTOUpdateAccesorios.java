@@ -1,14 +1,11 @@
 package com.biclapp.model.DTO;
 
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 public class DTOUpdateAccesorios {
 
-    @Size(min = 3, max = 10, message = "El código debe tener entre 3 y 10 caracteres")
-    private String codigo;
+    @Positive(message = "El código debe mayor o igual a 0")
+    private Integer codigo;
 
     @NotEmpty(message = "Nombre de accesorio requerido")
     @Size(min = 1, max = 100, message = "El nombre debe tener entre 1 y 100 caracteres")
@@ -37,7 +34,7 @@ public class DTOUpdateAccesorios {
     public DTOUpdateAccesorios() {
     }
 
-    public DTOUpdateAccesorios(String codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+    public DTOUpdateAccesorios(Integer codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.descripcion = descripcion;
@@ -48,11 +45,11 @@ public class DTOUpdateAccesorios {
         this.estado = estado;
     }
 
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 

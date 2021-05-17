@@ -13,6 +13,9 @@ public class DetallesPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull(message = "Producto requerido")
+    private Long id_producto;
+
     @NotNull(message = "Pedido requerido")
     @Column(name = "id_pedido")
     private Long idPedido;
@@ -31,8 +34,9 @@ public class DetallesPedido {
     public DetallesPedido() {
     }
 
-    public DetallesPedido(Long id, Long idPedido, Integer cantidad, Double precio, Double total) {
+    public DetallesPedido(Long id, Long id_producto, Long idPedido, Integer cantidad, Double precio, Double total) {
         this.id = id;
+        this.id_producto = id_producto;
         this.idPedido = idPedido;
         this.cantidad = cantidad;
         this.precio = precio;
@@ -45,6 +49,14 @@ public class DetallesPedido {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getId_producto() {
+        return id_producto;
+    }
+
+    public void setId_producto(Long id_producto) {
+        this.id_producto = id_producto;
     }
 
     public Long getIdPedido() {

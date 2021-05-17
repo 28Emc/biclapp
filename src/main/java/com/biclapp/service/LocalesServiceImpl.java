@@ -39,6 +39,8 @@ public class LocalesServiceImpl implements ILocalesService {
 
     @Override
     public void save(Locales local) throws Exception {
+        int contador = findAll().toArray().length;
+        local.setCodigo(contador + 1);
         repository.save(local);
     }
 

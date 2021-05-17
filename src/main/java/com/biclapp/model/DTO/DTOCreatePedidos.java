@@ -13,19 +13,8 @@ public class DTOCreatePedidos {
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
 
-    @NotEmpty(message = "DNI del usuario requerido")
-    @Size(min = 8, max = 8, message = "El DNI del usuario debe tener 8 caracteres")
-    private String nro_documento_usuario;
-
-    @NotNull(message = "Producto requerido")
-    private Long id_producto;
-
     @NotNull(message = "Empleado requerido")
     private Long id_empleado;
-
-    @NotEmpty(message = "Código requerido")
-    @Size(min = 1, max = 10, message = "El código debe tener entre 1 y 10 caracteres")
-    private String codigo;
 
     private String estado;
 
@@ -61,36 +50,12 @@ public class DTOCreatePedidos {
         this.id_usuario = id_usuario;
     }
 
-    public String getNro_documento_usuario() {
-        return nro_documento_usuario;
-    }
-
-    public void setNro_documento_usuario(String nro_documento_usuario) {
-        this.nro_documento_usuario = nro_documento_usuario;
-    }
-
-    public Long getId_producto() {
-        return id_producto;
-    }
-
-    public void setId_producto(Long id_producto) {
-        this.id_producto = id_producto;
-    }
-
     public Long getId_empleado() {
         return id_empleado;
     }
 
     public void setId_empleado(Long id_empleado) {
         this.id_empleado = id_empleado;
-    }
-
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
     }
 
     public String getEstado() {

@@ -37,6 +37,9 @@ public class AveriasServiceImpl implements IAveriasService {
     @Override
     public void save(Averias averia) throws Exception {
         usuariosService.findById(averia.getId_usuario());
+        int contador = findAll().toArray().length;
+        averia.setCodigo(contador + 1);
+        averia.setEstado("P");
         averiasRepository.save(averia);
     }
 
@@ -45,6 +48,7 @@ public class AveriasServiceImpl implements IAveriasService {
         Averias averiaFound = findById(id);
         Usuarios usuarioFound = usuariosService.findById(averiaFound.getId_usuario());
         averiaFound.setId_usuario(usuarioFound.getId());
+        averiaFound.setCodigo(updateAveria.getCodigo());
         averiaFound.setDireccion(updateAveria.getDireccion());
         averiaFound.setMotivo(updateAveria.getMotivo());
         averiaFound.setFecha_registro(updateAveria.getFecha_registro()); // POR AHORA, ACEPTO LA FECHA DEL CLIENTE

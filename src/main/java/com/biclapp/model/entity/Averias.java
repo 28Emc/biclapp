@@ -3,6 +3,7 @@ package com.biclapp.model.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
@@ -12,6 +13,9 @@ public class Averias {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Positive(message = "El código debe ser mayor a 0")
+    private Integer codigo;
 
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
@@ -24,7 +28,7 @@ public class Averias {
     @Size(min = 1, max = 255, message = "El motivo debe tener entre 1 y 255 caracteres")
     private String motivo;
 
-    @NotEmpty(message = "Fecha registro requerida")
+    @NotNull(message = "Fecha registro requerida")
     private Date fecha_registro;
 
     private String estado;
@@ -32,8 +36,9 @@ public class Averias {
     public Averias() {
     }
 
-    public Averias(Long id, Long id_usuario, String direccion, String motivo, Date fecha_registro, String estado) {
+    public Averias(Long id, Integer codigo, Long id_usuario, String direccion, String motivo, Date fecha_registro, String estado) {
         this.id = id;
+        this.codigo = codigo;
         this.id_usuario = id_usuario;
         this.direccion = direccion;
         this.motivo = motivo;
@@ -47,6 +52,14 @@ public class Averias {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public Long getId_usuario() {

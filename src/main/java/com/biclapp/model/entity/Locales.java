@@ -12,6 +12,8 @@ public class Locales {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer codigo;
+
     @NotNull(message = "Empresa requerida")
     @Column(name = "id_empresa")
     private Long idEmpresa;
@@ -23,8 +25,9 @@ public class Locales {
     public Locales() {
     }
 
-    public Locales(Long id, Long idEmpresa, String direccion) {
+    public Locales(Long id, Integer codigo, Long idEmpresa, String direccion) {
         this.id = id;
+        this.codigo = codigo;
         this.idEmpresa = idEmpresa;
         this.direccion = direccion;
     }
@@ -35,6 +38,14 @@ public class Locales {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public Long getIdEmpresa() {

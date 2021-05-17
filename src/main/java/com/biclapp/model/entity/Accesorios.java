@@ -1,10 +1,7 @@
 package com.biclapp.model.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "accesorios")
@@ -13,8 +10,8 @@ public class Accesorios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Size(min = 3, max = 10, message = "El código debe tener entre 3 y 10 caracteres")
-    private String codigo;
+    @Positive(message = "El código debe ser mayor a 0")
+    private Integer codigo;
 
     @NotEmpty(message = "Nombre de accesorio requerido")
     @Size(min = 1, max = 100, message = "El nombre debe tener entre 1 y 100 caracteres")
@@ -43,7 +40,7 @@ public class Accesorios {
     public Accesorios() {
     }
 
-    public Accesorios(Long id, String codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+    public Accesorios(Long id, Integer codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -63,11 +60,11 @@ public class Accesorios {
         this.id = id;
     }
 
-    public String getCodigo() {
+    public Integer getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(String codigo) {
+    public void setCodigo(Integer codigo) {
         this.codigo = codigo;
     }
 

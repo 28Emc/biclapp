@@ -12,6 +12,8 @@ public class Rutas {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Integer codigo;
+
     @NotNull(message = "Usuario requerido")
     @Column(name = "id_usuario")
     private Long idUsuario;
@@ -38,8 +40,9 @@ public class Rutas {
     public Rutas() {
     }
 
-    public Rutas(Long id, Long idUsuario, String nombre, String ruta, String estado, String tipo_ruta, String datos_origen, String datos_destino) {
+    public Rutas(Long id, Integer codigo, Long idUsuario, String nombre, String ruta, String estado, String tipo_ruta, String datos_origen, String datos_destino) {
         this.id = id;
+        this.codigo = codigo;
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.ruta = ruta;
@@ -57,11 +60,19 @@ public class Rutas {
         this.id = id;
     }
 
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
+    }
+
     public Long getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(Long id_usuario) {
+    public void setIdUsuario(Long idUsuario) {
         this.idUsuario = idUsuario;
     }
 

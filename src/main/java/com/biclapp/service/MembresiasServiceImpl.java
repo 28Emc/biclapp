@@ -28,6 +28,8 @@ public class MembresiasServiceImpl implements IMembresiasService {
 
     @Override
     public void save(Membresias membresia) throws Exception {
+        int contador = findAll().toArray().length;
+        membresia.setCodigo(contador + 1);
         repository.save(membresia);
     }
 

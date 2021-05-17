@@ -1,9 +1,12 @@
 package com.biclapp.model.DTO;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class DTOCreateEmpleados {
+
+    private Integer codigo;
 
     @NotEmpty(message = "Nombres requeridos")
     @Size(min = 1, max = 100, message = "Los nombres deben tener entre 1 y 100 caracteres")
@@ -35,15 +38,14 @@ public class DTOCreateEmpleados {
 
     private String estado;
 
-    private boolean isActivo;
-
     @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
     private String foto;
 
     public DTOCreateEmpleados() {
     }
 
-    public DTOCreateEmpleados(String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, boolean isActivo, String foto) {
+    public DTOCreateEmpleados(Integer codigo, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto) {
+        this.codigo = codigo;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -52,8 +54,15 @@ public class DTOCreateEmpleados {
         this.username = username;
         this.password = password;
         this.estado = estado;
-        this.isActivo = isActivo;
         this.foto = foto;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public String getNombres() {
@@ -118,14 +127,6 @@ public class DTOCreateEmpleados {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public boolean isActivo() {
-        return isActivo;
-    }
-
-    public void setActivo(boolean activo) {
-        isActivo = activo;
     }
 
     public String getFoto() {

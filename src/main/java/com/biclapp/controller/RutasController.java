@@ -62,6 +62,20 @@ public class RutasController {
         }
     }
 
+    @GetMapping("/rutas-user/{id_usuario}")
+    public ResponseEntity<?> getRutasUser(@PathVariable Long id_usuario) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<Rutas> rutas = rutasService.findById_usuario(id_usuario);
+            response.put("rutas", rutas);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/rutas")
     public ResponseEntity<?> createRuta(@Valid @RequestBody Rutas ruta, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
@@ -111,7 +125,7 @@ public class RutasController {
     }
 
     @PutMapping("/rutas/estado/{id}")
-    public ResponseEntity<?> changeEstadoRuta(@PathVariable Long id, @Valid @RequestBody DTOUpdate DTOUpdate, BindingResult result) {
+    public ResponseEntity<?> changeEstadoRuta(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -124,9 +138,7 @@ public class RutasController {
         }
 
         try {
-            Rutas rutaFound = rutasService.findById(id);
-            rutaFound.setEstado((DTOUpdate.getEstado()));
-            rutasService.save(rutaFound);
+            rutasService.updateEstado(id, update);
             response.put("message", "¡Estado de ruta actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -142,7 +154,7 @@ public class RutasController {
         try {
             rutasService.delete(id);
             response.put("message", "¡Ruta eliminada!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

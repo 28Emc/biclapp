@@ -110,7 +110,7 @@ public class EmpleadosController {
         try {
             empleadosService.delete(id);
             response.put("message", "¡Empleado eliminado!");
-            return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

@@ -1,10 +1,7 @@
 package com.biclapp.model.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PositiveOrZero;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "bicicletas")
@@ -12,6 +9,9 @@ public class Bicicletas {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Positive(message = "El valor del stock debe ser mayor a 0")
+    private Integer codigo;
 
     @NotNull(message = "Local requerido")
     private Long id_local;
@@ -24,6 +24,7 @@ public class Bicicletas {
     @Size(min = 1, max = 50, message = "El modelo debe tener entre 1 y 50 caracteres")
     private String modelo;
 
+    @NotNull(message = "Stock requerido")
     @PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
     private Integer stock;
 
@@ -41,8 +42,9 @@ public class Bicicletas {
     public Bicicletas() {
     }
 
-    public Bicicletas(Long id, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, String foto, String color) {
+    public Bicicletas(Long id, Integer codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, String foto, String color) {
         this.id = id;
+        this.codigo = codigo;
         this.id_local = id_local;
         this.marca = marca;
         this.modelo = modelo;
@@ -59,6 +61,14 @@ public class Bicicletas {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Integer codigo) {
+        this.codigo = codigo;
     }
 
     public Long getId_local() {
