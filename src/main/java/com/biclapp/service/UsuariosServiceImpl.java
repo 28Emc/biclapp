@@ -38,6 +38,12 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Usuarios findByUsername(String username) throws Exception {
+        return repository.findByUsername(username).orElseThrow(() -> new Exception("Nombre de usuario y/o contraseña incorrectos."));
+    }
+
+    @Override
     public void save(DTOCreateUsuarios createUsuarios) throws Exception {
         // TODO: POR MIENTRAS SE ESTÁ VALIDANDO EL USUARIO CON ESTADO "ACTIVO", SE DEBERÍA VALIDAR MEDIANTE
         // TODO: TOKEN/CELULAR/EMAIL.

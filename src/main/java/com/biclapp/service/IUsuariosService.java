@@ -12,6 +12,8 @@ public interface IUsuariosService {
 
     Usuarios findById(Long id) throws Exception;
 
+    Usuarios findByUsername(String username) throws Exception;
+
     void save(DTOCreateUsuarios createUsuarios) throws Exception;
 
     void update(Long id, DTOCreateUsuarios createUsuarios) throws Exception;

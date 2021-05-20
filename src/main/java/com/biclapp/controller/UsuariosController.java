@@ -1,10 +1,14 @@
 package com.biclapp.controller;
 
+import com.biclapp.config.security.JwtUtil;
+import com.biclapp.model.DTO.AuthenticationRequest;
+import com.biclapp.model.DTO.AuthenticationResponse;
 import com.biclapp.model.DTO.DTOCreateUsuarios;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Membresias;
 import com.biclapp.model.entity.Roles;
 import com.biclapp.model.entity.Usuarios;
+import com.biclapp.service.CustomUserDetailsService;
 import com.biclapp.service.IMembresiasService;
 import com.biclapp.service.IRolesService;
 import com.biclapp.service.IUsuariosService;
@@ -13,6 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,6 +43,40 @@ public class UsuariosController {
 
     @Autowired
     private IMembresiasService membresiasService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private CustomUserDetailsService userDetailsService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+
+    @PostMapping("/login")
+    public ResponseEntity<?> loginAndCreateAuthToken(@RequestBody AuthenticationRequest authenticationRequest)
+            throws Exception {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                    authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+            final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+            Usuarios usuario = usuariosService.findByUsername(userDetails.getUsername());
+            final String jwt = jwtUtil.generateToken(userDetails);
+            response.put("message", "Bienvenido, " + usuario.getUsername());
+            response.put("authenticationResponse", new AuthenticationResponse(jwt));
+        } catch (BadCredentialsException e) {
+            response.put("message", "¡Nombre de usuario y/o contraseña incorrectos!");
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        } catch (DisabledException e) {
+            response.put("message", "¡Lo sentimos, su cuenta está desactivada!");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
     @GetMapping("/usuarios")
     public ResponseEntity<?> getAllUsuarios() {
