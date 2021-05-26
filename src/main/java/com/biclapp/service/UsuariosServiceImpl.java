@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -24,6 +25,9 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
     @Autowired
     private IMembresiasService membresiasService;
+
+    @Autowired
+    private GoogleCloudStorageService cloudStorageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -44,11 +48,12 @@ public class UsuariosServiceImpl implements IUsuariosService {
         Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
         Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
         int contador = findAll().toArray().length;
+        String rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), createUsuarios.getUsername());
         Usuarios
                 usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
                 createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
                 createUsuarios.getDireccion(), createUsuarios.getUsername(), createUsuarios.getPassword(),
-                "A", createUsuarios.getFoto(), true);
+                "A", rutaFoto, true);
         // TODO: SE DEBERÍA CREAR UN MONEDERO AL CREAR EL USUARIO, O SE CREA A PARTE ?
         repository.save(usuariosNew);
     }
@@ -66,7 +71,8 @@ public class UsuariosServiceImpl implements IUsuariosService {
         usuarioFound.setUsername(createUsuarios.getUsername());
         usuarioFound.setPassword(createUsuarios.getPassword());
         usuarioFound.setEstado(createUsuarios.getEstado());
-        usuarioFound.setFoto(createUsuarios.getFoto());
+        String rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), createUsuarios.getUsername());
+        usuarioFound.setFoto(rutaFoto);
         usuarioFound.setActivo(true);
         repository.save(usuarioFound);
     }
