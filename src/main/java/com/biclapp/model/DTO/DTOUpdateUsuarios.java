@@ -1,12 +1,10 @@
 package com.biclapp.model.DTO;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class DTOCreateUsuarios {
+public class DTOUpdateUsuarios {
 
     @NotNull(message = "Membresía requerida")
     private Long id_membresia;
@@ -35,19 +33,10 @@ public class DTOCreateUsuarios {
     @Size(min = 1, max = 50, message = "El nombre de usuario debe tener entre 1 y 50 caracteres")
     private String username;
 
-    @NotEmpty(message = "Contraseña requerido")
-    @Size(min = 1, max = 255, message = "La contraseña debe tener entre 1 y 255 caracteres")
-    private String password;
-
-    private String estado;
-
-    //@Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
-    private MultipartFile foto;
-
-    public DTOCreateUsuarios() {
+    public DTOUpdateUsuarios() {
     }
 
-    public DTOCreateUsuarios(Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, MultipartFile foto) {
+    public DTOUpdateUsuarios(Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username) {
         this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
@@ -55,9 +44,6 @@ public class DTOCreateUsuarios {
         this.celular = celular;
         this.direccion = direccion;
         this.username = username;
-        this.password = password;
-        this.estado = estado;
-        this.foto = foto;
     }
 
     public Long getId_membresia() {
@@ -116,27 +102,4 @@ public class DTOCreateUsuarios {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEstado() {
-        return estado;
-    }
-
-    public void setEstado(String estado) {
-        this.estado = estado;
-    }
-
-    public MultipartFile getFoto() {
-        return foto;
-    }
-
-    public void setFoto(MultipartFile foto) {
-        this.foto = foto;
-    }
 }
