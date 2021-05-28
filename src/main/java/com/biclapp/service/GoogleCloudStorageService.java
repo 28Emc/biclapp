@@ -12,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Objects;
 
 @Service
 public class GoogleCloudStorageService {
@@ -37,12 +39,10 @@ public class GoogleCloudStorageService {
 
     public String uploadImageToGCS(MultipartFile fileStream, String username)
             throws IOException, ServletException {
-        String[] allowedExt = {".jpg", ".jpeg", ".png", ".gif"};
+        String[] allowedExt = {"image/jpg", "image/jpeg", "image/png", "image/gif"};
 
-        for (String ext : allowedExt) {
-            if (!fileStream.getName().endsWith(ext)) {
-                throw new ServletException("File must be an image");
-            }
+        if (!this.isValidImage(allowedExt, fileStream)) {
+            throw new ServletException("File must be an image");
         }
 
         final String fileName = userImgfolder.concat(username).concat(".jpg");
@@ -51,8 +51,15 @@ public class GoogleCloudStorageService {
                 fileStream.getBytes()
         );
 
-        System.out.println("Ruta final: ");
-        System.out.println(urlWebPath.concat(fileName));
         return urlWebPath.concat(fileName);
+    }
+
+    public boolean isValidImage(String[] extensions, MultipartFile file) {
+        for (String ext : extensions) {
+            if (Objects.equals(file.getContentType(), ext)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

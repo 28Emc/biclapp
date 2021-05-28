@@ -2,6 +2,7 @@ package com.biclapp.controller;
 
 import com.biclapp.model.DTO.DTOCreateUsuarios;
 import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.DTO.DTOUpdateUsuarios;
 import com.biclapp.model.entity.Membresias;
 import com.biclapp.model.entity.Roles;
 import com.biclapp.model.entity.Usuarios;
@@ -88,7 +89,7 @@ public class UsuariosController {
     }
 
     @PutMapping("/usuarios/{id}")
-    public ResponseEntity<?> editUsuario(@PathVariable Long id, @Valid @RequestBody DTOCreateUsuarios createUsuarios, BindingResult result) {
+    public ResponseEntity<?> editUsuario(@PathVariable Long id, @Valid @RequestBody DTOUpdateUsuarios updateUsuario, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -101,7 +102,7 @@ public class UsuariosController {
         }
 
         try {
-            usuariosService.update(id, createUsuarios);
+            usuariosService.update(id, updateUsuario);
             response.put("message", "¡Usuario actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
