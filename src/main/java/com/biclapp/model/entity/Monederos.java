@@ -32,6 +32,12 @@ public class Monederos {
         this.puntos = puntos;
     }
 
+    public Monederos(Integer codigo, Long idUsuario, Integer puntos) {
+        this.codigo = codigo;
+        this.idUsuario = idUsuario;
+        this.puntos = puntos;
+    }
+
     public Long getId() {
         return id;
     }

@@ -41,7 +41,6 @@ public class DTOCreateUsuarios {
 
     private String estado;
 
-    //@Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
     private MultipartFile foto;
 
     public DTOCreateUsuarios() {

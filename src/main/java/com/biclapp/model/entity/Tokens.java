@@ -1,15 +1,46 @@
-package com.biclapp.model.DTO;
+package com.biclapp.model.entity;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
-public class DTOUpdatePassword {
+@Entity
+@Table(name = "tokens")
+public class Tokens {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String email;
     private String tipoAccion;
     private String token;
     private int codigo;
     private LocalDateTime fechaCreacion;
 
-    public DTOUpdatePassword() {
+    public Tokens() {
+    }
+
+    public Tokens(Long id, String email, String tipoAccion, String token, int codigo, LocalDateTime fechaCreacion) {
+        this.id = id;
+        this.email = email;
+        this.tipoAccion = tipoAccion;
+        this.token = token;
+        this.codigo = codigo;
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Tokens(String email, String tipoAccion, String token, int codigo, LocalDateTime fechaCreacion) {
+        this.email = email;
+        this.tipoAccion = tipoAccion;
+        this.token = token;
+        this.codigo = codigo;
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getEmail() {

@@ -2,20 +2,20 @@ package com.biclapp.service;
 
 import com.biclapp.model.DTO.DTOCreateUsuarios;
 import com.biclapp.model.DTO.DTOUpdate;
-import com.biclapp.model.DTO.DTOUpdatePassword;
+import com.biclapp.model.DTO.DTOUpdateToken;
 import com.biclapp.model.DTO.DTOUpdateUsuarios;
-import com.biclapp.model.entity.Empleados;
-import com.biclapp.model.entity.Membresias;
-import com.biclapp.model.entity.Roles;
-import com.biclapp.model.entity.Usuarios;
+import com.biclapp.model.entity.*;
 import com.biclapp.repository.IUsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UsuariosServiceImpl implements IUsuariosService {
@@ -34,6 +34,15 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
     @Value("${gcp.img-user-default}")
     private String rutaFoto;
+
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+    @Autowired
+    private ITokensService tokenService;
+
+    @Autowired
+    private IMonederosService monederoService;
 
     @Override
     @Transactional(readOnly = true)
@@ -55,25 +64,53 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
     @Override
     public void save(DTOCreateUsuarios createUsuarios) throws Exception {
-        // TODO: POR MIENTRAS SE ESTÁ VALIDANDO EL USUARIO CON ESTADO "ACTIVO", SE DEBERÍA VALIDAR MEDIANTE
-        // TODO: TOKEN/CELULAR/EMAIL.
-        Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
-        Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
-        int contador = findAll().toArray().length;
+        Optional<Usuarios> usuarioFound = repository.findByUsername(createUsuarios.getUsername());
+        if (usuarioFound.isPresent()) {
+            throw new Exception("¡El usuario ya se encuentra registrado!");
+        } else {
+            Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
+            Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
+            if (createUsuarios.getFoto() != null) {
+                rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), createUsuarios.getUsername());
+            }
+            int contador = findAll().toArray().length;
+            String encryptPassword = encoder.encode(createUsuarios.getPassword());
+            Usuarios usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
+                    createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
+                    createUsuarios.getDireccion(), createUsuarios.getUsername(), encryptPassword,
+                    "B", rutaFoto, false);
+            repository.save(usuariosNew);
 
-        if (createUsuarios.getFoto() != null) {
-            rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), createUsuarios.getUsername());
+            int codigoMonedero = monederoService.findAll().toArray().length;
+            Monederos monedero = new Monederos(codigoMonedero, usuariosNew.getId(), 0);
+            monederoService.save(monedero);
+
+            DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
+                    0, null);
+            activateUserRequest(updateToken);
         }
+    }
 
-        // TODO: LÓGICA DE ENCRIPTACIÓN DE CONTRASEÑA
-        String encryptPassword = createUsuarios.getPassword();
+    @Override
+    public void activateUserRequest(DTOUpdateToken updateToken) throws Exception {
+        int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
+        Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
+                codigoRandom, LocalDateTime.now());
+        tokenService.save(activateToken);
+        // TODO: ENVIAR UN CORREO DE VERIFICACIÓN DE EMAIL (email, codigoRandom)
+        System.out.println("codigo token = " + activateToken.getCodigo());
+    }
 
-        Usuarios usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
-                createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
-                createUsuarios.getDireccion(), createUsuarios.getUsername(), encryptPassword,
-                "A", rutaFoto, true);
-        // TODO: SE DEBERÍA CREAR UN MONEDERO AL CREAR EL USUARIO, O SE CREA A PARTE ?
-        repository.save(usuariosNew);
+    @Override
+    public void activateUserAction(DTOUpdateToken updateToken) throws Exception {
+        // RECIBIR CODIGO DE 4 DÍGITOS, BUSCAR TOKEN POR CODIGO Y EMAIL Y ACTIVAR USUARIO
+        Tokens tokenFound = tokenService.findByEmailAndCodigo(updateToken.getEmail(), updateToken.getCodigo());
+        Usuarios usuarioFound = repository.findByUsername(updateToken.getEmail()).orElseThrow(() -> new Exception("¡El usuario no existe!"));
+        usuarioFound.setEstado("A");
+        usuarioFound.setActivo(true);
+        tokenService.delete(tokenFound.getId());
+        repository.save(usuarioFound);
+        // TODO: SERVICE DE ENVÍO DE CORREO DE CONFIRMACIÓN ACTIVACIÓN CUENTA (email)
     }
 
     @Override
@@ -95,7 +132,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
-    public void updateEstado(Long id, DTOUpdate update) throws Exception {
+    public void updateStatus(Long id, DTOUpdate update) throws Exception {
         Usuarios usuarioFound = findById(id);
         usuarioFound.setActivo(update.getEstado().equals("A"));
         usuarioFound.setEstado(update.getEstado());
@@ -103,10 +140,44 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
-    public void updatePasswordRequest(DTOUpdatePassword updatePassword) throws Exception {
-        // TODO: VALIDAR SI ACCEDO A ESTE MÉTODO DESDE DENTRO O FUERA DEL SISTEMA
-        // TODO: RECIBO EMAIL DEL USUARIO Y VERIFICAR SI EL USUARIO CON ESE CORREO ESTÁ REGISTRADO Y DESACTIVADO
-        // TODO: SI ES ASÍ, GENERO UN CÓDIGO DE 4 DÍGITOS Y LO ENVÍO AL CORREO RECIBIDO.
+    public void updatePasswordRequest(DTOUpdateToken updateToken) throws Exception {
+        // RECIBO EMAIL DEL USUARIO Y VERIFICAR SI EL USUARIO CON ESE CORREO ESTÁ REGISTRADO Y DESACTIVADO
+        // SI ES ASÍ, GENERO UN CÓDIGO DE 4 DÍGITOS Y LO ENVÍO AL CORREO RECIBIDO.
+        Optional<Usuarios> usuarioFound = repository.findByUsername(updateToken.getEmail());
+        if (usuarioFound.isEmpty()) {
+            throw new Exception("¡El usuario no se encuentra registrado!");
+        } else if (!usuarioFound.get().isActivo()) {
+            throw new Exception("¡El usuario se encuentra inactivo! Activar la cuenta para continuar.");
+        } else {
+            int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
+            updateToken.setCodigo(codigoRandom);
+            Tokens token = new Tokens(updateToken.getEmail(), updateToken.getTipo_accion(), null,
+                    codigoRandom, LocalDateTime.now());
+            tokenService.save(token);
+            System.out.println(token);
+            // TODO: SERVICE DE ENVÍO DE CORREO DE CÓDIGO DE VALIDACIÓN (email, codigoRandom)
+        }
+    }
+
+    @Override
+    public void updatePasswordAction(DTOUpdateToken updateToken) throws Exception {
+        // RECIBO EL CODIGO DE 4 DÍGITOS Y LA CONTRASEÑA, BUSCO EL USUARIO POR EL CODIGO Y EL CORREO,
+        // ACTUALIZO EL USUARIO Y REENVÍO UN CORREO DE CONFIRMACIÓN.
+        Tokens tokenFound = tokenService.findByEmailAndCodigo(updateToken.getEmail(), updateToken.getCodigo());
+        Usuarios usuarioFound = repository.findByUsername(updateToken.getEmail()).orElseThrow(() -> new Exception("¡El usuario no existe!"));
+        usuarioFound.setPassword(encoder.encode(updateToken.getPassword()));
+        repository.save(usuarioFound);
+        tokenService.delete(tokenFound.getId());
+        System.out.println(usuarioFound);
+        // TODO: SERVICE DE ENVÍO DE CORREO DE CONFIRMACIÓN ACTUALIZACIÓN CONTRASEÑA (email)
+    }
+
+    @Override
+    public void updatePhotoUser(Long id, MultipartFile photo) throws Exception {
+        Usuarios usuarioFound = findById(id);
+        rutaFoto = cloudStorageService.uploadImageToGCS(photo, usuarioFound.getUsername().split("@")[0]);
+        usuarioFound.setFoto(rutaFoto);
+        repository.save(usuarioFound);
     }
 
     @Override

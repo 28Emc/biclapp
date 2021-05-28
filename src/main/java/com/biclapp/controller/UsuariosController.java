@@ -1,13 +1,7 @@
 package com.biclapp.controller;
 
 import com.biclapp.config.security.JwtUtil;
-import com.biclapp.model.DTO.AuthenticationRequest;
-import com.biclapp.model.DTO.AuthenticationResponse;
-import com.biclapp.model.DTO.DTOCreateUsuarios;
-import com.biclapp.model.DTO.DTOUpdate;
-import com.biclapp.model.DTO.DTOUpdateUsuarios;
-import com.biclapp.model.entity.Membresias;
-import com.biclapp.model.entity.Roles;
+import com.biclapp.model.DTO.*;
 import com.biclapp.model.entity.Usuarios;
 import com.biclapp.service.CustomUserDetailsService;
 import com.biclapp.service.IMembresiasService;
@@ -25,6 +19,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -107,7 +102,7 @@ public class UsuariosController {
         }
     }
 
-    @PostMapping("/usuarios")
+    @PostMapping({"/usuarios", "/account"})
     public ResponseEntity<?> createUsuario(@Valid @RequestBody DTOCreateUsuarios createDTO, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
@@ -124,6 +119,54 @@ public class UsuariosController {
             usuariosService.save(createDTO);
             response.put("message", "¡Usuario registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/account/activate-request")
+    public ResponseEntity<?> activateAccountRequest(@Valid @RequestBody DTOUpdateToken updateToken, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            usuariosService.activateUserRequest(updateToken);
+            response.put("message", "¡Solicitud de activación de cuenta de usuario enviada correctamente!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/account/activate-action")
+    public ResponseEntity<?> activateAccountAccion(@Valid @RequestBody DTOUpdateToken updateToken, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            usuariosService.activateUserAction(updateToken);
+            response.put("message", "¡Su cuenta de usuario ha sido activada de manera exitosa!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
@@ -156,7 +199,7 @@ public class UsuariosController {
     }
 
     @PutMapping("/usuarios/estados/{id}")
-    public ResponseEntity<?> cambiarEstadoUsuario(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
+    public ResponseEntity<?> changeStatusUsuario(@PathVariable Long id, @Valid @RequestBody DTOUpdate update, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -169,8 +212,71 @@ public class UsuariosController {
         }
 
         try {
-            usuariosService.updateEstado(id, update);
+            usuariosService.updateStatus(id, update);
             response.put("message", "¡Estado del usuario actualizado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/account/password-request")
+    public ResponseEntity<?> changePasswordRequest(@Valid @RequestBody DTOUpdateToken updateToken, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            usuariosService.updatePasswordRequest(updateToken);
+            response.put("message", "¡Solicitud de cambio de contraseña enviada correctamente!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/account/password-action")
+    public ResponseEntity<?> changePasswordAccion(@Valid @RequestBody DTOUpdateToken updatePassword, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            usuariosService.updatePasswordAction(updatePassword);
+            response.put("message", "¡Cambio de contraseña completado!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/account/change-photo/{id}")
+    public ResponseEntity<?> changePhotoUsuario(@PathVariable Long id, MultipartFile photoUser) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            usuariosService.updatePhotoUser(id, photoUser);
+            response.put("message", "¡Foto actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
