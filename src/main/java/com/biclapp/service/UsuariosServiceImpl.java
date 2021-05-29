@@ -98,7 +98,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
                 codigoRandom, LocalDateTime.now());
         tokenService.save(activateToken);
         // TODO: ENVIAR UN CORREO DE VERIFICACIÓN DE EMAIL (email, codigoRandom)
-        System.out.println("codigo token = " + activateToken.getCodigo());
     }
 
     @Override
@@ -154,7 +153,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
             Tokens token = new Tokens(updateToken.getEmail(), updateToken.getTipo_accion(), null,
                     codigoRandom, LocalDateTime.now());
             tokenService.save(token);
-            System.out.println(token);
             // TODO: SERVICE DE ENVÍO DE CORREO DE CÓDIGO DE VALIDACIÓN (email, codigoRandom)
         }
     }
@@ -168,7 +166,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
         usuarioFound.setPassword(encoder.encode(updateToken.getPassword()));
         repository.save(usuarioFound);
         tokenService.delete(tokenFound.getId());
-        System.out.println(usuarioFound);
         // TODO: SERVICE DE ENVÍO DE CORREO DE CONFIRMACIÓN ACTUALIZACIÓN CONTRASEÑA (email)
     }
 
