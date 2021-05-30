@@ -65,20 +65,23 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Override
     public void save(DTOCreateUsuarios createUsuarios) throws Exception {
         Optional<Usuarios> usuarioFound = repository.findByUsername(createUsuarios.getUsername());
+
         if (usuarioFound.isPresent()) {
             throw new Exception("¡El usuario ya se encuentra registrado!");
         } else {
             Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
             Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
+
             if (createUsuarios.getFoto() != null) {
                 rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), createUsuarios.getUsername());
             }
+
             int contador = findAll().toArray().length;
             String encryptPassword = encoder.encode(createUsuarios.getPassword());
             Usuarios usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
                     createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
-                    createUsuarios.getDireccion(), createUsuarios.getUsername(), encryptPassword,
-                    "B", rutaFoto, false);
+                    createUsuarios.getDireccion(), createUsuarios.getSexo(), createUsuarios.getPeso(), createUsuarios.getEstatura(),
+                    createUsuarios.getUsername(), encryptPassword, "B", rutaFoto, false);
             repository.save(usuariosNew);
 
             int codigoMonedero = monederoService.findAll().toArray().length;
@@ -122,6 +125,9 @@ public class UsuariosServiceImpl implements IUsuariosService {
         usuarioFound.setNro_documento(updateUsuario.getNro_documento());
         usuarioFound.setCelular(updateUsuario.getCelular());
         usuarioFound.setDireccion(updateUsuario.getDireccion());
+        usuarioFound.setSexo(updateUsuario.getSexo());
+        usuarioFound.setPeso(updateUsuario.getPeso());
+        usuarioFound.setEstatura(updateUsuario.getEstatura());
         usuarioFound.setUsername(updateUsuario.getUsername());
         usuarioFound.setPassword(usuarioFound.getPassword());
         usuarioFound.setEstado(usuarioFound.getEstado());
@@ -143,6 +149,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
         // RECIBO EMAIL DEL USUARIO Y VERIFICAR SI EL USUARIO CON ESE CORREO ESTÁ REGISTRADO Y DESACTIVADO
         // SI ES ASÍ, GENERO UN CÓDIGO DE 4 DÍGITOS Y LO ENVÍO AL CORREO RECIBIDO.
         Optional<Usuarios> usuarioFound = repository.findByUsername(updateToken.getEmail());
+
         if (usuarioFound.isEmpty()) {
             throw new Exception("¡El usuario no se encuentra registrado!");
         } else if (!usuarioFound.get().isActivo()) {

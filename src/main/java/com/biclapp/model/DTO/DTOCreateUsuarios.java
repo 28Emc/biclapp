@@ -31,6 +31,13 @@ public class DTOCreateUsuarios {
     @Size(min = 1, max = 200, message = "La dirección debe tener entre 1 y 200 caracteres")
     private String direccion;
 
+    @NotEmpty(message = "Sexo requerido")
+    private String sexo;
+
+    private String peso;
+
+    private String estatura;
+
     @NotEmpty(message = "Nombre de usuario requerido")
     @Size(min = 1, max = 50, message = "El nombre de usuario debe tener entre 1 y 50 caracteres")
     private String username;
@@ -46,13 +53,16 @@ public class DTOCreateUsuarios {
     public DTOCreateUsuarios() {
     }
 
-    public DTOCreateUsuarios(Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, MultipartFile foto) {
+    public DTOCreateUsuarios(Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, MultipartFile foto) {
         this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
         this.celular = celular;
         this.direccion = direccion;
+        this.sexo = sexo;
+        this.peso = peso;
+        this.estatura = estatura;
         this.username = username;
         this.password = password;
         this.estado = estado;
@@ -105,6 +115,30 @@ public class DTOCreateUsuarios {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getPeso() {
+        return peso;
+    }
+
+    public void setPeso(String peso) {
+        this.peso = peso;
+    }
+
+    public String getEstatura() {
+        return estatura;
+    }
+
+    public void setEstatura(String estatura) {
+        this.estatura = estatura;
     }
 
     public String getUsername() {

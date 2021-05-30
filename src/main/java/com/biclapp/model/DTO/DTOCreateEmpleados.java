@@ -8,6 +8,9 @@ public class DTOCreateEmpleados {
 
     private Integer codigo;
 
+    @NotNull(message = "Local requerido")
+    private Long id_local;
+
     @NotEmpty(message = "Nombres requeridos")
     @Size(min = 1, max = 100, message = "Los nombres deben tener entre 1 y 100 caracteres")
     private String nombres;
@@ -44,8 +47,9 @@ public class DTOCreateEmpleados {
     public DTOCreateEmpleados() {
     }
 
-    public DTOCreateEmpleados(Integer codigo, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto) {
+    public DTOCreateEmpleados(Integer codigo, Long id_local, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto) {
         this.codigo = codigo;
+        this.id_local = id_local;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -63,6 +67,14 @@ public class DTOCreateEmpleados {
 
     public void setCodigo(Integer codigo) {
         this.codigo = codigo;
+    }
+
+    public Long getId_local() {
+        return id_local;
+    }
+
+    public void setId_local(Long id_local) {
+        this.id_local = id_local;
     }
 
     public String getNombres() {

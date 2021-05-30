@@ -22,14 +22,22 @@ public class Locales {
     @Size(min = 1, max = 100, message = "La dirección debe tener entre 1 y 100 caracteres")
     private String direccion;
 
+    @Size(max = 9, message = "EL nro. de teléfono debe tener como máximo 9 caracteres")
+    private String telefono1;
+
+    @Size(max = 9, message = "EL nro. de teléfono 2 debe tener como máximo 9 caracteres")
+    private String telefono2;
+
     public Locales() {
     }
 
-    public Locales(Long id, Integer codigo, Long idEmpresa, String direccion) {
+    public Locales(Long id, Integer codigo, Long idEmpresa, String direccion, String telefono1, String telefono2) {
         this.id = id;
         this.codigo = codigo;
         this.idEmpresa = idEmpresa;
         this.direccion = direccion;
+        this.telefono1 = telefono1;
+        this.telefono2 = telefono2;
     }
 
     public Long getId() {
@@ -62,5 +70,21 @@ public class Locales {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getTelefono1() {
+        return telefono1;
+    }
+
+    public void setTelefono1(String telefono1) {
+        this.telefono1 = telefono1;
+    }
+
+    public String getTelefono2() {
+        return telefono2;
+    }
+
+    public void setTelefono2(String telefono2) {
+        this.telefono2 = telefono2;
     }
 }

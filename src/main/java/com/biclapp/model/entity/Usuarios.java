@@ -25,6 +25,9 @@ public class Usuarios {
     private String nro_documento;
     private String celular;
     private String direccion;
+    private String sexo;
+    private String peso;
+    private String estatura;
     private String username;
     private String password;
     private String estado;
@@ -34,7 +37,7 @@ public class Usuarios {
     public Usuarios() {
     }
 
-    public Usuarios(Long id, Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Usuarios(Long id, Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, String foto, boolean isActivo) {
         this.id = id;
         this.codigo = codigo;
         this.rol = rol;
@@ -44,6 +47,9 @@ public class Usuarios {
         this.nro_documento = nro_documento;
         this.celular = celular;
         this.direccion = direccion;
+        this.sexo = sexo;
+        this.peso = peso;
+        this.estatura = estatura;
         this.username = username;
         this.password = password;
         this.estado = estado;
@@ -51,7 +57,7 @@ public class Usuarios {
         this.isActivo = isActivo;
     }
 
-    public Usuarios(Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Usuarios(Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, String foto, boolean isActivo) {
         this.codigo = codigo;
         this.rol = rol;
         this.id_membresia = id_membresia;
@@ -60,6 +66,9 @@ public class Usuarios {
         this.nro_documento = nro_documento;
         this.celular = celular;
         this.direccion = direccion;
+        this.sexo = sexo;
+        this.peso = peso;
+        this.estatura = estatura;
         this.username = username;
         this.password = password;
         this.estado = estado;
@@ -137,6 +146,30 @@ public class Usuarios {
 
     public void setDireccion(String direccion) {
         this.direccion = direccion;
+    }
+
+    public String getSexo() {
+        return sexo;
+    }
+
+    public void setSexo(String sexo) {
+        this.sexo = sexo;
+    }
+
+    public String getPeso() {
+        return peso;
+    }
+
+    public void setPeso(String peso) {
+        this.peso = peso;
+    }
+
+    public String getEstatura() {
+        return estatura;
+    }
+
+    public void setEstatura(String estatura) {
+        this.estatura = estatura;
     }
 
     public String getUsername() {

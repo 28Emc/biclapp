@@ -27,19 +27,23 @@ public class Empresas {
     @Size(min = 1, max = 150, message = "La dirección debe tener entre 1 y 150 caracteres")
     private String direccion;
 
-    @Size(max = 10, message = "EL nro. de teléfono debe tener como máximo 10 caracteres")
-    private String telefono;
+    @Size(max = 30, message = "EL nro. de teléfono debe tener como máximo 30 caracteres")
+    private String telefono1;
+
+    @Size(max = 30, message = "EL nro. de teléfono 2 debe tener como máximo 30 caracteres")
+    private String telefono2;
 
     public Empresas() {
     }
 
-    public Empresas(Long id, Integer codigo, String ruc, String razon_social, String direccion, String telefono) {
+    public Empresas(Long id, Integer codigo, String ruc, String razon_social, String direccion, String telefono1, String telefono2) {
         this.id = id;
         this.codigo = codigo;
         this.ruc = ruc;
         this.razon_social = razon_social;
         this.direccion = direccion;
-        this.telefono = telefono;
+        this.telefono1 = telefono1;
+        this.telefono2 = telefono2;
     }
 
     public Long getId() {
@@ -82,11 +86,19 @@ public class Empresas {
         this.direccion = direccion;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public String getTelefono1() {
+        return telefono1;
     }
 
-    public void setTelefono(String telefono) {
-        this.telefono = telefono;
+    public void setTelefono1(String telefono1) {
+        this.telefono1 = telefono1;
+    }
+
+    public String getTelefono2() {
+        return telefono2;
+    }
+
+    public void setTelefono2(String telefono2) {
+        this.telefono2 = telefono2;
     }
 }

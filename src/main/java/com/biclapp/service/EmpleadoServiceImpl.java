@@ -2,6 +2,7 @@ package com.biclapp.service;
 
 import com.biclapp.model.DTO.DTOCreateEmpleados;
 import com.biclapp.model.entity.Empleados;
+import com.biclapp.model.entity.Locales;
 import com.biclapp.model.entity.Roles;
 import com.biclapp.repository.IEmpleadosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
     @Autowired
     private IRolesService rolesService;
 
+    @Autowired
+    private ILocalesService localService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Empleados> findAll() {
@@ -34,8 +38,9 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
     @Override
     public void save(DTOCreateEmpleados createEmpleados) throws Exception {
         Roles rolFound = rolesService.findByRol("ROLE_EMPLEADO");
+        Locales localFound = localService.findById(createEmpleados.getId_local());
         int contador = findAll().toArray().length;
-        Empleados empleadosNew = new Empleados(contador + 1, rolFound, createEmpleados.getNombres(),
+        Empleados empleadosNew = new Empleados(contador + 1, rolFound, localFound.getId(), createEmpleados.getNombres(),
                 createEmpleados.getApellidos(), createEmpleados.getNro_documento(), createEmpleados.getCelular(),
                 createEmpleados.getDireccion(), createEmpleados.getUsername(), createEmpleados.getPassword(),
                 createEmpleados.getEstado(), createEmpleados.getFoto(), true);
@@ -45,7 +50,9 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
     @Override
     public void update(Long id, DTOCreateEmpleados createEmpleados) throws Exception {
         Empleados empleadoFound = findById(id);
+        Locales localFound = localService.findById(createEmpleados.getId_local());
         empleadoFound.setCodigo(createEmpleados.getCodigo());
+        empleadoFound.setId_local(localFound.getId());
         empleadoFound.setNombres(createEmpleados.getNombres());
         empleadoFound.setApellidos(createEmpleados.getApellidos());
         empleadoFound.setNro_documento(createEmpleados.getNro_documento());

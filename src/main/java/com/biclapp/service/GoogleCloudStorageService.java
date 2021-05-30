@@ -12,7 +12,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Objects;
 
 @Service

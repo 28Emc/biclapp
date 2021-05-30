@@ -22,6 +22,10 @@ public class Empleados {
     @JoinColumn(name = "id_rol")
     private Roles rol;
 
+    @NotNull(message = "Local requerido")
+    @Column(name = "id_local")
+    private Long id_local;
+
     @NotEmpty(message = "Nombres requeridos")
     @Size(min = 1, max = 100, message = "Los nombres deben tener entre 1 y 100 caracteres")
     private String nombres;
@@ -61,10 +65,11 @@ public class Empleados {
     public Empleados() {
     }
 
-    public Empleados(Long id, Integer codigo, Roles rol, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Empleados(Long id, Integer codigo, Roles rol, Long id_local, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
         this.id = id;
         this.codigo = codigo;
         this.rol = rol;
+        this.id_local = id_local;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -77,9 +82,10 @@ public class Empleados {
         this.isActivo = isActivo;
     }
 
-    public Empleados(Integer codigo, Roles rol, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
+    public Empleados(Integer codigo, Roles rol, Long id_local, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto, boolean isActivo) {
         this.codigo = codigo;
         this.rol = rol;
+        this.id_local = id_local;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.nro_documento = nro_documento;
@@ -115,6 +121,14 @@ public class Empleados {
 
     public void setRol(Roles rol) {
         this.rol = rol;
+    }
+
+    public Long getId_local() {
+        return id_local;
+    }
+
+    public void setId_local(Long id_local) {
+        this.id_local = id_local;
     }
 
     public String getNombres() {

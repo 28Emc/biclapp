@@ -49,6 +49,8 @@ public class LocalesServiceImpl implements ILocalesService {
         Locales localFound = findById(id);
         empresaService.findById(local.getIdEmpresa());
         localFound.setDireccion(local.getDireccion());
+        localFound.setTelefono1(local.getTelefono1());
+        localFound.setTelefono2(local.getTelefono2());
         repository.save(localFound);
     }
 
