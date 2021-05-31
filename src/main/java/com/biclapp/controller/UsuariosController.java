@@ -140,7 +140,7 @@ public class UsuariosController {
         }
 
         try {
-            usuariosService.activateUserRequest(updateToken);
+            usuariosService.activateUserRequest(updateToken, null);
             response.put("message", "¡Solicitud de activación de cuenta de usuario enviada correctamente!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {

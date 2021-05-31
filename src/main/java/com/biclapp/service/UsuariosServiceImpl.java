@@ -1,5 +1,6 @@
 package com.biclapp.service;
 
+import com.biclapp.config.mail.EmailService;
 import com.biclapp.model.DTO.DTOCreateUsuarios;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateToken;
@@ -14,7 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -43,6 +46,12 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
     @Autowired
     private IMonederosService monederoService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${spring.mail.username}")
+    private String emailFrom;
 
     @Override
     @Transactional(readOnly = true)
@@ -90,17 +99,27 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
             DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
                     0, null);
-            activateUserRequest(updateToken);
+
+            // MODEL VALIDAR CORREO: from, to, subject, titulo-cabecera, codigo-verificacion
+            Map<String, Object> model = new HashMap<>();
+            model.put("from", emailFrom);
+            model.put("to", createUsuarios.getUsername());
+            model.put("subject", "Biclapp - Verificación cuenta");
+            model.put("titulo-cabecera", "Verificación cuenta");
+
+            activateUserRequest(updateToken, model);
         }
     }
 
     @Override
-    public void activateUserRequest(DTOUpdateToken updateToken) throws Exception {
+    public void activateUserRequest(DTOUpdateToken updateToken, Map<String, Object> model) throws Exception {
         int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
         Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
                 codigoRandom, LocalDateTime.now());
         tokenService.save(activateToken);
-        // TODO: ENVIAR UN CORREO DE VERIFICACIÓN DE EMAIL (email, codigoRandom)
+
+        model.put("codigo-verificacion", activateToken.getCodigo());
+        emailService.enviarEmail(model, "VALIDAR CUENTA");
     }
 
     @Override
@@ -112,7 +131,15 @@ public class UsuariosServiceImpl implements IUsuariosService {
         usuarioFound.setActivo(true);
         tokenService.delete(tokenFound.getId());
         repository.save(usuarioFound);
-        // TODO: SERVICE DE ENVÍO DE CORREO DE CONFIRMACIÓN ACTIVACIÓN CUENTA (email)
+
+        // MODEL CONFIRMAR VALIDACIÓN CORREO: from, to, subject, titulo-cabecera
+        Map<String, Object> model = new HashMap<>();
+        model.put("from", emailFrom);
+        model.put("to", usuarioFound.getUsername());
+        model.put("subject", "Biclapp - ¡Cuenta verificada!");
+        model.put("titulo-cabecera", "¡Cuenta verificada!");
+
+        emailService.enviarEmail(model, "CONFIRMA VALIDACIÓN CUENTA");
     }
 
     @Override
@@ -160,7 +187,16 @@ public class UsuariosServiceImpl implements IUsuariosService {
             Tokens token = new Tokens(updateToken.getEmail(), updateToken.getTipo_accion(), null,
                     codigoRandom, LocalDateTime.now());
             tokenService.save(token);
-            // TODO: SERVICE DE ENVÍO DE CORREO DE CÓDIGO DE VALIDACIÓN (email, codigoRandom)
+
+            // MODEL CAMBIO CONTRASEÑA: from, to, subject, titulo-cabecera, codigo-verificacion
+            Map<String, Object> model = new HashMap<>();
+            model.put("from", emailFrom);
+            model.put("to", usuarioFound.get().getUsername());
+            model.put("subject", "Biclapp - Solicitud de cambio de contraseña");
+            model.put("titulo-cabecera", "Cambio de contraseña");
+            model.put("codigo-verificacion", token.getCodigo());
+
+            emailService.enviarEmail(model, "CAMBIO CONTRASEÑA");
         }
     }
 
@@ -173,7 +209,15 @@ public class UsuariosServiceImpl implements IUsuariosService {
         usuarioFound.setPassword(encoder.encode(updateToken.getPassword()));
         repository.save(usuarioFound);
         tokenService.delete(tokenFound.getId());
-        // TODO: SERVICE DE ENVÍO DE CORREO DE CONFIRMACIÓN ACTUALIZACIÓN CONTRASEÑA (email)
+
+        // MODEL CONFIRMAR VALIDACIÓN CORREO: from, to, subject, titulo-cabecera
+        Map<String, Object> model = new HashMap<>();
+        model.put("from", emailFrom);
+        model.put("to", usuarioFound.getUsername());
+        model.put("subject", "Biclapp - ¡Contraseña actualizada!");
+        model.put("titulo-cabecera", "¡Contraseña actualizada!");
+
+        emailService.enviarEmail(model, "CONFIRMA ACTUALIZACIÓN CONTRASEÑA");
     }
 
     @Override
