@@ -105,7 +105,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
             DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
                     0, null);
 
-            // MODEL VALIDAR CORREO: from, to, subject, titulo-cabecera, codigo-verificacion
             Map<String, Object> model = new HashMap<>();
             model.put("from", emailFrom);
             model.put("to", createUsuarios.getUsername());
@@ -137,7 +136,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
         tokenService.delete(tokenFound.getId());
         repository.save(usuarioFound);
 
-        // MODEL CONFIRMAR VALIDACIÓN CORREO: from, to, subject, titulo-cabecera
         Map<String, Object> model = new HashMap<>();
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
@@ -193,7 +191,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
                     codigoRandom, LocalDateTime.now());
             tokenService.save(token);
 
-            // MODEL CAMBIO CONTRASEÑA: from, to, subject, titulo-cabecera, codigo-verificacion
             Map<String, Object> model = new HashMap<>();
             model.put("from", emailFrom);
             model.put("to", usuarioFound.get().getUsername());
@@ -215,7 +212,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
         repository.save(usuarioFound);
         tokenService.delete(tokenFound.getId());
 
-        // MODEL CONFIRMAR VALIDACIÓN CORREO: from, to, subject, titulo-cabecera
         Map<String, Object> model = new HashMap<>();
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
