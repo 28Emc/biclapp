@@ -1,5 +1,7 @@
 package com.biclapp.model.DTO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -41,13 +43,12 @@ public class DTOCreateEmpleados {
 
     private String estado;
 
-    @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
-    private String foto;
+    private MultipartFile foto;
 
     public DTOCreateEmpleados() {
     }
 
-    public DTOCreateEmpleados(Integer codigo, Long id_local, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, String foto) {
+    public DTOCreateEmpleados(Integer codigo, Long id_local, String nombres, String apellidos, String nro_documento, String celular, String direccion, String username, String password, String estado, MultipartFile foto) {
         this.codigo = codigo;
         this.id_local = id_local;
         this.nombres = nombres;
@@ -141,11 +142,11 @@ public class DTOCreateEmpleados {
         this.estado = estado;
     }
 
-    public String getFoto() {
+    public MultipartFile getFoto() {
         return foto;
     }
 
-    public void setFoto(String foto) {
+    public void setFoto(MultipartFile foto) {
         this.foto = foto;
     }
 }

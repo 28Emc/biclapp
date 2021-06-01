@@ -35,9 +35,6 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Autowired
     private GoogleCloudStorageService cloudStorageService;
 
-    @Value("${gcp.img-user-default}")
-    private String rutaFoto;
-
     @Autowired
     private BCryptPasswordEncoder encoder;
 
@@ -50,8 +47,14 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Autowired
     private EmailService emailService;
 
+    @Value("${gcp.img-user-default}")
+    private String rutaFoto;
+
     @Value("${spring.mail.username}")
     private String emailFrom;
+
+    @Value("${gcp.user-img-folder}")
+    private String userImgfolder;
 
     @Override
     @Transactional(readOnly = true)
@@ -82,7 +85,9 @@ public class UsuariosServiceImpl implements IUsuariosService {
             Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
 
             if (createUsuarios.getFoto() != null) {
-                rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), createUsuarios.getUsername());
+                String namePhoto = createUsuarios.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
+                String path = userImgfolder.concat(namePhoto).concat(".jpg");
+                rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), path);
             }
 
             int contador = findAll().toArray().length;
@@ -223,7 +228,9 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Override
     public void updatePhotoUser(Long id, MultipartFile photo) throws Exception {
         Usuarios usuarioFound = findById(id);
-        rutaFoto = cloudStorageService.uploadImageToGCS(photo, usuarioFound.getUsername().split("@")[0]);
+        String namePhoto = usuarioFound.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
+        String path = userImgfolder.concat(namePhoto).concat(".jpg");
+        rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
         usuarioFound.setFoto(rutaFoto);
         repository.save(usuarioFound);
     }

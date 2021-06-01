@@ -1,14 +1,10 @@
-package com.biclapp.model.entity;
+package com.biclapp.model.DTO;
 
-import javax.persistence.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.*;
 
-@Entity
-@Table(name = "bicicletas")
-public class Bicicletas {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class DTOCreateBicicletas {
 
     @Positive(message = "El valor del stock debe ser mayor a 0")
     private Integer codigo;
@@ -32,16 +28,15 @@ public class Bicicletas {
 
     private String estado;
 
-    private String foto;
+    private MultipartFile foto;
 
     @Size(max = 45, message = "El color debe tener como máximo 45 caracteres")
     private String color;
 
-    public Bicicletas() {
+    public DTOCreateBicicletas() {
     }
 
-    public Bicicletas(Long id, Integer codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, String foto, String color) {
-        this.id = id;
+    public DTOCreateBicicletas(Integer codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, MultipartFile foto, String color) {
         this.codigo = codigo;
         this.id_local = id_local;
         this.marca = marca;
@@ -51,26 +46,6 @@ public class Bicicletas {
         this.estado = estado;
         this.foto = foto;
         this.color = color;
-    }
-
-    public Bicicletas(Integer codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, String foto, String color) {
-        this.codigo = codigo;
-        this.id_local = id_local;
-        this.marca = marca;
-        this.modelo = modelo;
-        this.stock = stock;
-        this.descripcion = descripcion;
-        this.estado = estado;
-        this.foto = foto;
-        this.color = color;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public Integer getCodigo() {
@@ -129,11 +104,11 @@ public class Bicicletas {
         this.estado = estado;
     }
 
-    public String getFoto() {
+    public MultipartFile getFoto() {
         return foto;
     }
 
-    public void setFoto(String foto) {
+    public void setFoto(MultipartFile foto) {
         this.foto = foto;
     }
 

@@ -1,15 +1,20 @@
 package com.biclapp.service;
 
+import com.biclapp.model.DTO.DTOCreateBicicletas;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateBicicletas;
 import com.biclapp.model.entity.Bicicletas;
 import com.biclapp.model.entity.Locales;
+import com.biclapp.model.entity.Usuarios;
 import com.biclapp.repository.IBicicletasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class BicicletasServiceImpl implements IBicicletasService {
@@ -20,6 +25,15 @@ public class BicicletasServiceImpl implements IBicicletasService {
     @Autowired
     private ILocalesService localesService;
 
+    @Value("${gcp.img-product-default}")
+    private String rutaFoto;
+
+    @Value("${gcp.app-img-folder}")
+    private String productImgfolder;
+
+    @Autowired
+    private GoogleCloudStorageService cloudStorageService;
+
     @Override
     @Transactional(readOnly = true)
     public List<Bicicletas> findAll() {
@@ -29,16 +43,38 @@ public class BicicletasServiceImpl implements IBicicletasService {
     @Override
     @Transactional(readOnly = true)
     public Bicicletas findById(Long id) throws Exception {
-        return bicicletasRepository.findById(id).orElseThrow(() -> new Exception("La bicicleta con el id ".concat(id.toString()).concat(" no existe.")));
+        return bicicletasRepository.findById(id).orElseThrow(() -> new Exception("La bicicleta con el id "
+                .concat(id.toString()).concat(" no existe.")));
     }
 
     @Override
-    public void save(Bicicletas bicicleta) throws Exception {
-        localesService.findById(bicicleta.getId_local());
+    @Transactional(readOnly = true)
+    public Optional<Bicicletas> findByMarcaAndModelo(String marca, String modelo) throws Exception {
+        return bicicletasRepository.findByMarcaAndModelo(marca, modelo);
+    }
+
+    @Override
+    public void save(DTOCreateBicicletas createBicicleta) throws Exception {
+        localesService.findById(createBicicleta.getId_local());
+
+        Optional<Bicicletas> bicicletaFound = bicicletasRepository.findByMarcaAndModelo(createBicicleta.getMarca(), createBicicleta.getModelo());
+        if (bicicletaFound.isPresent()) {
+            throw new Exception("La bicicleta con la marca ".concat(createBicicleta.getMarca().concat(" y el modelo").concat(createBicicleta.getModelo())
+            .concat(" ya existe.")));
+        }
+
         int contador = findAll().toArray().length;
-        bicicleta.setCodigo(contador + 1);
-        bicicleta.setEstado("D");
-        bicicletasRepository.save(bicicleta);
+
+        if (createBicicleta.getFoto() != null) {
+            String namePhoto = createBicicleta.getModelo().replace(" ", "-").toLowerCase();
+            String path = productImgfolder.concat(namePhoto).concat(".jpg");
+            rutaFoto = cloudStorageService.uploadImageToGCS(createBicicleta.getFoto(), path);
+        }
+
+        Bicicletas bicicletaNew = new Bicicletas(contador + 1, createBicicleta.getId_local(), createBicicleta.getMarca(),
+                createBicicleta.getModelo(), createBicicleta.getStock(), createBicicleta.getDescripcion(), "D", rutaFoto,
+                createBicicleta.getColor());
+        bicicletasRepository.save(bicicletaNew);
     }
 
     @Override
@@ -62,6 +98,16 @@ public class BicicletasServiceImpl implements IBicicletasService {
         Bicicletas bicicletaFound = findById(id);
         bicicletaFound.setEstado(update.getEstado());
         bicicletasRepository.save(bicicletaFound);
+    }
+
+    @Override
+    public void updatePhotoBicicleta(Long id, MultipartFile photo) throws Exception {
+        Bicicletas bicicletafound = findById(id);
+        String namePhoto = bicicletafound.getModelo().replace(" ", "-").toLowerCase();
+        String path = productImgfolder.concat(namePhoto).concat(".jpg");
+        rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
+        bicicletafound.setFoto(rutaFoto);
+        bicicletasRepository.save(bicicletafound);
     }
 
     @Override

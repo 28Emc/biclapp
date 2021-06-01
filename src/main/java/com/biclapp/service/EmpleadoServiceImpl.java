@@ -6,8 +6,10 @@ import com.biclapp.model.entity.Locales;
 import com.biclapp.model.entity.Roles;
 import com.biclapp.repository.IEmpleadosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,6 +24,15 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
 
     @Autowired
     private ILocalesService localService;
+
+    @Autowired
+    private GoogleCloudStorageService cloudStorageService;
+
+    @Value("${gcp.img-employee-default}")
+    private String rutaFoto;
+
+    @Value("${gcp.employee-img-folder}")
+    private String employeeImgfolder;
 
     @Override
     @Transactional(readOnly = true)
@@ -40,10 +51,17 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
         Roles rolFound = rolesService.findByRol("ROLE_EMPLEADO");
         Locales localFound = localService.findById(createEmpleados.getId_local());
         int contador = findAll().toArray().length;
+
+        if (createEmpleados.getFoto() != null) {
+            String namePhoto = createEmpleados.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
+            String path = employeeImgfolder.concat(namePhoto).concat(".jpg");
+            rutaFoto = cloudStorageService.uploadImageToGCS(createEmpleados.getFoto(), path);
+        }
+
         Empleados empleadosNew = new Empleados(contador + 1, rolFound, localFound.getId(), createEmpleados.getNombres(),
                 createEmpleados.getApellidos(), createEmpleados.getNro_documento(), createEmpleados.getCelular(),
                 createEmpleados.getDireccion(), createEmpleados.getUsername(), createEmpleados.getPassword(),
-                createEmpleados.getEstado(), createEmpleados.getFoto(), true);
+                createEmpleados.getEstado(), rutaFoto, true);
         empleadosRepository.save(empleadosNew);
     }
 
@@ -51,7 +69,7 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
     public void update(Long id, DTOCreateEmpleados createEmpleados) throws Exception {
         Empleados empleadoFound = findById(id);
         Locales localFound = localService.findById(createEmpleados.getId_local());
-        empleadoFound.setCodigo(createEmpleados.getCodigo());
+        empleadoFound.setCodigo(empleadoFound.getCodigo());
         empleadoFound.setId_local(localFound.getId());
         empleadoFound.setNombres(createEmpleados.getNombres());
         empleadoFound.setApellidos(createEmpleados.getApellidos());
@@ -59,10 +77,20 @@ public class EmpleadoServiceImpl implements IEmpleadosService {
         empleadoFound.setCelular(createEmpleados.getCelular());
         empleadoFound.setDireccion(createEmpleados.getDireccion());
         empleadoFound.setUsername(createEmpleados.getUsername());
-        empleadoFound.setPassword(createEmpleados.getPassword());
-        empleadoFound.setEstado(createEmpleados.getEstado());
-        empleadoFound.setFoto(createEmpleados.getFoto());
+        empleadoFound.setPassword(empleadoFound.getPassword());
+        empleadoFound.setEstado(empleadoFound.getEstado());
+        empleadoFound.setFoto(empleadoFound.getFoto());
         empleadoFound.setActivo(true);
+        empleadosRepository.save(empleadoFound);
+    }
+
+    @Override
+    public void updatePhotoEmpleado(Long id, MultipartFile photo) throws Exception {
+        Empleados empleadoFound = findById(id);
+        String namePhoto = empleadoFound.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
+        String path = employeeImgfolder.concat(namePhoto).concat(".jpg");
+        rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
+        empleadoFound.setFoto(rutaFoto);
         empleadosRepository.save(empleadoFound);
     }
 

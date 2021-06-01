@@ -20,14 +20,8 @@ public class GoogleCloudStorageService {
     @Value("${gcp.bucket}")
     private String bucketName;
 
-    @Value("${gcp.app-img-folder}")
-    private String appImgfolder;
-
-    @Value("${gcp.user-img-folder}")
-    private String userImgfolder;
-
     @Value("${gcp.img-web-path}")
-    private String urlWebPath;
+    private String imgWebPath;
 
     Credentials credentials = GoogleCredentials.fromStream(new ClassPathResource("gcp-credentials.json")
             .getInputStream());
@@ -36,7 +30,7 @@ public class GoogleCloudStorageService {
     public GoogleCloudStorageService() throws IOException {
     }
 
-    public String uploadImageToGCS(MultipartFile fileStream, String username)
+    public String uploadImageToGCS(MultipartFile fileStream, String path)
             throws IOException, ServletException {
         String[] allowedExt = {"image/jpg", "image/jpeg", "image/png", "image/gif"};
 
@@ -44,13 +38,12 @@ public class GoogleCloudStorageService {
             throw new ServletException("File must be an image");
         }
 
-        final String fileName = userImgfolder.concat(username).concat(".jpg");
         storage.create(
-                BlobInfo.newBuilder(bucketName, fileName).setContentType("image/jpg").build(),
+                BlobInfo.newBuilder(bucketName, path).setContentType("image/jpg").build(),
                 fileStream.getBytes()
         );
 
-        return urlWebPath.concat(fileName);
+        return imgWebPath.concat(path);
     }
 
     public boolean isValidImage(String[] extensions, MultipartFile file) {

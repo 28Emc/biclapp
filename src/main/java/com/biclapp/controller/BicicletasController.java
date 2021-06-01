@@ -1,5 +1,6 @@
 package com.biclapp.controller;
 
+import com.biclapp.model.DTO.DTOCreateBicicletas;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateBicicletas;
 import com.biclapp.model.entity.Bicicletas;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -59,7 +61,7 @@ public class BicicletasController {
     }
 
     @PostMapping("/bicicletas")
-    public ResponseEntity<?> createBicicleta(@Valid @RequestBody Bicicletas bicicleta, BindingResult result) {
+    public ResponseEntity<?> createBicicleta(@Valid DTOCreateBicicletas createBicicleta, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
@@ -72,7 +74,7 @@ public class BicicletasController {
         }
 
         try {
-            bicicletasService.save(bicicleta);
+            bicicletasService.save(createBicicleta);
             response.put("message", "¡Bicicleta registrada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -122,6 +124,21 @@ public class BicicletasController {
         try {
             bicicletasService.updateEstado(id, update);
             response.put("message", "¡Estado de bicicleta actualizada!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/bicicletas/change-photo/{id}")
+    public ResponseEntity<?> changePhotoBicicleta(@PathVariable Long id, MultipartFile photoBicicleta) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            bicicletasService.updatePhotoBicicleta(id, photoBicicleta);
+            response.put("message", "¡Foto actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));

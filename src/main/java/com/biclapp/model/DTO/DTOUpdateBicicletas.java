@@ -25,7 +25,6 @@ public class DTOUpdateBicicletas {
     @Size(max = 255, message = "La descripción debe tener como máximo 255 caracteres")
     private String descripcion;
 
-    @Size(max = 255, message = "La foto debe tener como máximo 255 caracteres")
     private String foto;
 
     @Size(max = 45, message = "El color debe tener como máximo 45 caracteres")
