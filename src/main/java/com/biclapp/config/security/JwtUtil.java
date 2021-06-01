@@ -17,6 +17,7 @@ public class JwtUtil {
 
     @Value("${jwt.secret-key}")
     private String SECRET_KEY;
+
     private int TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 10;
 
     public String extractUsername(String token) {
