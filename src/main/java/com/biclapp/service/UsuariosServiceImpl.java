@@ -35,8 +35,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Autowired
     private GoogleCloudStorageService cloudStorageService;
 
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     @Autowired
     private ITokensService tokenService;
