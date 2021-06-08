@@ -35,6 +35,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Autowired
     private GoogleCloudStorageService cloudStorageService;
 
+    @Autowired
     private BCryptPasswordEncoder encoder;
 
     @Autowired
@@ -98,7 +99,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
             repository.save(usuariosNew);
 
             int codigoMonedero = monederoService.findAll().toArray().length;
-            Monederos monedero = new Monederos(codigoMonedero, usuariosNew.getId(), 0);
+            Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 0);
             monederoService.save(monedero);
 
             DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
