@@ -61,8 +61,7 @@ public class UsuariosController {
             final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
             Usuarios usuario = usuariosService.findByUsername(userDetails.getUsername());
             final String jwt = jwtUtil.generateToken(userDetails);
-            response.put("message", "Bienvenido, " + usuario.getUsername());
-            response.put("authenticationResponse", new AuthenticationResponse(jwt));
+            response.put("authenticationResponse", new AuthenticationResponse(jwt, "Bienvenido, " + usuario.getUsername()));
         } catch (BadCredentialsException e) {
             response.put("message", "¡Nombre de usuario y/o contraseña incorrectos!");
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
