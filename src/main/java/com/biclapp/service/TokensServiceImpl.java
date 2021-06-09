@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class TokensServiceImpl implements ITokensService {
 
@@ -14,7 +16,7 @@ public class TokensServiceImpl implements ITokensService {
 
     @Override
     @Transactional(readOnly = true)
-    public Tokens findByEmail(String email) {
+    public List<Tokens> findByEmail(String email) {
         return tokensRepository.findByEmail(email);
     }
 

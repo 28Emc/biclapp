@@ -188,6 +188,10 @@ public class UsuariosServiceImpl implements IUsuariosService {
             updateToken.setCodigo(codigoRandom);
             Tokens token = new Tokens(updateToken.getEmail(), updateToken.getTipo_accion(), null,
                     codigoRandom, LocalDateTime.now());
+            List<Tokens> tokensFound = tokenService.findByEmail(updateToken.getEmail());
+            if (tokensFound.size() > 0) {
+                tokensFound.forEach(tokenItem -> tokenService.delete(tokenItem.getId()));
+            }
             tokenService.save(token);
 
             Map<String, Object> model = new HashMap<>();

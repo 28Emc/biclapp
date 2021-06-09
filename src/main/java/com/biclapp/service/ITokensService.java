@@ -2,9 +2,11 @@ package com.biclapp.service;
 
 import com.biclapp.model.entity.Tokens;
 
+import java.util.List;
+
 public interface ITokensService {
 
-    Tokens findByEmail(String email);
+    List<Tokens> findByEmail(String email);
 
     Tokens findByEmailAndCodigo(String email, int codigo) throws Exception;
 
