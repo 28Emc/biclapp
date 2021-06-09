@@ -202,14 +202,20 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    public boolean validateCode(DTOUpdateToken updateToken) throws Exception {
+        // RECIBO EL CODIGO DE 4 DÍGITOS, BUSCO EL USUARIO POR EL CODIGO Y EL CORREO,
+        // SI ENCUENTRO EL CÓDIGO ASOCIADO, MANDO TRUE COMO CONFIRMACIÓN
+        Optional<Tokens> tokenFound = Optional.ofNullable(tokenService.findByEmailAndCodigo(updateToken.getEmail(), updateToken.getCodigo()));
+        tokenFound.ifPresent(tokens -> tokenService.delete(tokens.getId()));
+        return true;
+    }
+
+    @Override
     public void updatePasswordAction(DTOUpdateToken updateToken) throws Exception {
-        // RECIBO EL CODIGO DE 4 DÍGITOS Y LA CONTRASEÑA, BUSCO EL USUARIO POR EL CODIGO Y EL CORREO,
-        // ACTUALIZO EL USUARIO Y REENVÍO UN CORREO DE CONFIRMACIÓN.
-        Tokens tokenFound = tokenService.findByEmailAndCodigo(updateToken.getEmail(), updateToken.getCodigo());
+        // BUSCO EL USUARIO POR EL CORREO, ACTUALIZO EL USUARIO Y REENVÍO UN CORREO DE CONFIRMACIÓN.
         Usuarios usuarioFound = repository.findByUsername(updateToken.getEmail()).orElseThrow(() -> new Exception("¡El usuario no existe!"));
         usuarioFound.setPassword(encoder.encode(updateToken.getPassword()));
         repository.save(usuarioFound);
-        tokenService.delete(tokenFound.getId());
 
         Map<String, Object> model = new HashMap<>();
         model.put("from", emailFrom);

@@ -30,6 +30,8 @@ public interface IUsuariosService {
 
     void updatePasswordRequest(DTOUpdateToken updatePassword) throws Exception;
 
+    boolean validateCode(DTOUpdateToken updateToken) throws Exception;
+
     void updatePasswordAction(DTOUpdateToken updatePassword) throws Exception;
 
     void updatePhotoUser(Long id, MultipartFile photo) throws Exception;

@@ -245,6 +245,30 @@ public class UsuariosController {
         }
     }
 
+    @PostMapping("/account/validate-code")
+    public ResponseEntity<?> validateCode(@Valid @RequestBody DTOUpdateToken updatePassword, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            usuariosService.validateCode(updatePassword);
+            response.put("message", "¡Código validado correctamente!");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/account/password-action")
     public ResponseEntity<?> changePasswordAccion(@Valid @RequestBody DTOUpdateToken updatePassword, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
