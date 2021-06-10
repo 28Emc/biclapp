@@ -64,19 +64,30 @@ public class PedidosServiceImpl implements IPedidosService {
         List<DetallesPedido> detallePedidoList = findByUserAndPedido(id_usuario, id_pedido);
         List<DTODetallePedido> nDetallePedido = new ArrayList<>();
         if (pedidoFound.getTipo_pedido().equals("B")) {
-            Bicicletas bicicletaFound = bicicletasService.findById(pedidoFound.getId());
-            detallePedidoList.forEach(detP -> nDetallePedido.add(new DTODetallePedido(
-                    detP.getId(), id_pedido, bicicletaFound.getId(), pedidoFound.getTipo_pedido(),
-                    bicicletaFound.getMarca(), bicicletaFound.getModelo(), null, null,
-                    null, bicicletaFound.getFoto(), detP.getCantidad(), detP.getPrecio(),
-                    detP.getTotal())));
+            detallePedidoList.forEach(detP -> {
+                try {
+                    Bicicletas bicicletaFound = bicicletasService.findById(detP.getId_producto());
+                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, bicicletaFound.getId(),
+                            pedidoFound.getTipo_pedido(), bicicletaFound.getMarca(),
+                            bicicletaFound.getModelo(), null, null,
+                            null, bicicletaFound.getFoto(), detP.getCantidad(),
+                            detP.getPrecio(), detP.getTotal()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         } else if (pedidoFound.getTipo_pedido().equals("A")) {
-            Accesorios accesorioFound = accesoriosService.findById(pedidoFound.getId());
-            detallePedidoList.forEach(detP -> nDetallePedido.add(new DTODetallePedido(
-                    detP.getId(), id_pedido, null, pedidoFound.getTipo_pedido(),
-                    null, null, accesorioFound.getNombre(), accesorioFound.getDescripcion(),
-                    accesorioFound.getTipo(), accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(),
-                    detP.getTotal())));
+            detallePedidoList.forEach(detP -> {
+                try {
+                    Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
+                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, null,
+                            pedidoFound.getTipo_pedido(), null, null,
+                            accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
+                            accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getTotal()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         return nDetallePedido;
