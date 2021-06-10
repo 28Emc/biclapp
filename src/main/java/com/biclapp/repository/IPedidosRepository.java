@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface IPedidosRepository extends CrudRepository<Pedidos, Long> {
-    List<Pedidos> findById_usuario(Long id_usuario);
+    List<Pedidos> findByIdUsuario(Long id_usuario);
 
     //List<Pedidos> findAllWithDetails(); // TODO: CREAR SP
 

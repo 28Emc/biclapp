@@ -2,7 +2,6 @@ package com.biclapp.model.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
 @Table(name = "pedidos")
@@ -10,8 +9,8 @@ public class Pedidos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     private Long id_empleado;
 
@@ -28,9 +27,9 @@ public class Pedidos {
     public Pedidos() {
     }
 
-    public Pedidos(Long id, Long id_usuario, Long id_empleado, Integer codigo, String estado, String tipo_pedido, String direccion, LocalDateTime fecha_registro) {
+    public Pedidos(Long id, Long idUsuario, Long id_empleado, Integer codigo, String estado, String tipo_pedido, String direccion, LocalDateTime fecha_registro) {
         this.id = id;
-        this.id_usuario = id_usuario;
+        this.idUsuario = idUsuario;
         this.id_empleado = id_empleado;
         this.codigo = codigo;
         this.estado = estado;
@@ -47,12 +46,12 @@ public class Pedidos {
         this.id = id;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public Long getId_empleado() {

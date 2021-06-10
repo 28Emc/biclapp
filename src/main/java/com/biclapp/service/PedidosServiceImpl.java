@@ -8,8 +8,6 @@ import com.biclapp.model.entity.*;
 import com.biclapp.repository.IDetallesPedidoRepository;
 import com.biclapp.repository.IPedidosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +45,7 @@ public class PedidosServiceImpl implements IPedidosService {
     @Override
     @Transactional(readOnly = true)
     public List<Pedidos> findByIdUsuario(Long id_usuario) {
-        return repository.findById_usuario(id_usuario);
+        return repository.findByIdUsuario(id_usuario);
     }
 
 
@@ -130,7 +128,7 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         Empleados empleadoFound = empleadosService.findById(createPedidos.getId_empleado());
-        pedidoNew.setId_usuario(usuarioFound.getId());
+        pedidoNew.setIdUsuario(usuarioFound.getId());
         int contador = findAll().toArray().length;
         pedidoNew.setCodigo(contador + 1);
         pedidoNew.setId_empleado(empleadoFound.getId());
@@ -165,7 +163,7 @@ public class PedidosServiceImpl implements IPedidosService {
     public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
-        pedidoNew.setId_usuario(usuarioFound.getId());
+        pedidoNew.setIdUsuario(usuarioFound.getId());
         int contador = findAll().toArray().length;
         pedidoNew.setCodigo(contador + 1);
         //pedidoNew.setId_empleado(null);
@@ -207,7 +205,7 @@ public class PedidosServiceImpl implements IPedidosService {
             Usuarios usuarioFound = usuariosService.findById(updatePedidos.getId_usuario());
             Empleados empleadoFound = empleadosService.findById(updatePedidos.getId_empleado());
             int contador = findAll().toArray().length;
-            pedidoFound.setId_usuario(usuarioFound.getId());
+            pedidoFound.setIdUsuario(usuarioFound.getId());
             pedidoFound.setId_empleado(empleadoFound.getId());
             pedidoFound.setTipo_pedido(updatePedidos.getTipo_pedido());
             pedidoFound.setDireccion(updatePedidos.getDireccion());
