@@ -13,7 +13,7 @@ public class DTOCreatePedidos {
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
 
-    @NotNull(message = "Empleado requerido")
+    //@NotNull(message = "Empleado requerido")
     private Long id_empleado;
 
     private String estado;

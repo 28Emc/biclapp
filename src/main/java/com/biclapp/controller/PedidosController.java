@@ -140,6 +140,30 @@ public class PedidosController {
         }
     }
 
+    @PostMapping("/pedido-bike")
+    public ResponseEntity<?> createPedidoBike(@Valid @RequestBody DTOCreatePedidos createPedidos, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        if (result.hasErrors()) {
+            List<String> errores = result.getFieldErrors()
+                    .stream()
+                    .map(DefaultMessageSourceResolvable::getDefaultMessage)
+                    .collect(Collectors.toList());
+            response.put("errores", errores);
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            pedidosService.giveBikeToUser(createPedidos);
+            response.put("message", "¡Pedido registrado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PutMapping("/pedidos/{id}")
     public ResponseEntity<?> editPedido(@PathVariable Long id, @Valid @RequestBody DTOUpdatePedidos updatePedidos, BindingResult result) {
         Map<String, Object> response = new HashMap<>();

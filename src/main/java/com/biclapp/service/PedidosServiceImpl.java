@@ -113,6 +113,41 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    public void giveBikeToUser(DTOCreatePedidos createPedidos) throws Exception {
+        Pedidos pedidoNew = new Pedidos();
+        Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
+        pedidoNew.setId_usuario(usuarioFound.getId());
+        int contador = findAll().toArray().length;
+        pedidoNew.setCodigo(contador + 1);
+        //pedidoNew.setId_empleado(null);
+        pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
+        pedidoNew.setDireccion(createPedidos.getDireccion());
+        pedidoNew.setFecha_registro(LocalDateTime.now());
+        pedidoNew.setEstado("R");
+        repository.save(pedidoNew);
+
+        createPedidos.getDetalles_pedido().forEach(p -> {
+            try {
+                DetallesPedido detallesPedido = new DetallesPedido();
+                if (createPedidos.getTipo_pedido().equals("A")) {
+                    Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                    detallesPedido.setId_producto(accesorioFound.getId());
+                } else if (createPedidos.getTipo_pedido().equals("B")) {
+                    Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
+                    detallesPedido.setId_producto(bicicletaFound.getId());
+                }
+                detallesPedido.setIdPedido(pedidoNew.getId());
+                detallesPedido.setCantidad(p.getCantidad());
+                detallesPedido.setPrecio(p.getPrecio());
+                detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                detallesPedidoRepository.save(detallesPedido);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    @Override
     public void update(Long id, DTOUpdatePedidos updatePedidos) throws Exception {
         Pedidos pedidoFound = findById(id);
         if (pedidoFound.getEstado().equals("R")) {

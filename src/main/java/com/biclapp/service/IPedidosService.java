@@ -23,6 +23,8 @@ public interface IPedidosService {
 
     void save(DTOCreatePedidos createPedidos) throws Exception;
 
+    void giveBikeToUser(DTOCreatePedidos createPedidos) throws Exception;
+
     void update(Long id, DTOUpdatePedidos updatePedidos) throws Exception;
 
     void updateEstado(Long id, DTOUpdate update) throws Exception;
