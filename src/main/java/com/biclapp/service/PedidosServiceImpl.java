@@ -80,7 +80,7 @@ public class PedidosServiceImpl implements IPedidosService {
             detallePedidoList.forEach(detP -> {
                 try {
                     Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
-                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, null,
+                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
                             pedidoFound.getTipo_pedido(), null, null,
                             accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
                             accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getTotal()));
