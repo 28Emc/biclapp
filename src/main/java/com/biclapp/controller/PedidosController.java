@@ -4,7 +4,6 @@ import com.biclapp.model.DTO.DTOCreatePedidos;
 import com.biclapp.model.DTO.DTODetallePedido;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdatePedidos;
-import com.biclapp.model.entity.DetallesPedido;
 import com.biclapp.model.entity.Pedidos;
 import com.biclapp.service.IDetallesPedidoService;
 import com.biclapp.service.IPedidosService;
@@ -156,7 +155,7 @@ public class PedidosController {
         }
     }
 
-    @PostMapping("/pedido-bike")
+    @PostMapping({"/pedido-bike", "/pedido-user"})
     public ResponseEntity<?> createPedidoBike(@Valid @RequestBody DTOCreatePedidos createPedidos, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
@@ -170,7 +169,7 @@ public class PedidosController {
         }
 
         try {
-            pedidosService.giveBikeToUser(createPedidos);
+            pedidosService.createPedidoUser(createPedidos);
             response.put("message", "¡Pedido registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {

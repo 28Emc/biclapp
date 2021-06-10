@@ -156,7 +156,7 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
-    public void giveBikeToUser(DTOCreatePedidos createPedidos) throws Exception {
+    public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         pedidoNew.setId_usuario(usuarioFound.getId());
