@@ -13,6 +13,8 @@ public interface IPedidosService {
 
     List<Pedidos> findAll();
 
+    List<Pedidos> findByIdUsuario(Long id_usuario);
+
     Pedidos findById(Long id) throws Exception;
 
     List<DetallesPedido> findByUserAndPedido(Long id_usuario, Long id_pedido) throws Exception;

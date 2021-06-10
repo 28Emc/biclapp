@@ -73,6 +73,20 @@ public class PedidosController {
         }
     }
 
+    @GetMapping("/pedidos-user/{id}")
+    public ResponseEntity<?> getPedidosByUser(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<Pedidos> pedidos = pedidosService.findByIdUsuario(id);
+            response.put("pedidos", pedidos);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     /*
     @GetMapping("/pedidos-details")
     public ResponseEntity<?> getAllPedidosWithDetails() {

@@ -44,6 +44,12 @@ public class PedidosServiceImpl implements IPedidosService {
         return (List<Pedidos>) repository.findAll();
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<Pedidos> findByIdUsuario(Long id_usuario) {
+        return repository.findByIdUsuario(id_usuario);
+    }
+
 
     @Override
     @Transactional(readOnly = true)
@@ -53,7 +59,7 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Override
     public List<DetallesPedido> findByUserAndPedido(Long id_usuario, Long id_pedido) throws Exception {
-        Usuarios usuarioFound = usuariosService.findById(id_usuario);
+        usuariosService.findById(id_usuario);
         Pedidos pedidoFound = findById(id_pedido);
         return detallesPedidoRepository.findByIdPedido(pedidoFound.getId());
     }
