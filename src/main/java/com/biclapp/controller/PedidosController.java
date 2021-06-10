@@ -45,7 +45,7 @@ public class PedidosController {
         }
     }
 
-    @GetMapping("/pedidos-user")
+    @GetMapping("/pedidos-user/{id_usuario}/{id_pedido}")
     public ResponseEntity<?> getAllDetallesPedidoByUser(@PathVariable Long id_usuario, @PathVariable Long id_pedido) {
         Map<String, Object> response = new HashMap<>();
         try {
