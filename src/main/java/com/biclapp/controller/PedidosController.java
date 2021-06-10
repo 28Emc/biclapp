@@ -3,6 +3,7 @@ package com.biclapp.controller;
 import com.biclapp.model.DTO.DTOCreatePedidos;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdatePedidos;
+import com.biclapp.model.entity.DetallesPedido;
 import com.biclapp.model.entity.Pedidos;
 import com.biclapp.service.IDetallesPedidoService;
 import com.biclapp.service.IPedidosService;
@@ -36,6 +37,20 @@ public class PedidosController {
         try {
             List<Pedidos> pedidos = pedidosService.findAll();
             response.put("pedidos", pedidos);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/pedidos-user")
+    public ResponseEntity<?> getAllDetallesPedidoByUser(@PathVariable Long id_usuario, @PathVariable Long id_pedido) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<DetallesPedido> detPedido = pedidosService.findByUserAndPedido(id_usuario, id_pedido);
+            response.put("detalles-pedido", detPedido);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));

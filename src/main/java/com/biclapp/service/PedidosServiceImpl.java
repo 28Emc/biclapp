@@ -50,6 +50,13 @@ public class PedidosServiceImpl implements IPedidosService {
         return repository.findById(id).orElseThrow(() -> new Exception("El pedido con el id ".concat(id.toString()).concat(" no existe.")));
     }
 
+    @Override
+    public List<DetallesPedido> findByUserAndPedido(Long id_usuario, Long id_pedido) throws Exception {
+        Usuarios usuarioFound = usuariosService.findById(id_usuario);
+        Pedidos pedidoFound = findById(id_pedido);
+        return detallesPedidoRepository.findByIdPedido(pedidoFound.getId());
+    }
+
     /*
     @Override
     @Transactional(readOnly = true)

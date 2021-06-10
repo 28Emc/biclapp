@@ -3,6 +3,7 @@ package com.biclapp.service;
 import com.biclapp.model.DTO.DTOCreatePedidos;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdatePedidos;
+import com.biclapp.model.entity.DetallesPedido;
 import com.biclapp.model.entity.Pedidos;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface IPedidosService {
     List<Pedidos> findAll();
 
     Pedidos findById(Long id) throws Exception;
+
+    List<DetallesPedido> findByUserAndPedido(Long id_usuario, Long id_pedido) throws Exception;
 
     //List<Pedidos> findAllWithDetails(); // TODO: CREAR SP
 
