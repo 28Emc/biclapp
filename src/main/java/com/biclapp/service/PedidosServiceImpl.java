@@ -47,7 +47,7 @@ public class PedidosServiceImpl implements IPedidosService {
     @Override
     @Transactional(readOnly = true)
     public List<Pedidos> findByIdUsuario(Long id_usuario) {
-        return repository.findByIdUsuario(id_usuario);
+        return repository.findById_usuario(id_usuario);
     }
 
 
