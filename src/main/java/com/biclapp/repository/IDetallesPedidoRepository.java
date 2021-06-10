@@ -1,5 +1,6 @@
 package com.biclapp.repository;
 
+import com.biclapp.model.DTO.DTODetallePedido;
 import com.biclapp.model.entity.DetallesPedido;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

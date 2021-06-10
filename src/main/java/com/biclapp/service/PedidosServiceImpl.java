@@ -1,6 +1,7 @@
 package com.biclapp.service;
 
 import com.biclapp.model.DTO.DTOCreatePedidos;
+import com.biclapp.model.DTO.DTODetallePedido;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdatePedidos;
 import com.biclapp.model.entity.*;
@@ -55,6 +56,30 @@ public class PedidosServiceImpl implements IPedidosService {
         Usuarios usuarioFound = usuariosService.findById(id_usuario);
         Pedidos pedidoFound = findById(id_pedido);
         return detallesPedidoRepository.findByIdPedido(pedidoFound.getId());
+    }
+
+    @Override
+    public List<DTODetallePedido> findByUserAndPedidoWithDetail(Long id_usuario, Long id_pedido) throws Exception {
+        Pedidos pedidoFound = findById(id_pedido);
+        List<DetallesPedido> detallePedidoList = findByUserAndPedido(id_usuario, id_pedido);
+        List<DTODetallePedido> nDetallePedido = new ArrayList<>();
+        if (pedidoFound.getTipo_pedido().equals("A")) {
+            Bicicletas bicicletaFound = bicicletasService.findById(pedidoFound.getId());
+            detallePedidoList.forEach(detP -> nDetallePedido.add(new DTODetallePedido(
+                    detP.getId(), id_pedido, bicicletaFound.getId(), pedidoFound.getTipo_pedido(),
+                    bicicletaFound.getMarca(), bicicletaFound.getModelo(), null, null,
+                    null, bicicletaFound.getFoto(), detP.getCantidad(), detP.getPrecio(),
+                    detP.getTotal())));
+        } else if (pedidoFound.getTipo_pedido().equals("B")) {
+            Accesorios accesorioFound = accesoriosService.findById(pedidoFound.getId());
+            detallePedidoList.forEach(detP -> nDetallePedido.add(new DTODetallePedido(
+                    detP.getId(), id_pedido, null, pedidoFound.getTipo_pedido(),
+                    null, null, accesorioFound.getNombre(), accesorioFound.getDescripcion(),
+                    accesorioFound.getTipo(), accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(),
+                    detP.getTotal())));
+        }
+
+        return nDetallePedido;
     }
 
     /*

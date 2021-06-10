@@ -1,6 +1,7 @@
 package com.biclapp.controller;
 
 import com.biclapp.model.DTO.DTOCreatePedidos;
+import com.biclapp.model.DTO.DTODetallePedido;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdatePedidos;
 import com.biclapp.model.entity.DetallesPedido;
@@ -49,7 +50,7 @@ public class PedidosController {
     public ResponseEntity<?> getAllDetallesPedidoByUser(@PathVariable Long id_usuario, @PathVariable Long id_pedido) {
         Map<String, Object> response = new HashMap<>();
         try {
-            List<DetallesPedido> detPedido = pedidosService.findByUserAndPedido(id_usuario, id_pedido);
+            List<DTODetallePedido> detPedido = pedidosService.findByUserAndPedidoWithDetail(id_usuario, id_pedido);
             response.put("detalles-pedido", detPedido);
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
