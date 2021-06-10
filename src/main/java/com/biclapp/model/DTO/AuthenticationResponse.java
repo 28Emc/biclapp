@@ -29,5 +29,6 @@ public class AuthenticationResponse {
     public AuthenticationResponse(String token, String message, Long id) {
         this.token = token;
         this.message = message;
+        this.id = id;
     }
 }
