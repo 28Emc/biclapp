@@ -4,6 +4,7 @@ public class AuthenticationResponse {
 
     private final String token;
     private String message;
+    private Long id;
 
     public String getToken() {
         return token;
@@ -17,7 +18,15 @@ public class AuthenticationResponse {
         this.message = message;
     }
 
-    public AuthenticationResponse(String token, String message) {
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public AuthenticationResponse(String token, String message, Long id) {
         this.token = token;
         this.message = message;
     }
