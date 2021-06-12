@@ -170,6 +170,10 @@ public class PedidosServiceImpl implements IPedidosService {
     public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
+        Membresias membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
+        if (createPedidos.getTipo_pedido().equals("B")) {
+            usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
+        }
         pedidoNew.setIdUsuario(usuarioFound.getId());
         int contador = findAll().toArray().length;
         pedidoNew.setCodigo(contador + 1);
