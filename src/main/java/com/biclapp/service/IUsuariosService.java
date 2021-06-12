@@ -28,6 +28,8 @@ public interface IUsuariosService {
 
     void updateStatus(Long id, DTOUpdate update) throws Exception;
 
+    void updateMembresia(Long id, Long id_membresia) throws Exception;
+
     void updatePasswordRequest(DTOUpdateToken updatePassword) throws Exception;
 
     boolean validateCode(DTOUpdateToken updateToken) throws Exception;

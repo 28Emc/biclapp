@@ -174,6 +174,13 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    public void updateMembresia(Long id, Long id_membresia) throws Exception {
+        Usuarios usuarioFound = findById(id);
+        usuarioFound.setId_membresia(id_membresia);
+        repository.save(usuarioFound);
+    }
+
+    @Override
     public void updatePasswordRequest(DTOUpdateToken updateToken) throws Exception {
         // RECIBO EMAIL DEL USUARIO Y VERIFICAR SI EL USUARIO CON ESE CORREO ESTÁ REGISTRADO Y DESACTIVADO
         // SI ES ASÍ, GENERO UN CÓDIGO DE 4 DÍGITOS Y LO ENVÍO AL CORREO RECIBIDO.

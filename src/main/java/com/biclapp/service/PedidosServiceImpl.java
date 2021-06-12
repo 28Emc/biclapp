@@ -28,6 +28,9 @@ public class PedidosServiceImpl implements IPedidosService {
     private IUsuariosService usuariosService;
 
     @Autowired
+    private IMembresiasService membresiaService;
+
+    @Autowired
     private IEmpleadosService empleadosService;
 
     @Autowired
@@ -128,6 +131,10 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         Empleados empleadoFound = empleadosService.findById(createPedidos.getId_empleado());
+        Membresias membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
+        if (createPedidos.getTipo_pedido().equals("B")) {
+            usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
+        }
         pedidoNew.setIdUsuario(usuarioFound.getId());
         int contador = findAll().toArray().length;
         pedidoNew.setCodigo(contador + 1);

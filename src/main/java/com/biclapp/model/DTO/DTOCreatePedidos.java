@@ -13,6 +13,8 @@ public class DTOCreatePedidos {
     @NotNull(message = "Usuario requerido")
     private Long id_usuario;
 
+    private Long id_membresia;
+
     //@NotNull(message = "Empleado requerido")
     private Long id_empleado;
 
@@ -48,6 +50,14 @@ public class DTOCreatePedidos {
 
     public void setId_usuario(Long id_usuario) {
         this.id_usuario = id_usuario;
+    }
+
+    public Long getId_membresia() {
+        return id_membresia;
+    }
+
+    public void setId_membresia(Long id_membresia) {
+        this.id_membresia = id_membresia;
     }
 
     public Long getId_empleado() {
