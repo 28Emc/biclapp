@@ -8,7 +8,6 @@ import com.biclapp.model.entity.Usuarios;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.Map;
 
 public interface IUsuariosService {
 
@@ -20,7 +19,7 @@ public interface IUsuariosService {
 
     void save(DTOCreateUsuarios createUsuarios) throws Exception;
 
-    void activateUserRequest(DTOUpdateToken updateToken, Map<String, Object> model) throws Exception;
+    void activateUserRequest(DTOUpdateToken updateToken) throws Exception;
 
     void activateUserAction(DTOUpdateToken updateToken) throws Exception;
 

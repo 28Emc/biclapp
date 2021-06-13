@@ -110,17 +110,22 @@ public class UsuariosServiceImpl implements IUsuariosService {
             model.put("subject", "Biclapp - Verificación cuenta");
             model.put("titulo-cabecera", "Verificación cuenta");
 
-            activateUserRequest(updateToken, model);
+            activateUserRequest(updateToken);
         }
     }
 
     @Override
-    public void activateUserRequest(DTOUpdateToken updateToken, Map<String, Object> model) throws Exception {
+    public void activateUserRequest(DTOUpdateToken updateToken) throws Exception {
         int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
         Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
                 codigoRandom, LocalDateTime.now());
         tokenService.save(activateToken);
 
+        Map<String, Object> model = new HashMap<>();
+        model.put("from", emailFrom);
+        model.put("to", activateToken.getEmail());
+        model.put("subject", "Biclapp - Solicitud de recuperación de contraseña");
+        model.put("titulo-cabecera", "Recuperar Cuenta");
         model.put("codigo-verificacion", activateToken.getCodigo());
         emailService.enviarEmail(model, "VALIDAR CUENTA");
     }

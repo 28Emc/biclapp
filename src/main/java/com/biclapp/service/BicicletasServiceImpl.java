@@ -54,7 +54,13 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
-    public void save(DTOCreateBicicletas createBicicleta) throws Exception {
+    public void save(Bicicletas bicicleta) throws Exception {
+        bicicletasRepository.save(bicicleta);
+    }
+
+
+    @Override
+    public void saveCustom(DTOCreateBicicletas createBicicleta) throws Exception {
         localesService.findById(createBicicleta.getId_local());
 
         Optional<Bicicletas> bicicletaFound = bicicletasRepository.findByMarcaAndModelo(createBicicleta.getMarca(), createBicicleta.getModelo());

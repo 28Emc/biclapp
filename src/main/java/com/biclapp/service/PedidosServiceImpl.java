@@ -150,9 +150,13 @@ public class PedidosServiceImpl implements IPedidosService {
                 DetallesPedido detallesPedido = new DetallesPedido();
                 if (createPedidos.getTipo_pedido().equals("A")) {
                     Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                    accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
+                    accesoriosService.save(accesorioFound);
                     detallesPedido.setId_producto(accesorioFound.getId());
                 } else if (createPedidos.getTipo_pedido().equals("B")) {
                     Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
+                    bicicletaFound.setStock(bicicletaFound.getCodigo() - p.getCantidad());
+                    bicicletasService.save(bicicletaFound);
                     detallesPedido.setId_producto(bicicletaFound.getId());
                 }
                 detallesPedido.setIdPedido(pedidoNew.getId());
@@ -189,9 +193,13 @@ public class PedidosServiceImpl implements IPedidosService {
                 DetallesPedido detallesPedido = new DetallesPedido();
                 if (createPedidos.getTipo_pedido().equals("A")) {
                     Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                    accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
+                    accesoriosService.save(accesorioFound);
                     detallesPedido.setId_producto(accesorioFound.getId());
                 } else if (createPedidos.getTipo_pedido().equals("B")) {
                     Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
+                    bicicletaFound.setStock(bicicletaFound.getCodigo() - p.getCantidad());
+                    bicicletasService.save(bicicletaFound);
                     detallesPedido.setId_producto(bicicletaFound.getId());
                 }
                 detallesPedido.setIdPedido(pedidoNew.getId());

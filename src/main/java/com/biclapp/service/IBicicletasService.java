@@ -17,7 +17,9 @@ public interface IBicicletasService {
 
     Optional<Bicicletas> findByMarcaAndModelo(String marca, String modelo) throws Exception;
 
-    void save(DTOCreateBicicletas createBicicleta) throws Exception;
+    void save(Bicicletas bicicleta) throws Exception;
+
+    void saveCustom(DTOCreateBicicletas createBicicleta) throws Exception;
 
     void update(Long id, DTOUpdateBicicletas updateBicicleta) throws Exception;
 

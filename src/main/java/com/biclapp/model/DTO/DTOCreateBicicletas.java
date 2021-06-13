@@ -6,8 +6,8 @@ import javax.validation.constraints.*;
 
 public class DTOCreateBicicletas {
 
-    @Positive(message = "El valor del stock debe ser mayor a 0")
-    private Integer codigo;
+    @PositiveOrZero(message = "El valor del stock debe ser mayor a 0")
+    private int codigo;
 
     @NotNull(message = "Local requerido")
     private Long id_local;
@@ -36,7 +36,7 @@ public class DTOCreateBicicletas {
     public DTOCreateBicicletas() {
     }
 
-    public DTOCreateBicicletas(Integer codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, MultipartFile foto, String color) {
+    public DTOCreateBicicletas(int codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, MultipartFile foto, String color) {
         this.codigo = codigo;
         this.id_local = id_local;
         this.marca = marca;
@@ -48,11 +48,11 @@ public class DTOCreateBicicletas {
         this.color = color;
     }
 
-    public Integer getCodigo() {
+    public int getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(Integer codigo) {
+    public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
 

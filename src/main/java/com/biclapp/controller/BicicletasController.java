@@ -4,7 +4,6 @@ import com.biclapp.model.DTO.DTOCreateBicicletas;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateBicicletas;
 import com.biclapp.model.entity.Bicicletas;
-import com.biclapp.model.entity.Locales;
 import com.biclapp.service.IBicicletasService;
 import com.biclapp.service.ILocalesService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -74,7 +73,7 @@ public class BicicletasController {
         }
 
         try {
-            bicicletasService.save(createBicicleta);
+            bicicletasService.saveCustom(createBicicleta);
             response.put("message", "¡Bicicleta registrada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
