@@ -18,44 +18,38 @@ public class Recorridos {
     @Column(name = "id_usuario")
     private Long idUsuario;
 
-    @NotNull(message = "Fecha de registro requerida")
     @PastOrPresent(message = "La fecha de registro es inválida")
     private LocalDateTime fecha_registro;
 
     private LocalDateTime fecha_actualizacion;
 
     @PositiveOrZero(message = "El valor de los kilómetros debe ser mayor o igual a 0")
-    private Integer kilometros;
+    private Double kilometros;
 
-    @Size(max = 100, message = "El ritmo cardíaco debe tener entre 1 y 100 caracteres")
-    private String ritmo_cardiaco;
+    @PositiveOrZero(message = "El valor de las calorías debe ser mayor o igual a 0")
+    private Double kcal;
 
-    @Size(max = 10, message = "Las calorías debe tener entre 1 y 10 caracteres")
-    private String kcal;
+    @PositiveOrZero(message = "El valor de las horas debe ser mayor o igual a 0")
+    private Integer horas;
 
-    @PositiveOrZero(message = "El valor del peso debe ser mayor o igual a 0")
-    @DecimalMax(value = "999.99", message = "El peso tiene un valor no admitido")
-    private Double peso;
-
-    @Size(max = 20, message = "El tiempo debe tener entre 1 y 20 caracteres")
-    private String tiempo;
+    @PositiveOrZero(message = "El valor de los minutos debe ser mayor o igual a 0")
+    private Integer minutos;
 
     private String estado;
 
     public Recorridos() {
     }
 
-    public Recorridos(Long id, Integer codigo, Long idUsuario, LocalDateTime fecha_registro, LocalDateTime fecha_actualizacion, Integer kilometros, String ritmo_cardiaco, String kcal, Double peso, String tiempo, String estado) {
+    public Recorridos(Long id, Integer codigo, Long idUsuario, LocalDateTime fecha_registro, LocalDateTime fecha_actualizacion, Double kilometros, Double kcal, Integer horas, Integer minutos, String estado) {
         this.id = id;
         this.codigo = codigo;
         this.idUsuario = idUsuario;
         this.fecha_registro = fecha_registro;
         this.fecha_actualizacion = fecha_actualizacion;
         this.kilometros = kilometros;
-        this.ritmo_cardiaco = ritmo_cardiaco;
         this.kcal = kcal;
-        this.peso = peso;
-        this.tiempo = tiempo;
+        this.horas = horas;
+        this.minutos = minutos;
         this.estado = estado;
     }
 
@@ -91,44 +85,44 @@ public class Recorridos {
         this.fecha_registro = fecha_registro;
     }
 
-    public Integer getKilometros() {
+    public LocalDateTime getFecha_actualizacion() {
+        return fecha_actualizacion;
+    }
+
+    public void setFecha_actualizacion(LocalDateTime fecha_actualizacion) {
+        this.fecha_actualizacion = fecha_actualizacion;
+    }
+
+    public Double getKilometros() {
         return kilometros;
     }
 
-    public void setKilometros(Integer kilometros) {
+    public void setKilometros(Double kilometros) {
         this.kilometros = kilometros;
     }
 
-    public String getRitmo_cardiaco() {
-        return ritmo_cardiaco;
-    }
-
-    public void setRitmo_cardiaco(String ritmo_cardiaco) {
-        this.ritmo_cardiaco = ritmo_cardiaco;
-    }
-
-    public String getKcal() {
+    public Double getKcal() {
         return kcal;
     }
 
-    public void setKcal(String kcal) {
+    public void setKcal(Double kcal) {
         this.kcal = kcal;
     }
 
-    public Double getPeso() {
-        return peso;
+    public Integer getHoras() {
+        return horas;
     }
 
-    public void setPeso(Double peso) {
-        this.peso = peso;
+    public void setHoras(Integer horas) {
+        this.horas = horas;
     }
 
-    public String getTiempo() {
-        return tiempo;
+    public Integer getMinutos() {
+        return minutos;
     }
 
-    public void setTiempo(String tiempo) {
-        this.tiempo = tiempo;
+    public void setMinutos(Integer minutos) {
+        this.minutos = minutos;
     }
 
     public String getEstado() {
@@ -137,13 +131,5 @@ public class Recorridos {
 
     public void setEstado(String estado) {
         this.estado = estado;
-    }
-
-    public LocalDateTime getFecha_actualizacion() {
-        return fecha_actualizacion;
-    }
-
-    public void setFecha_actualizacion(LocalDateTime fecha_actualizacion) {
-        this.fecha_actualizacion = fecha_actualizacion;
     }
 }

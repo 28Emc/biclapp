@@ -172,11 +172,9 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Override
     public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
-        int nroItemsPedidos = createPedidos.getDetalles_pedido().size();
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         if (createPedidos.getTipo_pedido().equals("B")) {
-            nroItemsPedidos = 150;
             Membresias membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
             usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
         }
@@ -214,12 +212,47 @@ public class PedidosServiceImpl implements IPedidosService {
             }
         });
 
-        Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
+        /*Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
         if (createPedidos.getTipo_pedido().equals("A")) {
             monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() + (nroItemsPedidos * 10)));
         } else {
             monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() + nroItemsPedidos));
+        }*/
+    }
+
+    public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {
+        int cantidadItems;
+        int puntosCalculados;
+        Pedidos pedidoFound = findById(idPedido);
+        List<DetallesPedido> dList = detallesPedidoRepository.findByIdPedido(idPedido);
+        cantidadItems = dList.size();
+        Long idUsuario = pedidoFound.getIdUsuario();
+        Monederos monederoFound = monederoService.findByUser(idUsuario);
+
+        switch (tipoOperacion) {
+            case "COMPLETAR PEDIDO ACCESORIOS":
+                puntosCalculados = cantidadItems * 10;
+                break;
+            case "COMPLETAR PEDIDO BICICLETA":
+                puntosCalculados = 150;
+                break;
+            /*case "ANULAR PEDIDO BICICLETA":
+                puntosCalculados = -150;
+                break;
+            case "ANULAR PEDIDO ACCESORIOS":
+                puntosCalculados = -(cantidadItems * 10);
+                break;
+            case "COMPARTIR APP":
+                puntosCalculados = 100;
+                break;
+            case "COMPLETAR RECORRIDO":
+                puntosCalculados = 3 * kmRecorridos;
+                break;*/
+            default:
+                puntosCalculados = 0;
         }
+
+        monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(idUsuario, monederoFound.getPuntos() + puntosCalculados));
     }
 
     @Override
@@ -270,15 +303,25 @@ public class PedidosServiceImpl implements IPedidosService {
     @Override
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Pedidos pedidoFound = findById(id);
-        pedidoFound.setEstado((update.getEstado()));
+        pedidoFound.setEstado(update.getEstado());
+
+        if (pedidoFound.getEstado().equals("E")) {
+            updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
+        } /*else if (pedidoFound.getEstado().equals("B")) {
+            updatePointsPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "ANULAR PEDIDO ACCESORIOS" : "ANULAR PEDIDO BICICLETA");
+        }*/
+
         repository.save(pedidoFound);
     }
 
     @Override
     public void delete(Long id) throws Exception {
-        findById(id);
+        Pedidos pedidoFound = findById(id);
         List<DetallesPedido> detallesPedidos = detallesPedidoRepository.findByIdPedido(id);
         detallesPedidos.forEach(p -> detallesPedidoRepository.deleteById(p.getId()));
+
+        updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "ANULAR PEDIDO ACCESORIOS" : "ANULAR PEDIDO BICICLETA");
+
         repository.deleteById(id);
     }
 }

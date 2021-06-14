@@ -1,14 +1,18 @@
 package com.biclapp.service;
 
 import com.biclapp.model.DTO.DTOUpdate;
+import com.biclapp.model.DTO.DTOUpdateMonederos;
 import com.biclapp.model.DTO.DTOUpdateRecorridos;
+import com.biclapp.model.entity.Monederos;
 import com.biclapp.model.entity.Recorridos;
+import com.biclapp.model.entity.Usuarios;
 import com.biclapp.repository.IRecorridosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -19,6 +23,9 @@ public class RecorridosServiceImpl implements IRecorridosService {
 
     @Autowired
     private IUsuariosService usuariosService;
+
+    @Autowired
+    private IMonederosService monederoService;
 
     @Override
     @Transactional(readOnly = true)
@@ -51,29 +58,64 @@ public class RecorridosServiceImpl implements IRecorridosService {
         int contador = findAll().toArray().length;
         recorrido.setCodigo(contador + 1);
         recorrido.setEstado("R");
+        recorrido.setFecha_registro(LocalDateTime.now());
+        recorrido.setKilometros(0.00);
+        recorrido.setKcal(0.00);
+        recorrido.setHoras(0);
+        recorrido.setMinutos(0);
         recorridosRepository.save(recorrido);
     }
 
     @Override
     public void update(Long id, DTOUpdateRecorridos updateRecorrido) throws Exception {
         Recorridos recorridoFound = findById(id);
-        usuariosService.findById(updateRecorrido.getIdUsuario());
+        Usuarios usuarioFound = usuariosService.findById(updateRecorrido.getIdUsuario());
         recorridoFound.setKilometros(updateRecorrido.getKilometros());
-        recorridoFound.setRitmo_cardiaco(updateRecorrido.getRitmo_cardiaco());
-        recorridoFound.setKcal(updateRecorrido.getKcal());
-        recorridoFound.setPeso(updateRecorrido.getPeso());
-        recorridoFound.setTiempo(updateRecorrido.getTiempo());
-        //recorridoFound.setFecha_actualizacion(LocalDateTime.now());
-        recorridoFound.setFecha_actualizacion(updateRecorrido.getFecha_actualizacion());
-        recorridosRepository.save(recorridoFound);
+        recorridoFound.setFecha_actualizacion(LocalDateTime.now());
+        recorridoFound.setEstado(updateRecorrido.getEstado());
+
+        if (updateRecorrido.getEstado().equals("C") || updateRecorrido.getEstado().equals("B")) {
+            realizarCalculosRecorrido(recorridoFound, Double.parseDouble(usuarioFound.getPeso()));
+        } else {
+            recorridosRepository.save(recorridoFound);
+        }
     }
 
     @Override
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Recorridos recorridoFound = findById(id);
         recorridoFound.setEstado(update.getEstado());
-        // TODO: SEGÚN EL ESTADO, REALIZAR EL CÁLCULO DE LOS DEMÁS CAMPOS (KCAL, TIEMPO, ETC)
         recorridosRepository.save(recorridoFound);
+    }
+
+    public void realizarCalculosRecorrido(Recorridos recorrido, Double peso) throws Exception {
+        double kcalFinales;
+        final double CONST_FORMULA_1 = 0.049;
+        final double CONST_FORMULA_2 = 2.2;
+        long hours;
+        long minutes;
+        minutes = ChronoUnit.MINUTES.between(recorrido.getFecha_registro(), recorrido.getFecha_actualizacion());
+        recorrido.setMinutos((int) minutes);
+
+        hours = ChronoUnit.HOURS.between(recorrido.getFecha_registro(), recorrido.getFecha_actualizacion());
+        recorrido.setHoras((int) hours);
+
+        kcalFinales = CONST_FORMULA_1 * (peso * CONST_FORMULA_2) * recorrido.getMinutos();
+        recorrido.setKcal(kcalFinales);
+
+        if (recorrido.getEstado().equals("C") && recorrido.getKilometros() > 0.00 && minutes > 0) {
+            asignarPuntosRecorrido(recorrido);
+        }
+
+        recorridosRepository.save(recorrido);
+    }
+
+    public void asignarPuntosRecorrido(Recorridos recorrido) throws Exception {
+        double puntosCalculados;
+        Monederos monederoFound = monederoService.findByUser(recorrido.getIdUsuario());
+        puntosCalculados = 5 * recorrido.getKilometros();
+        monederoService.editPuntos(monederoFound.getId(),
+                new DTOUpdateMonederos(recorrido.getIdUsuario(), monederoFound.getPuntos() + (int) puntosCalculados));
     }
 
     @Override
@@ -82,3 +124,4 @@ public class RecorridosServiceImpl implements IRecorridosService {
         recorridosRepository.deleteById(id);
     }
 }
+
