@@ -1,10 +1,7 @@
 package com.biclapp.service;
 
 import com.biclapp.config.mail.EmailService;
-import com.biclapp.model.DTO.DTOCreateUsuarios;
-import com.biclapp.model.DTO.DTOUpdate;
-import com.biclapp.model.DTO.DTOUpdateToken;
-import com.biclapp.model.DTO.DTOUpdateUsuarios;
+import com.biclapp.model.DTO.*;
 import com.biclapp.model.entity.*;
 import com.biclapp.repository.IUsuariosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +95,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
             repository.save(usuariosNew);
 
             int codigoMonedero = monederoService.findAll().toArray().length;
-            Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 0);
+            Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 20);
             monederoService.save(monedero);
 
             DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
@@ -110,13 +107,34 @@ public class UsuariosServiceImpl implements IUsuariosService {
             model.put("subject", "Biclapp - Verificación cuenta");
             model.put("titulo-cabecera", "Verificación cuenta");
 
-            activateUserRequest(updateToken);
+            int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
+            String codStr = String.valueOf(codigoRandom);
+
+            while (codStr.length() < 4) {
+                codStr = codStr.concat("0");
+            }
+
+            codigoRandom = Integer.parseInt(codStr);
+            Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
+                    codigoRandom, LocalDateTime.now());
+            tokenService.save(activateToken);
+
+            model.put("codigo-verificacion", activateToken.getCodigo());
+
+            emailService.enviarEmail(model, "VALIDAR CUENTA");
         }
     }
 
     @Override
     public void activateUserRequest(DTOUpdateToken updateToken) throws Exception {
         int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
+        String codStr = String.valueOf(codigoRandom);
+
+        while (codStr.length() < 4) {
+            codStr = codStr.concat("0");
+        }
+
+        codigoRandom = Integer.parseInt(codStr);
         Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
                 codigoRandom, LocalDateTime.now());
         tokenService.save(activateToken);
@@ -127,7 +145,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
         model.put("subject", "Biclapp - Solicitud de recuperación de contraseña");
         model.put("titulo-cabecera", "Recuperar Cuenta");
         model.put("codigo-verificacion", activateToken.getCodigo());
-        emailService.enviarEmail(model, "VALIDAR CUENTA");
+        emailService.enviarEmail(model, "CAMBIO CONTRASEÑA");
     }
 
     @Override
@@ -139,6 +157,11 @@ public class UsuariosServiceImpl implements IUsuariosService {
         usuarioFound.setActivo(true);
         tokenService.delete(tokenFound.getId());
         repository.save(usuarioFound);
+        Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
+        if (monederoFound.getPuntos() == 10) {
+            int puntos = monederoFound.getPuntos() + 10;
+            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), puntos));
+        }
 
         Map<String, Object> model = new HashMap<>();
         model.put("from", emailFrom);
@@ -197,6 +220,13 @@ public class UsuariosServiceImpl implements IUsuariosService {
             throw new Exception("¡El usuario se encuentra inactivo! Activar la cuenta para continuar.");
         } else {
             int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
+            String codStr = String.valueOf(codigoRandom);
+
+            while (codStr.length() < 4) {
+                codStr = codStr.concat("0");
+            }
+
+            codigoRandom = Integer.parseInt(codStr);
             updateToken.setCodigo(codigoRandom);
             Tokens token = new Tokens(updateToken.getEmail(), updateToken.getTipo_accion(), null,
                     codigoRandom, LocalDateTime.now());

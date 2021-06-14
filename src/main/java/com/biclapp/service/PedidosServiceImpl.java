@@ -1,9 +1,6 @@
 package com.biclapp.service;
 
-import com.biclapp.model.DTO.DTOCreatePedidos;
-import com.biclapp.model.DTO.DTODetallePedido;
-import com.biclapp.model.DTO.DTOUpdate;
-import com.biclapp.model.DTO.DTOUpdatePedidos;
+import com.biclapp.model.DTO.*;
 import com.biclapp.model.entity.*;
 import com.biclapp.repository.IDetallesPedidoRepository;
 import com.biclapp.repository.IPedidosRepository;
@@ -29,6 +26,9 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Autowired
     private IMembresiasService membresiaService;
+
+    @Autowired
+    private IMonederosService monederoService;
 
     @Autowired
     private IEmpleadosService empleadosService;
@@ -172,10 +172,12 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Override
     public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
+        int nroItemsPedidos = createPedidos.getDetalles_pedido().size();
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
-        Membresias membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
         if (createPedidos.getTipo_pedido().equals("B")) {
+            nroItemsPedidos = 150;
+            Membresias membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
             usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
         }
         pedidoNew.setIdUsuario(usuarioFound.getId());
@@ -211,6 +213,13 @@ public class PedidosServiceImpl implements IPedidosService {
                 e.printStackTrace();
             }
         });
+
+        Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
+        if (createPedidos.getTipo_pedido().equals("A")) {
+            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() + (nroItemsPedidos * 10)));
+        } else {
+            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() + nroItemsPedidos));
+        }
     }
 
     @Override
