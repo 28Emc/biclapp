@@ -3,10 +3,7 @@ package com.biclapp.controller;
 import com.biclapp.config.security.JwtUtil;
 import com.biclapp.model.DTO.*;
 import com.biclapp.model.entity.Usuarios;
-import com.biclapp.service.CustomUserDetailsService;
-import com.biclapp.service.IMembresiasService;
-import com.biclapp.service.IRolesService;
-import com.biclapp.service.IUsuariosService;
+import com.biclapp.service.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -33,6 +30,9 @@ public class UsuariosController {
 
     @Autowired
     private IUsuariosService usuariosService;
+
+    @Autowired
+    private ITokensService tokenService;
 
     @Autowired
     private IRolesService rolesService;
@@ -166,6 +166,20 @@ public class UsuariosController {
             usuariosService.activateUserAction(updateToken);
             response.put("message", "¡Su cuenta de usuario ha sido activada de manera exitosa!");
             return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/account/new-code/{email}/{tipo}")
+    public ResponseEntity<?> reenvioCodigo(@PathVariable String email, @PathVariable String tipo) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            tokenService.updateToken(email, tipo);
+            response.put("message", "¡Código actualizado! Revisa tu correo.");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());

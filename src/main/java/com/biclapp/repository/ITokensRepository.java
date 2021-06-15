@@ -12,5 +12,7 @@ public interface ITokensRepository extends CrudRepository<Tokens, Long> {
 
     List<Tokens> findByEmail(String email);
 
+    Tokens findByEmailAndTipoAccion(String email, String tipoAccion);
+
     Optional<Tokens> findByEmailAndCodigo(String email, int codigo) throws Exception;
 }
