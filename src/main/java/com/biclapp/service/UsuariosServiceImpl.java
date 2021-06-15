@@ -95,7 +95,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
             repository.save(usuariosNew);
 
             int codigoMonedero = monederoService.findAll().toArray().length;
-            Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 20);
+            Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 1000);
             monederoService.save(monedero);
 
             DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
@@ -158,8 +158,8 @@ public class UsuariosServiceImpl implements IUsuariosService {
         tokenService.delete(tokenFound.getId());
         repository.save(usuarioFound);
         Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
-        if (monederoFound.getPuntos() == 10) {
-            int puntos = monederoFound.getPuntos() + 10;
+        if (monederoFound.getPuntos() == 1000) {
+            int puntos = monederoFound.getPuntos() + 1000;
             monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), puntos));
         }
 

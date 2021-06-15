@@ -113,7 +113,7 @@ public class RecorridosServiceImpl implements IRecorridosService {
     public void asignarPuntosRecorrido(Recorridos recorrido) throws Exception {
         double puntosCalculados;
         Monederos monederoFound = monederoService.findByUser(recorrido.getIdUsuario());
-        puntosCalculados = 5 * recorrido.getKilometros();
+        puntosCalculados = 300 * recorrido.getKilometros();
         monederoService.editPuntos(monederoFound.getId(),
                 new DTOUpdateMonederos(recorrido.getIdUsuario(), monederoFound.getPuntos() + (int) puntosCalculados));
     }

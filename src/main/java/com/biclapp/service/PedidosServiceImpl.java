@@ -150,18 +150,29 @@ public class PedidosServiceImpl implements IPedidosService {
                 DetallesPedido detallesPedido = new DetallesPedido();
                 if (createPedidos.getTipo_pedido().equals("A")) {
                     Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
-                    accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
-                    accesoriosService.save(accesorioFound);
-                    detallesPedido.setId_producto(accesorioFound.getId());
+                    if (accesorioFound.getStock() > 0 || accesorioFound.getStock() >= p.getCantidad()) {
+                        accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
+                        accesoriosService.save(accesorioFound);
+                        detallesPedido.setId_producto(accesorioFound.getId());
+                        detallesPedido.setPuntos(0);
+                    } else {
+                        throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
+                    }
                 } else if (createPedidos.getTipo_pedido().equals("B")) {
                     Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
-                    bicicletaFound.setStock(bicicletaFound.getCodigo() - p.getCantidad());
-                    bicicletasService.save(bicicletaFound);
-                    detallesPedido.setId_producto(bicicletaFound.getId());
+                    if (bicicletaFound.getStock() > 0 || bicicletaFound.getStock() >= p.getCantidad()) {
+                        bicicletaFound.setStock(bicicletaFound.getStock() - p.getCantidad());
+                        bicicletasService.save(bicicletaFound);
+                        detallesPedido.setId_producto(bicicletaFound.getId());
+                        detallesPedido.setPuntos(0);
+                    } else {
+                        throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
+                    }
                 }
                 detallesPedido.setIdPedido(pedidoNew.getId());
                 detallesPedido.setCantidad(p.getCantidad());
                 detallesPedido.setPrecio(p.getPrecio());
+                detallesPedido.setPuntos(0);
                 detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                 detallesPedidoRepository.save(detallesPedido);
             } catch (Exception e) {
@@ -181,7 +192,6 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setIdUsuario(usuarioFound.getId());
         int contador = findAll().toArray().length;
         pedidoNew.setCodigo(contador + 1);
-        //pedidoNew.setId_empleado(null);
         pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
         pedidoNew.setDireccion(createPedidos.getDireccion());
         pedidoNew.setFecha_registro(LocalDateTime.now());
@@ -191,33 +201,65 @@ public class PedidosServiceImpl implements IPedidosService {
         createPedidos.getDetalles_pedido().forEach(p -> {
             try {
                 DetallesPedido detallesPedido = new DetallesPedido();
-                if (createPedidos.getTipo_pedido().equals("A")) {
-                    Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
-                    accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
-                    accesoriosService.save(accesorioFound);
-                    detallesPedido.setId_producto(accesorioFound.getId());
-                } else if (createPedidos.getTipo_pedido().equals("B")) {
-                    Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
-                    bicicletaFound.setStock(bicicletaFound.getCodigo() - p.getCantidad());
-                    bicicletasService.save(bicicletaFound);
-                    detallesPedido.setId_producto(bicicletaFound.getId());
+                switch (createPedidos.getTipo_pedido()) {
+                    case "A": {
+                        Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                        if (accesorioFound.getStock() > 0 || accesorioFound.getStock() >= p.getCantidad()) {
+                            accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
+                            accesoriosService.save(accesorioFound);
+                            detallesPedido.setId_producto(accesorioFound.getId());
+                            detallesPedido.setPuntos(0);
+                            detallesPedido.setPrecio(p.getPrecio());
+                            detallesPedido.setCantidad(p.getCantidad());
+                            detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                        } else {
+                            throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
+                        }
+                        break;
+                    }
+                    case "B":
+                        Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
+                        if (bicicletaFound.getStock() > 0 || bicicletaFound.getStock() >= p.getCantidad()) {
+                            bicicletaFound.setStock(bicicletaFound.getStock() - p.getCantidad());
+                            bicicletasService.save(bicicletaFound);
+                            detallesPedido.setId_producto(bicicletaFound.getId());
+                            detallesPedido.setPuntos(0);
+                            detallesPedido.setPrecio(p.getPrecio());
+                            detallesPedido.setCantidad(p.getCantidad());
+                            detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                        } else {
+                            throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
+                        }
+                        break;
+                    case "C": {
+                        Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
+                        Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
+                        if (monederoFound.getPuntos() >= p.getPuntos()) {
+                            if (accesorioFound.getStock() > 0 || accesorioFound.getStock() >= p.getCantidad()) {
+                                accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
+                                accesoriosService.save(accesorioFound);
+                                detallesPedido.setId_producto(accesorioFound.getId());
+                                detallesPedido.setPrecio(0.00);
+                                detallesPedido.setCantidad(p.getCantidad());
+                                detallesPedido.setPuntos(p.getPuntos() / p.getCantidad());
+                                detallesPedido.setTotal((double) (p.getPuntos()));
+                            } else {
+                                throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
+                            }
+                            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() - p.getPuntos()));
+                        } else {
+                            throw new Exception("No tienes puntos suficientes.");
+                        }
+
+                        break;
+                    }
                 }
                 detallesPedido.setIdPedido(pedidoNew.getId());
-                detallesPedido.setCantidad(p.getCantidad());
-                detallesPedido.setPrecio(p.getPrecio());
-                detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                 detallesPedidoRepository.save(detallesPedido);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
-
-        /*Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
-        if (createPedidos.getTipo_pedido().equals("A")) {
-            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() + (nroItemsPedidos * 10)));
-        } else {
-            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() + nroItemsPedidos));
-        }*/
     }
 
     public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {
@@ -231,23 +273,11 @@ public class PedidosServiceImpl implements IPedidosService {
 
         switch (tipoOperacion) {
             case "COMPLETAR PEDIDO ACCESORIOS":
-                puntosCalculados = cantidadItems * 10;
+                puntosCalculados = cantidadItems * 1000;
                 break;
             case "COMPLETAR PEDIDO BICICLETA":
-                puntosCalculados = 150;
+                puntosCalculados = 15000;
                 break;
-            /*case "ANULAR PEDIDO BICICLETA":
-                puntosCalculados = -150;
-                break;
-            case "ANULAR PEDIDO ACCESORIOS":
-                puntosCalculados = -(cantidadItems * 10);
-                break;
-            case "COMPARTIR APP":
-                puntosCalculados = 100;
-                break;
-            case "COMPLETAR RECORRIDO":
-                puntosCalculados = 3 * kmRecorridos;
-                break;*/
             default:
                 puntosCalculados = 0;
         }
@@ -307,9 +337,7 @@ public class PedidosServiceImpl implements IPedidosService {
 
         if (pedidoFound.getEstado().equals("E")) {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
-        } /*else if (pedidoFound.getEstado().equals("B")) {
-            updatePointsPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "ANULAR PEDIDO ACCESORIOS" : "ANULAR PEDIDO BICICLETA");
-        }*/
+        }
 
         repository.save(pedidoFound);
     }
