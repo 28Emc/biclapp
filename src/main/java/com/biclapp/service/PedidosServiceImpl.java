@@ -78,7 +78,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             pedidoFound.getTipo_pedido(), bicicletaFound.getMarca(),
                             bicicletaFound.getModelo(), null, null,
                             null, bicicletaFound.getFoto(), detP.getCantidad(),
-                            detP.getPrecio(), detP.getTotal()));
+                            detP.getPrecio(), 0, detP.getTotal()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -90,7 +90,19 @@ public class PedidosServiceImpl implements IPedidosService {
                     nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
                             pedidoFound.getTipo_pedido(), null, null,
                             accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
-                            accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getTotal()));
+                            accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), 0, detP.getTotal()));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } else if (pedidoFound.getTipo_pedido().equals("C")) {
+            detallePedidoList.forEach(detP -> {
+                try {
+                    Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
+                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
+                            pedidoFound.getTipo_pedido(), null, null,
+                            accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
+                            accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getPuntos(), detP.getTotal()));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -212,6 +224,8 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setPrecio(p.getPrecio());
                             detallesPedido.setCantidad(p.getCantidad());
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                            detallesPedido.setIdPedido(pedidoNew.getId());
+                            detallesPedidoRepository.save(detallesPedido);
                         } else {
                             throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                         }
@@ -227,6 +241,8 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setPrecio(p.getPrecio());
                             detallesPedido.setCantidad(p.getCantidad());
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                            detallesPedido.setIdPedido(pedidoNew.getId());
+                            detallesPedidoRepository.save(detallesPedido);
                         } else {
                             throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                         }
@@ -243,6 +259,8 @@ public class PedidosServiceImpl implements IPedidosService {
                                 detallesPedido.setCantidad(p.getCantidad());
                                 detallesPedido.setPuntos(p.getPuntos() / p.getCantidad());
                                 detallesPedido.setTotal((double) (p.getPuntos()));
+                                detallesPedido.setIdPedido(pedidoNew.getId());
+                                detallesPedidoRepository.save(detallesPedido);
                             } else {
                                 throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                             }
@@ -250,12 +268,9 @@ public class PedidosServiceImpl implements IPedidosService {
                         } else {
                             throw new Exception("No tienes puntos suficientes.");
                         }
-
                         break;
                     }
                 }
-                detallesPedido.setIdPedido(pedidoNew.getId());
-                detallesPedidoRepository.save(detallesPedido);
             } catch (Exception e) {
                 e.printStackTrace();
             }

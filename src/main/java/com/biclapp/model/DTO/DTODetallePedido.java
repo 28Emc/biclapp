@@ -16,12 +16,13 @@ public class DTODetallePedido {
     String foto; // ARTICULO O BICICLETA
     int cantidad; // SOLO ARTICULO
     double precio; // SOLO ARTICULO
+    int puntos; // SOLO ARTICULO
     double total; // SOLO ARTICULO
 
     public DTODetallePedido() {
     }
 
-    public DTODetallePedido(Long id, Long id_pedido, Long id_producto, String tipo_pedido, String marca_bicicleta, String modelo_bicicleta, String nombre_accesorio, String descripcion_accesorio, String tipo_accesorio, String foto, int cantidad, double precio, double total) {
+    public DTODetallePedido(Long id, Long id_pedido, Long id_producto, String tipo_pedido, String marca_bicicleta, String modelo_bicicleta, String nombre_accesorio, String descripcion_accesorio, String tipo_accesorio, String foto, int cantidad, double precio, int puntos, double total) {
         this.id = id;
         this.id_pedido = id_pedido;
         this.id_producto = id_producto;
@@ -34,6 +35,7 @@ public class DTODetallePedido {
         this.foto = foto;
         this.cantidad = cantidad;
         this.precio = precio;
+        this.puntos = puntos;
         this.total = total;
     }
 
@@ -131,6 +133,14 @@ public class DTODetallePedido {
 
     public void setPrecio(double precio) {
         this.precio = precio;
+    }
+
+    public int getPuntos() {
+        return puntos;
+    }
+
+    public void setPuntos(int puntos) {
+        this.puntos = puntos;
     }
 
     public double getTotal() {
