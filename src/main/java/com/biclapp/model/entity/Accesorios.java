@@ -35,12 +35,14 @@ public class Accesorios {
     @DecimalMax(value = "999999.99", message = "El precio tiene un valor no admitido")
     private Double precio;
 
+    private Integer puntos;
+
     private String estado;
 
     public Accesorios() {
     }
 
-    public Accesorios(Long id, Integer codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, String estado) {
+    public Accesorios(Long id, Integer codigo, String nombre, String descripcion, String foto, String tipo, Integer stock, Double precio, Integer puntos, String estado) {
         this.id = id;
         this.codigo = codigo;
         this.nombre = nombre;
@@ -49,6 +51,7 @@ public class Accesorios {
         this.tipo = tipo;
         this.stock = stock;
         this.precio = precio;
+        this.puntos = puntos;
         this.estado = estado;
     }
 
@@ -122,5 +125,13 @@ public class Accesorios {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public Integer getPuntos() {
+        return puntos;
+    }
+
+    public void setPuntos(Integer puntos) {
+        this.puntos = puntos;
     }
 }
