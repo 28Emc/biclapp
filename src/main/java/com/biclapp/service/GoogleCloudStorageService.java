@@ -30,6 +30,10 @@ public class GoogleCloudStorageService {
     public GoogleCloudStorageService() throws IOException {
     }
 
+    public void deleteImageFromGCS(String oldPath) {
+        storage.delete(bucketName, oldPath);
+    }
+
     public String uploadImageToGCS(MultipartFile fileStream, String path)
             throws IOException, ServletException {
         String[] allowedExt = {"image/jpg", "image/jpeg", "image/png", "image/gif"};

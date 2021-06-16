@@ -52,6 +52,9 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Value("${gcp.user-img-folder}")
     private String userImgfolder;
 
+    @Value("${gcp.img-web-path}")
+    private String imgWebPath;
+
     @Override
     @Transactional(readOnly = true)
     public List<Usuarios> findAll() {
@@ -276,6 +279,10 @@ public class UsuariosServiceImpl implements IUsuariosService {
     public void updatePhotoUser(Long id, MultipartFile photo) throws Exception {
         Usuarios usuarioFound = findById(id);
         String namePhoto = usuarioFound.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
+        String imgPathUser = usuarioFound.getFoto().substring(usuarioFound.getFoto().indexOf(userImgfolder));
+
+        //cloudStorageService.deleteImageFromGCS(imgPathUser);
+
         String path = userImgfolder.concat(namePhoto).concat(".jpg");
         rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
         usuarioFound.setFoto(rutaFoto);
