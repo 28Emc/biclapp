@@ -1,16 +1,20 @@
 package com.biclapp.service;
 
+import com.biclapp.config.mail.EmailService;
 import com.biclapp.model.DTO.*;
 import com.biclapp.model.entity.*;
 import com.biclapp.repository.IDetallesPedidoRepository;
 import com.biclapp.repository.IPedidosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PedidosServiceImpl implements IPedidosService {
@@ -38,6 +42,12 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Autowired
     private IAccesoriosService accesoriosService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${spring.mail.username}")
+    private String emailFrom;
 
     @Override
     @Transactional(readOnly = true)
@@ -195,6 +205,8 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Override
     public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
+        int puntosGanados = 0;
+        Map<String, Object> model = new HashMap<>();
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         if (createPedidos.getTipo_pedido().equals("B")) {
@@ -207,6 +219,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
         pedidoNew.setDireccion(createPedidos.getDireccion());
         pedidoNew.setFecha_registro(LocalDateTime.now());
+        pedidoNew.setFecha_actualizacion(null);
         pedidoNew.setEstado("R");
         repository.save(pedidoNew);
 
@@ -217,6 +230,7 @@ public class PedidosServiceImpl implements IPedidosService {
                     case "A": {
                         Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
                         if (accesorioFound.getStock() > 0 || accesorioFound.getStock() >= p.getCantidad()) {
+                            p.setProducto(accesorioFound.getNombre());
                             accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
                             accesoriosService.save(accesorioFound);
                             detallesPedido.setId_producto(accesorioFound.getId());
@@ -234,6 +248,7 @@ public class PedidosServiceImpl implements IPedidosService {
                     case "B":
                         Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
                         if (bicicletaFound.getStock() > 0 || bicicletaFound.getStock() >= p.getCantidad()) {
+                            p.setProducto(bicicletaFound.getMarca().concat(" - ").concat(bicicletaFound.getModelo()));
                             bicicletaFound.setStock(bicicletaFound.getStock() - p.getCantidad());
                             bicicletasService.save(bicicletaFound);
                             detallesPedido.setId_producto(bicicletaFound.getId());
@@ -252,6 +267,7 @@ public class PedidosServiceImpl implements IPedidosService {
                         Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
                         if (monederoFound.getPuntos() >= p.getPuntos()) {
                             if (accesorioFound.getStock() > 0 || accesorioFound.getStock() >= p.getCantidad()) {
+                                p.setProducto(accesorioFound.getNombre());
                                 accesorioFound.setStock(accesorioFound.getStock() - p.getCantidad());
                                 accesoriosService.save(accesorioFound);
                                 detallesPedido.setId_producto(accesorioFound.getId());
@@ -275,6 +291,14 @@ public class PedidosServiceImpl implements IPedidosService {
                 e.printStackTrace();
             }
         });
+
+        model.put("from", emailFrom);
+        model.put("to", usuarioFound.getUsername());
+        model.put("subject", "Biclapp - Pedido registrado");
+        model.put("titulo-cabecera", "Su pedido ha sido registrado");
+        model.put("pedido", pedidoNew.getId());
+        model.put("detalle-pedido", createPedidos);
+        emailService.enviarEmail(model, "REGISTRO PEDIDO");
     }
 
     public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {
@@ -349,6 +373,7 @@ public class PedidosServiceImpl implements IPedidosService {
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Pedidos pedidoFound = findById(id);
         pedidoFound.setEstado(update.getEstado());
+        pedidoFound.setFecha_actualizacion(LocalDateTime.now());
 
         if (pedidoFound.getEstado().equals("E")) {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");

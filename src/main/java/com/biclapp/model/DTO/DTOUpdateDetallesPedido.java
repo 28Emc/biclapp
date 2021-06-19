@@ -10,6 +10,8 @@ public class DTOUpdateDetallesPedido {
     @NotNull(message = "Producto requerido")
     private Long id_producto;
 
+    private String producto;
+
     private Long id_pedido;
 
     @Positive(message = "El valor del stock debe ser mayor o igual a 1")
@@ -45,6 +47,14 @@ public class DTOUpdateDetallesPedido {
 
     public void setId_producto(Long id_producto) {
         this.id_producto = id_producto;
+    }
+
+    public String getProducto() {
+        return producto;
+    }
+
+    public void setProducto(String producto) {
+        this.producto = producto;
     }
 
     public Long getId_pedido() {
