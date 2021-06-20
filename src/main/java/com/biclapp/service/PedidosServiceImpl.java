@@ -5,6 +5,7 @@ import com.biclapp.model.DTO.*;
 import com.biclapp.model.entity.*;
 import com.biclapp.repository.IDetallesPedidoRepository;
 import com.biclapp.repository.IPedidosRepository;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -69,6 +70,7 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DetallesPedido> findByUserAndPedido(Long id_usuario, Long id_pedido) throws Exception {
         usuariosService.findById(id_usuario);
         Pedidos pedidoFound = findById(id_pedido);
@@ -76,6 +78,7 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<DTODetallePedido> findByUserAndPedidoWithDetail(Long id_usuario, Long id_pedido) throws Exception {
         Pedidos pedidoFound = findById(id_pedido);
         List<DetallesPedido> detallePedidoList = findByUserAndPedido(id_usuario, id_pedido);
@@ -149,6 +152,7 @@ public class PedidosServiceImpl implements IPedidosService {
     */
 
     @Override
+    @Transactional
     public void save(DTOCreatePedidos createPedidos) throws Exception {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
@@ -204,8 +208,8 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    @Transactional(rollbackFor = {RuntimeException.class})
     public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
-        int puntosGanados = 0;
         Map<String, Object> model = new HashMap<>();
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
@@ -224,10 +228,10 @@ public class PedidosServiceImpl implements IPedidosService {
         repository.save(pedidoNew);
 
         createPedidos.getDetalles_pedido().forEach(p -> {
-            try {
-                DetallesPedido detallesPedido = new DetallesPedido();
-                switch (createPedidos.getTipo_pedido()) {
-                    case "A": {
+            DetallesPedido detallesPedido = new DetallesPedido();
+            switch (createPedidos.getTipo_pedido()) {
+                case "A":
+                    try {
                         Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
                         if (accesorioFound.getStock() > 0 || accesorioFound.getStock() >= p.getCantidad()) {
                             p.setProducto(accesorioFound.getNombre());
@@ -243,9 +247,13 @@ public class PedidosServiceImpl implements IPedidosService {
                         } else {
                             throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                         }
-                        break;
+
+                    } catch (Exception e) {
+                        throw new RuntimeException(ExceptionUtils.getRootCauseMessage(e));
                     }
-                    case "B":
+                    break;
+                case "B":
+                    try {
                         Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
                         if (bicicletaFound.getStock() > 0 || bicicletaFound.getStock() >= p.getCantidad()) {
                             p.setProducto(bicicletaFound.getMarca().concat(" - ").concat(bicicletaFound.getModelo()));
@@ -261,8 +269,12 @@ public class PedidosServiceImpl implements IPedidosService {
                         } else {
                             throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                         }
-                        break;
-                    case "C": {
+                    } catch (Exception e) {
+                        throw new RuntimeException(ExceptionUtils.getRootCauseMessage(e));
+                    }
+                    break;
+                case "C":
+                    try {
                         Accesorios accesorioFound = accesoriosService.findById(p.getId_producto());
                         Monederos monederoFound = monederoService.findByUser(usuarioFound.getId());
                         if (monederoFound.getPuntos() >= p.getPuntos()) {
@@ -277,18 +289,18 @@ public class PedidosServiceImpl implements IPedidosService {
                                 detallesPedido.setTotal((double) (p.getPuntos()));
                                 detallesPedido.setIdPedido(pedidoNew.getId());
                                 detallesPedidoRepository.save(detallesPedido);
+                                monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() - p.getPuntos()));
                             } else {
                                 throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                             }
-                            monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() - p.getPuntos()));
+                            //monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(usuarioFound.getId(), monederoFound.getPuntos() - p.getPuntos()));
                         } else {
                             throw new Exception("No tienes puntos suficientes.");
                         }
-                        break;
+                    } catch (Exception e) {
+                        throw new RuntimeException(ExceptionUtils.getRootCauseMessage(e));
                     }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+                    break;
             }
         });
 
@@ -301,6 +313,8 @@ public class PedidosServiceImpl implements IPedidosService {
         emailService.enviarEmail(model, "REGISTRO PEDIDO");
     }
 
+
+    @Transactional(rollbackFor = {Exception.class})
     public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {
         int cantidadItems;
         int puntosCalculados;
@@ -309,6 +323,8 @@ public class PedidosServiceImpl implements IPedidosService {
         cantidadItems = dList.size();
         Long idUsuario = pedidoFound.getIdUsuario();
         Monederos monederoFound = monederoService.findByUser(idUsuario);
+        Usuarios usuarioFound = usuariosService.findById(idUsuario);
+        Map<String, Object> model = new HashMap<>();
 
         switch (tipoOperacion) {
             case "COMPLETAR PEDIDO ACCESORIOS":
@@ -322,9 +338,18 @@ public class PedidosServiceImpl implements IPedidosService {
         }
 
         monederoService.editPuntos(monederoFound.getId(), new DTOUpdateMonederos(idUsuario, monederoFound.getPuntos() + puntosCalculados));
+
+        model.put("from", emailFrom);
+        model.put("to", usuarioFound.getUsername());
+        model.put("subject", "Biclapp - Pedido entregado");
+        model.put("titulo-cabecera", "¡Su pedido ha sido entregado!");
+        model.put("pedido", pedidoFound.getId());
+        model.put("puntos", puntosCalculados);
+        emailService.enviarEmail(model, "PEDIDO ENTREGADO");
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(Long id, DTOUpdatePedidos updatePedidos) throws Exception {
         Pedidos pedidoFound = findById(id);
         if (pedidoFound.getEstado().equals("R")) {
@@ -370,6 +395,7 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Pedidos pedidoFound = findById(id);
         pedidoFound.setEstado(update.getEstado());
@@ -383,6 +409,7 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void delete(Long id) throws Exception {
         Pedidos pedidoFound = findById(id);
         List<DetallesPedido> detallesPedidos = detallesPedidoRepository.findByIdPedido(id);

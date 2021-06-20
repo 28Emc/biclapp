@@ -187,8 +187,12 @@ public class PedidosController {
             response.put("message", "¡Pedido registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
+            String messageFormat = e.getMessage();
+            if (messageFormat.contains("Exception:")) {
+                messageFormat = messageFormat.substring(messageFormat.indexOf(": ")).replace(":", "").trim();
+            }
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
-            response.put("message", e.getMessage());
+            response.put("message", messageFormat);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

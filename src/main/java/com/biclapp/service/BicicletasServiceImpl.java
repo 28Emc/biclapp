@@ -54,19 +54,21 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
+    @Transactional
     public void save(Bicicletas bicicleta) throws Exception {
         bicicletasRepository.save(bicicleta);
     }
 
 
     @Override
+    @Transactional(rollbackFor = { Exception.class })
     public void saveCustom(DTOCreateBicicletas createBicicleta) throws Exception {
         localesService.findById(createBicicleta.getId_local());
 
         Optional<Bicicletas> bicicletaFound = bicicletasRepository.findByMarcaAndModelo(createBicicleta.getMarca(), createBicicleta.getModelo());
         if (bicicletaFound.isPresent()) {
             throw new Exception("La bicicleta con la marca ".concat(createBicicleta.getMarca().concat(" y el modelo").concat(createBicicleta.getModelo())
-            .concat(" ya existe.")));
+                    .concat(" ya existe.")));
         }
 
         int contador = findAll().toArray().length;
@@ -84,6 +86,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
+    @Transactional(rollbackFor = { Exception.class })
     public void update(Long id, DTOUpdateBicicletas updateBicicleta) throws Exception {
         Bicicletas bicicletaFound = findById(id);
         Locales localFound = localesService.findById(updateBicicleta.getId_local());
@@ -100,6 +103,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
+    @Transactional(rollbackFor = { Exception.class })
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Bicicletas bicicletaFound = findById(id);
         bicicletaFound.setEstado(update.getEstado());
@@ -107,6 +111,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
+    @Transactional(rollbackFor = { Exception.class })
     public void updatePhotoBicicleta(Long id, MultipartFile photo) throws Exception {
         Bicicletas bicicletafound = findById(id);
         String namePhoto = bicicletafound.getModelo().replace(" ", "-").toLowerCase();
@@ -117,6 +122,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) throws Exception {
         findById(id);
         bicicletasRepository.deleteById(id);

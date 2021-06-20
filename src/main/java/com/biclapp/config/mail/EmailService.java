@@ -39,6 +39,8 @@ public class EmailService {
     private String armarPlantilla(Map<String, Object> model, String tipoOperacion) {
         String header = "<!DOCTYPE html><html lang='es'> <head> <title>Biclapp</title> <meta charset='UTF-8' /> <meta name='viewport' content='width=device-width, initial-scale=1.0' /> <style> html { height: 100%; } body { color: #808080; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; width: 100%; padding: 0; margin: 0; height: 100%; } @media (min-width: 0) and (max-width: 420px) { .container { margin: auto; height: 100%; width: 100%; padding-left: .5em; padding-right: .5em; } table { width: 100%; height: 100%; } .imagen { padding-top: 2em; padding-bottom: 2em; text-align: center; } hr { width: 30px; margin-top: 1em; margin-bottom: 1em; height: .05px; background-color: #2cb02c; border-radius: 1em; color: #2cb02c; } .content { padding: 1em; font-size: 1rem; text-align: center; } .titulo { text-align: center; font-weight: lighter; font-size: 1em; color: black; } .texto { padding-top: .5em; padding-bottom: .5em; font-weight: lighter; } .texto-2 { font-weight: bolder; color: rgb(5, 75, 5); font-size: 2em; } .footer { padding-top: 1em; padding-bottom: 1em; text-align: center; font-weight: normal; font-size: 1rem; } } @media (min-width: 421px) { .container { margin: auto; height: 100%; width: 650px; } table { width: 100%; height: 100%; } .imagen { padding-top: 5em; padding-bottom: 2em; text-align: center; } hr { width: 30px; margin-top: 1em; margin-bottom: 1em; height: 1px; background-color: #2cb02c; border-radius: 1em; color: #2cb02c; } .content { font-size: 1rem; text-align: center; padding: 1em 0; } .titulo { text-align: center; font-weight: lighter; font-size: 2em; color: black; } .texto { padding-top: .5em; padding-bottom: .5em; font-weight: lighter; } .texto-2 { font-weight: bolder; color: rgb(5, 75, 5); font-size: 2.6em; } .footer { padding-top: 2em; padding-bottom: 3em; text-align: center; font-weight: normal; font-size: 1.2rem; } } </style> </head>";
         String body = "";
+        long idPedido;
+        int puntos;
 
         switch (tipoOperacion) {
             case "VALIDAR CUENTA":
@@ -57,7 +59,7 @@ public class EmailService {
                 body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/spring-bucket-biclapp-dev/app-images/logo-citybike.png' alt='validar-email' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, te hemos enviado un nuevo código de verificación: </h3> <h2 class='texto-2'>" + model.get("codigo-verificacion").toString() + " </h2> </td> </tr> <td> <hr> </td>";
                 break;
             case "REGISTRO PEDIDO":
-                long idPedido = (long) model.get("pedido");
+                idPedido = (long) model.get("pedido");
                 DTOCreatePedidos pedidoDet = (DTOCreatePedidos) model.get("detalle-pedido");
                 StringBuilder detail = new StringBuilder();
                 body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/spring-bucket-biclapp-dev/app-images/logo-citybike.png' alt='confirma-pedido' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, le informamos que hemos registrado su pedido de los siguientes artículos: </h3> <tr> <td> <table style='text-align: center'> <tr> <td colspan='2'>PEDIDO</td> </tr><tr></tr><tr></tr><tr></tr> <tr> <td colspan='1'>CÓDIGO</td> <td colspan='1'>" + idPedido + "</td> </tr> <tr> <td colspan='1'>TIPO PEDIDO</td> <td colspan='1'>" + pedidoDet.getTipo_pedido() + "</td> </tr> <tr> <td colspan='1'>DIRECCIÓN</td> <td colspan='1'>" + pedidoDet.getDireccion() + "</td> </tr> <tr></tr> <tr></tr><tr></tr><tr></tr><tr></tr><tr><td colspan='2'>DETALLES PEDIDO</td></tr>";
@@ -73,6 +75,11 @@ public class EmailService {
                 detail.append("</table></td></tr>");
                 body = body.concat(detail.toString().concat((!pedidoDet.getTipo_pedido().equals("C")) ? "<tr style='text-align: center'> <td> <h3 class='texto'>Para poder hacer efectiva su compra, enviar el voucher de pago a uno de los siguientes nro de teléfono a continuación</h3> </td> </tr> <tr style='text-align: center'> <td> <h3 class='texto-normal'>983422657</h3> <h3 class='texto-normal'>900120344</h3> </td> </tr> <tr style='text-align: center'> <td> <h3 class='texto'>Aceptamos pagos vía transferencia bancaria a las siguientes cuentas:</h3> <h3 class='texto-normal'>BCP SOLES - 191-0939560-0-04</h3> <h3 class='texto-normal'>BBVA SOLES - 0011-0686-0100023327</h3> </td> </tr> </td> </tr>" : ""));
                 body = body.concat("<td> <hr> </td>");
+                break;
+            case "PEDIDO ENTREGADO":
+                idPedido = (long) model.get("pedido");
+                puntos = (int) model.get("puntos");
+                body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/spring-bucket-biclapp-dev/app-images/logo-citybike.png' alt='validar-email' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, le informamos que su pedido nro." + idPedido + " ha sido entregado. </h3> <h3 class='texto'>Además, en su monedero personal se agregaron la cantidad de <strong>" + puntos + "</strong> puntos. </h3> <h3 class='texto'>Gracias por confiar en nosotros. </h3> </td> </tr> <td> <hr> </td>";
                 break;
         }
 
