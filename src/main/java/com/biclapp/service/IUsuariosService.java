@@ -8,6 +8,7 @@ import com.biclapp.model.entity.Usuarios;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUsuariosService {
 
@@ -16,6 +17,8 @@ public interface IUsuariosService {
     Usuarios findById(Long id) throws Exception;
 
     Usuarios findByUsername(String username) throws Exception;
+
+    Optional<Usuarios> findByUsernameOrNroDocumentoOrCelular(String username, String nroDocumento, String celular) throws Exception;
 
     void save(DTOCreateUsuarios createUsuarios) throws Exception;
 

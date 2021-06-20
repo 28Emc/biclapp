@@ -74,11 +74,24 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<Usuarios> findByUsernameOrNroDocumentoOrCelular(String username, String nroDocumento, String celular) throws Exception {
+        return repository.findByUsernameOrNroDocumentoOrCelular(username, nroDocumento, celular);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void save(DTOCreateUsuarios createUsuarios) throws Exception {
-        Optional<Usuarios> usuarioFound = repository.findByUsername(createUsuarios.getUsername());
+        Optional<Usuarios> usuarioFound = repository.findByUsernameOrNroDocumentoOrCelular(createUsuarios.getUsername(), createUsuarios.getNro_documento(), createUsuarios.getCelular());
 
         if (usuarioFound.isPresent()) {
-            throw new Exception("¡El usuario ya se encuentra registrado!");
+            if (usuarioFound.get().getNroDocumento().trim().equals(createUsuarios.getNro_documento().trim())) {
+                throw new Exception("¡El nro de documento ya está registrado en el sistema!");
+            } else if (usuarioFound.get().getCelular().trim().equals(createUsuarios.getCelular().trim())) {
+                throw new Exception("¡El número de celular ya está siendo utilizado por otra persona!");
+            } else if (usuarioFound.get().getUsername().trim().equals(createUsuarios.getUsername().trim())) {
+                throw new Exception("¡El nombre de usuario ya está siendo utilizado por otra persona!");
+            }
         } else {
             Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
             Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
@@ -129,6 +142,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public void activateUserRequest(DTOUpdateToken updateToken) throws Exception {
         int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
         String codStr = String.valueOf(codigoRandom);
@@ -152,6 +166,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public void activateUserAction(DTOUpdateToken updateToken) throws Exception {
         // RECIBIR CODIGO DE 4 DÍGITOS, BUSCAR TOKEN POR CODIGO Y EMAIL Y ACTIVAR USUARIO
         Tokens tokenFound = tokenService.findByEmailAndCodigo(updateToken.getEmail(), updateToken.getCodigo());
@@ -176,13 +191,14 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public void update(Long id, DTOUpdateUsuarios updateUsuario) throws Exception {
         Usuarios usuarioFound = findById(id);
         Membresias membresiaFound = membresiasService.findById(updateUsuario.getId_membresia());
         usuarioFound.setId_membresia(membresiaFound.getId());
         usuarioFound.setNombres(updateUsuario.getNombres());
         usuarioFound.setApellidos(updateUsuario.getApellidos());
-        usuarioFound.setNro_documento(updateUsuario.getNro_documento());
+        usuarioFound.setNroDocumento(updateUsuario.getNro_documento());
         usuarioFound.setCelular(updateUsuario.getCelular());
         usuarioFound.setDireccion(updateUsuario.getDireccion());
         usuarioFound.setSexo(updateUsuario.getSexo());
@@ -197,6 +213,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public void updateStatus(Long id, DTOUpdate update) throws Exception {
         Usuarios usuarioFound = findById(id);
         usuarioFound.setActivo(update.getEstado().equals("A"));
@@ -205,6 +222,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public void updateMembresia(Long id, Long id_membresia) throws Exception {
         Usuarios usuarioFound = findById(id);
         usuarioFound.setId_membresia(id_membresia);
@@ -212,6 +230,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updatePasswordRequest(DTOUpdateToken updateToken) throws Exception {
         // RECIBO EMAIL DEL USUARIO Y VERIFICAR SI EL USUARIO CON ESE CORREO ESTÁ REGISTRADO Y DESACTIVADO
         // SI ES ASÍ, GENERO UN CÓDIGO DE 4 DÍGITOS Y LO ENVÍO AL CORREO RECIBIDO.
@@ -251,6 +270,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public boolean validateCode(DTOUpdateToken updateToken) throws Exception {
         // RECIBO EL CODIGO DE 4 DÍGITOS, BUSCO EL USUARIO POR EL CODIGO Y EL CORREO,
         // SI ENCUENTRO EL CÓDIGO ASOCIADO, MANDO TRUE COMO CONFIRMACIÓN
@@ -260,6 +280,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updatePasswordAction(DTOUpdateToken updateToken) throws Exception {
         // BUSCO EL USUARIO POR EL CORREO, ACTUALIZO EL USUARIO Y REENVÍO UN CORREO DE CONFIRMACIÓN.
         Usuarios usuarioFound = repository.findByUsername(updateToken.getEmail()).orElseThrow(() -> new Exception("¡El usuario no existe!"));
@@ -276,6 +297,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updatePhotoUser(Long id, MultipartFile photo) throws Exception {
         Usuarios usuarioFound = findById(id);
         String namePhoto = usuarioFound.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
@@ -290,6 +312,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
     }
 
     @Override
+    @Transactional
     public void delete(Long id) throws Exception {
         findById(id);
         repository.deleteById(id);

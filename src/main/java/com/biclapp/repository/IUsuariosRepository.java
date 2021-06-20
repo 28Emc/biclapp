@@ -11,4 +11,6 @@ public interface IUsuariosRepository extends CrudRepository<Usuarios, Long> {
 
     Optional<Usuarios> findByUsername(String username);
 
+    Optional<Usuarios> findByUsernameOrNroDocumentoOrCelular(String username, String nroDocumento, String celular) throws Exception;
+
 }

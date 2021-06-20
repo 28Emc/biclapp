@@ -1,8 +1,6 @@
 package com.biclapp.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 
@@ -22,7 +20,8 @@ public class Usuarios {
     private Long id_membresia;
     private String nombres;
     private String apellidos;
-    private String nro_documento;
+    @Column(name = "nro_documento")
+    private String nroDocumento;
     private String celular;
     private String direccion;
     private String sexo;
@@ -37,14 +36,14 @@ public class Usuarios {
     public Usuarios() {
     }
 
-    public Usuarios(Long id, Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, String foto, boolean isActivo) {
+    public Usuarios(Long id, Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nroDocumento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, String foto, boolean isActivo) {
         this.id = id;
         this.codigo = codigo;
         this.rol = rol;
         this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
-        this.nro_documento = nro_documento;
+        this.nroDocumento = nroDocumento;
         this.celular = celular;
         this.direccion = direccion;
         this.sexo = sexo;
@@ -57,13 +56,13 @@ public class Usuarios {
         this.isActivo = isActivo;
     }
 
-    public Usuarios(Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nro_documento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, String foto, boolean isActivo) {
+    public Usuarios(Integer codigo, Roles rol, Long id_membresia, String nombres, String apellidos, String nroDocumento, String celular, String direccion, String sexo, String peso, String estatura, String username, String password, String estado, String foto, boolean isActivo) {
         this.codigo = codigo;
         this.rol = rol;
         this.id_membresia = id_membresia;
         this.nombres = nombres;
         this.apellidos = apellidos;
-        this.nro_documento = nro_documento;
+        this.nroDocumento = nroDocumento;
         this.celular = celular;
         this.direccion = direccion;
         this.sexo = sexo;
@@ -124,12 +123,12 @@ public class Usuarios {
         this.apellidos = apellidos;
     }
 
-    public String getNro_documento() {
-        return nro_documento;
+    public String getNroDocumento() {
+        return nroDocumento;
     }
 
-    public void setNro_documento(String nro_documento) {
-        this.nro_documento = nro_documento;
+    public void setNroDocumento(String nroDocumento) {
+        this.nroDocumento = nroDocumento;
     }
 
     public String getCelular() {
