@@ -38,6 +38,7 @@ public class MembresiasServiceImpl implements IMembresiasService {
         Membresias membresiaFound = findById(id);
         membresiaFound.setTipo(membresiaFound.getTipo());
         membresiaFound.setCuota(membresia.getCuota());
+        membresiaFound.setDescripcion(membresia.getDescripcion());
         repository.save(membresiaFound);
     }
 

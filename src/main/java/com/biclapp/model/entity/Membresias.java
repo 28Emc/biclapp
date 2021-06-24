@@ -21,14 +21,17 @@ public class Membresias {
     @DecimalMax(value = "999999.99", message = "La cuota tiene un valor no admitido")
     private Double cuota;
 
+    private String descripcion;
+
     public Membresias() {
     }
 
-    public Membresias(Long id, Integer codigo, String tipo, Double cuota) {
+    public Membresias(Long id, Integer codigo, String tipo, Double cuota, String descripcion) {
         this.id = id;
         this.codigo = codigo;
         this.tipo = tipo;
         this.cuota = cuota;
+        this.descripcion = descripcion;
     }
 
     public Long getId() {
@@ -61,6 +64,14 @@ public class Membresias {
 
     public void setCuota(Double cuota) {
         this.cuota = cuota;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
 
