@@ -81,6 +81,9 @@ public class EmailService {
                 puntos = (int) model.get("puntos");
                 body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/spring-bucket-biclapp-dev/app-images/logo-citybike.png' alt='validar-email' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, le informamos que su pedido nro." + idPedido + " ha sido entregado. </h3> <h3 class='texto'>Además, en su monedero personal se agregaron la cantidad de <strong>" + puntos + "</strong> puntos. </h3> <h3 class='texto'>Gracias por confiar en nosotros. </h3> </td> </tr> <td> <hr> </td>";
                 break;
+            case "REGISTRO AVERIA":
+                body =  "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/spring-bucket-biclapp-dev/app-images/logo-citybike.png' alt='validar-email' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, se registró con éxito su solicitud de atención al cliente.</h3> <h3 class='texto'>Responderemos a su solicitud lo más pronto posible.</h3> <h3 class='texto'>Le recordamos además que están disponibles los siguientes números de contacto: </h3> <h3 class='texto-normal'>983422657</h3> <h3 class='texto-normal'>900120344</h3> </td> </tr> <tr> <td> <hr> </td> </tr>";
+                break;
         }
 
         String footer = "<tr> <td id class='footer'> <p>Biclapp &copy;2021</p> </td> </tr> </table> </div> </body></html>";

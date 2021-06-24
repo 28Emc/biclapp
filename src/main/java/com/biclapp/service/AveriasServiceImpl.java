@@ -1,15 +1,19 @@
 package com.biclapp.service;
 
+import com.biclapp.config.mail.EmailService;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateAverias;
 import com.biclapp.model.entity.Averias;
 import com.biclapp.model.entity.Usuarios;
 import com.biclapp.repository.IAveriasRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class AveriasServiceImpl implements IAveriasService {
@@ -19,6 +23,12 @@ public class AveriasServiceImpl implements IAveriasService {
 
     @Autowired
     private IUsuariosService usuariosService;
+
+    @Autowired
+    private EmailService emailService;
+
+    @Value("${spring.mail.username}")
+    private String emailFrom;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,11 +46,19 @@ public class AveriasServiceImpl implements IAveriasService {
 
     @Override
     public void save(Averias averia) throws Exception {
-        usuariosService.findById(averia.getId_usuario());
+        Usuarios usuarioFound = usuariosService.findById(averia.getId_usuario());
         int contador = findAll().toArray().length;
         averia.setCodigo(contador + 1);
         averia.setEstado("P");
         averiasRepository.save(averia);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("from", emailFrom);
+        model.put("to", usuarioFound.getUsername());
+        model.put("subject", "Biclapp - Avería registrada");
+        model.put("titulo-cabecera", "Avería registrada");
+        model.put("averia", averia);
+        emailService.enviarEmail(model, "REGISTRO AVERIA");
     }
 
     @Override
