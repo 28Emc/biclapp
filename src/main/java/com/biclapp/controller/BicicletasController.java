@@ -60,7 +60,7 @@ public class BicicletasController {
     }
 
     @PostMapping("/bicicletas")
-    public ResponseEntity<?> createBicicleta(@Valid DTOCreateBicicletas createBicicleta, BindingResult result) {
+    public ResponseEntity<?> createBicicleta(@Valid @RequestBody DTOCreateBicicletas createBicicleta, BindingResult result) {
         Map<String, Object> response = new HashMap<>();
 
         if (result.hasErrors()) {
