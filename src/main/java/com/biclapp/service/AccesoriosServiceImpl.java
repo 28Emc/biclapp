@@ -3,10 +3,13 @@ package com.biclapp.service;
 import com.biclapp.model.DTO.DTOUpdateAccesorios;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.entity.Accesorios;
+import com.biclapp.model.entity.Bicicletas;
 import com.biclapp.repository.IAccesoriosRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -15,6 +18,15 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
 
     @Autowired
     private IAccesoriosRepository repository;
+
+    @Value("${gcp.img-product-default}")
+    private String rutaFoto;
+
+    @Value("${gcp.app-img-folder}")
+    private String productImgfolder;
+
+    @Autowired
+    private GoogleCloudStorageService cloudStorageService;
 
     @Override
     @Transactional(readOnly = true)
@@ -58,6 +70,16 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
         repository.save(accesorioFound);
     }
 
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void updatePhotoAccesorio(Long id, MultipartFile photo) throws Exception {
+        Accesorios accesorioFound = findById(id);
+        String namePhoto = "accesorio-".concat(accesorioFound.getNombre().concat("-")).replace(" ", "-").toLowerCase();
+        String path = productImgfolder.concat(namePhoto).concat(".jpg");
+        rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
+        accesorioFound.setFoto(rutaFoto);
+        repository.save(accesorioFound);
+    }
 
     @Override
     public void delete(Long id) throws Exception {

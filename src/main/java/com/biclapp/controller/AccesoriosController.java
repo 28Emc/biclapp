@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.HashMap;
@@ -117,6 +118,21 @@ public class AccesoriosController {
         try {
             accesoriosService.updateEstado(id, update);
             response.put("message", "¡Estado de accesorio actualizado!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/accesorios/change-photo/{id}")
+    public ResponseEntity<?> changePhotoAccesorio(@PathVariable Long id, MultipartFile photoAccesorio) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            accesoriosService.updatePhotoAccesorio(id, photoAccesorio);
+            response.put("message", "¡Foto actualizada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
