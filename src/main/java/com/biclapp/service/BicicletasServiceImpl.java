@@ -78,7 +78,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
         int contador = findAll().toArray().length;
 
         if (createBicicleta.getFoto() != null) {
-            String namePhoto = createBicicleta.getModelo().replace(" ", "-").toLowerCase();
+            String namePhoto = "bicicleta-".concat(createBicicleta.getMarca().concat("-").concat(createBicicleta.getModelo())).replace(" ", "-").toLowerCase();
             String path = productImgfolder.concat(namePhoto).concat(".jpg");
             rutaFoto = cloudStorageService.uploadImageToGCS(createBicicleta.getFoto(), path);
         }
@@ -118,7 +118,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     @Transactional(rollbackFor = {Exception.class})
     public void updatePhotoBicicleta(Long id, MultipartFile photo) throws Exception {
         Bicicletas bicicletafound = findById(id);
-        String namePhoto = bicicletafound.getModelo().replace(" ", "-").toLowerCase();
+        String namePhoto = "bicicleta-".concat(bicicletafound.getMarca().concat("-").concat(bicicletafound.getModelo())).replace(" ", "-").toLowerCase();
         String path = productImgfolder.concat(namePhoto).concat(".jpg");
         rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
         bicicletafound.setFoto(rutaFoto);
