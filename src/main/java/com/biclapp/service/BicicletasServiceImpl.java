@@ -84,7 +84,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
         }*/
 
         Bicicletas bicicletaNew = new Bicicletas(contador + 1, createBicicleta.getId_local(), createBicicleta.getMarca(),
-                createBicicleta.getModelo(), createBicicleta.getStock(), createBicicleta.getDescripcion(), "D", rutaFoto,
+                createBicicleta.getModelo(), createBicicleta.getStock(), createBicicleta.getDescripcion(), "D", createBicicleta.getFoto(),
                 createBicicleta.getColor());
         bicicletasRepository.save(bicicletaNew);
     }
