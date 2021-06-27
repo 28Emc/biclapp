@@ -5,6 +5,7 @@ public class AuthenticationResponse {
     private final String token;
     private String message;
     private Long id;
+    private String rol;
 
     public String getToken() {
         return token;
@@ -26,9 +27,18 @@ public class AuthenticationResponse {
         this.id = id;
     }
 
-    public AuthenticationResponse(String token, String message, Long id) {
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public AuthenticationResponse(String token, String message, Long id, String rol) {
         this.token = token;
         this.message = message;
         this.id = id;
+        this.rol = rol;
     }
 }
