@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,10 @@ public class BicicletasServiceImpl implements IBicicletasService {
     @Override
     @Transactional(readOnly = true)
     public List<Bicicletas> findAll() {
-        return (List<Bicicletas>) bicicletasRepository.findAll();
+        //return (List<Bicicletas>) bicicletasRepository.findAll();
+        List<String> estados = new ArrayList<>();
+        estados.add("D");
+        return bicicletasRepository.findByEstadoIn(estados);
     }
 
     @Override
@@ -61,7 +65,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
 
 
     @Override
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void saveCustom(DTOCreateBicicletas createBicicleta) throws Exception {
         localesService.findById(createBicicleta.getId_local());
 
@@ -86,7 +90,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void update(Long id, DTOUpdateBicicletas updateBicicleta) throws Exception {
         Bicicletas bicicletaFound = findById(id);
         Locales localFound = localesService.findById(updateBicicleta.getId_local());
@@ -103,7 +107,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Bicicletas bicicletaFound = findById(id);
         bicicletaFound.setEstado(update.getEstado());
@@ -111,7 +115,7 @@ public class BicicletasServiceImpl implements IBicicletasService {
     }
 
     @Override
-    @Transactional(rollbackFor = { Exception.class })
+    @Transactional(rollbackFor = {Exception.class})
     public void updatePhotoBicicleta(Long id, MultipartFile photo) throws Exception {
         Bicicletas bicicletafound = findById(id);
         String namePhoto = bicicletafound.getModelo().replace(" ", "-").toLowerCase();
