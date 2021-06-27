@@ -28,7 +28,8 @@ public class DTOCreateBicicletas {
 
     private String estado;
 
-    private MultipartFile foto;
+    //private MultipartFile foto;
+    private String foto;
 
     @Size(max = 45, message = "El color debe tener como máximo 45 caracteres")
     private String color;
@@ -36,7 +37,7 @@ public class DTOCreateBicicletas {
     public DTOCreateBicicletas() {
     }
 
-    public DTOCreateBicicletas(int codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, MultipartFile foto, String color) {
+    public DTOCreateBicicletas(int codigo, Long id_local, String marca, String modelo, Integer stock, String descripcion, String estado, /*MultipartFile*/ String foto, String color) {
         this.codigo = codigo;
         this.id_local = id_local;
         this.marca = marca;
@@ -104,11 +105,11 @@ public class DTOCreateBicicletas {
         this.estado = estado;
     }
 
-    public MultipartFile getFoto() {
+    public /*MultipartFile*/ String getFoto() {
         return foto;
     }
 
-    public void setFoto(MultipartFile foto) {
+    public void setFoto(/*MultipartFile*/ String foto) {
         this.foto = foto;
     }
 

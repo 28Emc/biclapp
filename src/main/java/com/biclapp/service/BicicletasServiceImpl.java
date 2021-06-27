@@ -77,11 +77,11 @@ public class BicicletasServiceImpl implements IBicicletasService {
 
         int contador = findAll().toArray().length;
 
-        if (createBicicleta.getFoto() != null) {
+        /*if (createBicicleta.getFoto() != null) {
             String namePhoto = "bicicleta-".concat(createBicicleta.getMarca().concat("-").concat(createBicicleta.getModelo())).replace(" ", "-").toLowerCase();
             String path = productImgfolder.concat(namePhoto).concat(".jpg");
             rutaFoto = cloudStorageService.uploadImageToGCS(createBicicleta.getFoto(), path);
-        }
+        }*/
 
         Bicicletas bicicletaNew = new Bicicletas(contador + 1, createBicicleta.getId_local(), createBicicleta.getMarca(),
                 createBicicleta.getModelo(), createBicicleta.getStock(), createBicicleta.getDescripcion(), "D", rutaFoto,
