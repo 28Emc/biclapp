@@ -46,6 +46,8 @@ public class BicicletasServiceImpl implements IBicicletasService {
     public List<Bicicletas> findAllByEstado() {
         List<String> estados = new ArrayList<>();
         estados.add("D");
+        estados.add("M");
+        estados.add("B");
         return bicicletasRepository.findByEstadoIn(estados);
     }
 
