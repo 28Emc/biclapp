@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,6 +33,15 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
     @Transactional(readOnly = true)
     public List<Accesorios> findAll() {
         return (List<Accesorios>) repository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Accesorios> findAllByEstado() {
+        List<String> estados = new ArrayList<>();
+        estados.add("D");
+        estados.add("N");
+        return repository.findByEstadoIn(estados);
     }
 
     @Override

@@ -12,6 +12,8 @@ public interface IAccesoriosService {
 
     List<Accesorios> findAll();
 
+    List<Accesorios> findAllByEstado();
+
     Accesorios findById(Long id) throws Exception;
 
     void save(Accesorios accesorio) throws Exception;

@@ -4,6 +4,7 @@ import com.biclapp.model.DTO.DTOCreateBicicletas;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateBicicletas;
 import com.biclapp.model.entity.Bicicletas;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.Optional;
 public interface IBicicletasService {
 
     List<Bicicletas> findAll();
+
+    List<Bicicletas> findAllByEstado();
 
     Bicicletas findById(Long id) throws Exception;
 

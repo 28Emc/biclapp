@@ -38,7 +38,12 @@ public class BicicletasServiceImpl implements IBicicletasService {
     @Override
     @Transactional(readOnly = true)
     public List<Bicicletas> findAll() {
-        //return (List<Bicicletas>) bicicletasRepository.findAll();
+        return (List<Bicicletas>) bicicletasRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Bicicletas> findAllByEstado() {
         List<String> estados = new ArrayList<>();
         estados.add("D");
         return bicicletasRepository.findByEstadoIn(estados);
