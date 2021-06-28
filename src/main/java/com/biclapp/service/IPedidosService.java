@@ -29,6 +29,8 @@ public interface IPedidosService {
 
     List<DTODetallePedido> findByUserAndPedidoWithDetail(Long id_usuario, Long id_pedido) throws Exception;
 
+    boolean findIfExistPedidoBicicleta(Long idUsuario);
+
     void save(DTOCreatePedidos createPedidos) throws Exception;
 
     void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception;

@@ -125,6 +125,20 @@ public class PedidosServiceImpl implements IPedidosService {
         return nDetallePedido;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public boolean findIfExistPedidoBicicleta(Long idUsuario) {
+        List<Pedidos> pedidosFound = repository.findByIdUsuario(idUsuario);
+        return pedidosFound
+                .stream()
+                .anyMatch(bike ->
+                        bike.getTipo_pedido().equals("B") &&
+                                (bike.getEstado().equals("R") || bike.getEstado().equals("C") || bike.getEstado().equals("E"))
+                );
+    }
+
+
+
     /*
     @Override
     @Transactional(readOnly = true)
@@ -312,7 +326,6 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("detalle-pedido", createPedidos);
         emailService.enviarEmail(model, "REGISTRO PEDIDO");
     }
-
 
     @Transactional(rollbackFor = {Exception.class})
     public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {

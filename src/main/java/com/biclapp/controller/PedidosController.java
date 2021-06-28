@@ -87,6 +87,20 @@ public class PedidosController {
         }
     }
 
+    @GetMapping("/pedido-bike-exist/{idUsuario}")
+    public ResponseEntity<?> isPedidoBikeFound(@PathVariable Long idUsuario) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            boolean pedidoBikeFound = pedidosService.findIfExistPedidoBicicleta(idUsuario);
+            response.put("pedido-bike", pedidoBikeFound);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     /*
     @GetMapping("/pedidos-details")
     public ResponseEntity<?> getAllPedidosWithDetails() {
@@ -184,6 +198,11 @@ public class PedidosController {
 
         try {
             pedidosService.createPedidoUser(createPedidos);
+
+            Pedidos pedidoFound = pedidosService.findById(createPedidos.getId_pedido());
+            if (pedidoFound.getTipo_pedido().equals("B")) {
+                response.put("pedido-bike", true);
+            }
             response.put("message", "¡Pedido registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
@@ -235,6 +254,11 @@ public class PedidosController {
         }
 
         try {
+            Pedidos pedidoFound = pedidosService.findById(id);
+            if (pedidoFound.getTipo_pedido().equals("B") && update.getEstado().equals("B")) {
+                response.put("pedido-bike", false);
+            }
+
             pedidosService.updateEstado(id, update);
             response.put("message", "¡Estado del pedido actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);

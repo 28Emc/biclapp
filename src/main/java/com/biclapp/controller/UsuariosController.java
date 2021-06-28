@@ -47,6 +47,9 @@ public class UsuariosController {
     private CustomUserDetailsService userDetailsService;
 
     @Autowired
+    private IPedidosService pedidosService;
+
+    @Autowired
     private JwtUtil jwtUtil;
 
 
@@ -62,6 +65,8 @@ public class UsuariosController {
             Usuarios usuario = usuariosService.findByUsername(userDetails.getUsername());
             final String jwt = jwtUtil.generateToken(userDetails);
             final String rol = usuario.getRol().getRol();
+            boolean pedidoBikeFound = pedidosService.findIfExistPedidoBicicleta(usuario.getId());
+            response.put("pedido-bike", pedidoBikeFound);
             response.put("authenticationResponse", new AuthenticationResponse(jwt, "Bienvenido, " + usuario.getUsername(), usuario.getId(), rol));
         } catch (BadCredentialsException e) {
             response.put("message", "¡Nombre de usuario y/o contraseña incorrectos!");
