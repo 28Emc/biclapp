@@ -56,6 +56,7 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
     public void save(Accesorios accesorio) throws Exception {
         int contador = findAll().toArray().length;
         accesorio.setCodigo(contador + 1);
+        accesorio.setEstado("D");
         repository.save(accesorio);
     }
 
