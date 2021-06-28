@@ -10,7 +10,7 @@ public class Accesorios {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Positive(message = "El código debe ser mayor a 0")
+    @PositiveOrZero(message = "El código debe ser mayor o igual a a 0")
     private Integer codigo;
 
     @NotEmpty(message = "Nombre de accesorio requerido")
