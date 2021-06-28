@@ -40,6 +40,20 @@ public class AccesoriosController {
         }
     }
 
+    @GetMapping("/accesoriosByEstado")
+    public ResponseEntity<?> getAllAccesoriosByEstado() {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<Accesorios> accesorios = accesoriosService.findAllByEstado();
+            response.put("accesorios", accesorios);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @GetMapping("/accesorios/{id}")
     public ResponseEntity<?> getAccesorio(@PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
