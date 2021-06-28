@@ -18,7 +18,8 @@ public class Averias {
     private Integer codigo;
 
     @NotNull(message = "Usuario requerido")
-    private Long id_usuario;
+    @Column(name = "id_usuario")
+    private Long idUsuario;
 
     @NotEmpty(message = "Dirección requerida")
     @Size(min = 1, max = 150, message = "La dirección debe tener entre 1 y 150 caracteres")
@@ -36,10 +37,10 @@ public class Averias {
     public Averias() {
     }
 
-    public Averias(Long id, Integer codigo, Long id_usuario, String direccion, String motivo, Date fecha_registro, String estado) {
+    public Averias(Long id, Integer codigo, Long idUsuario, String direccion, String motivo, Date fecha_registro, String estado) {
         this.id = id;
         this.codigo = codigo;
-        this.id_usuario = id_usuario;
+        this.idUsuario = idUsuario;
         this.direccion = direccion;
         this.motivo = motivo;
         this.fecha_registro = fecha_registro;
@@ -62,12 +63,12 @@ public class Averias {
         this.codigo = codigo;
     }
 
-    public Long getId_usuario() {
-        return id_usuario;
+    public Long getIdUsuario() {
+        return idUsuario;
     }
 
-    public void setId_usuario(Long id_usuario) {
-        this.id_usuario = id_usuario;
+    public void setIdUsuario(Long idUsuario) {
+        this.idUsuario = idUsuario;
     }
 
     public String getDireccion() {

@@ -53,6 +53,20 @@ public class AveriasController {
         }
     }
 
+    @GetMapping("/averias-user/{idUsuario}")
+    public ResponseEntity<?> getAveriasByUser(@PathVariable Long idUsuario) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            List<Averias> averias = averiasService.findByIdUsuario(idUsuario);
+            response.put("averias", averias);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+        }
+    }
+
     @PostMapping("/averias")
     public ResponseEntity<?> createAveria(@Valid @RequestBody Averias averia, BindingResult result) {
         Map<String, Object> response = new HashMap<>();

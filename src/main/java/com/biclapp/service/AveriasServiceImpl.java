@@ -45,8 +45,14 @@ public class AveriasServiceImpl implements IAveriasService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<Averias> findByIdUsuario(Long idUsuario) throws Exception {
+        return averiasRepository.findByIdUsuario(idUsuario);
+    }
+
+    @Override
     public void save(Averias averia) throws Exception {
-        Usuarios usuarioFound = usuariosService.findById(averia.getId_usuario());
+        Usuarios usuarioFound = usuariosService.findById(averia.getIdUsuario());
         int contador = findAll().toArray().length;
         averia.setCodigo(contador + 1);
         averia.setEstado("P");
@@ -64,8 +70,8 @@ public class AveriasServiceImpl implements IAveriasService {
     @Override
     public void update(Long id, DTOUpdateAverias updateAveria) throws Exception {
         Averias averiaFound = findById(id);
-        Usuarios usuarioFound = usuariosService.findById(averiaFound.getId_usuario());
-        averiaFound.setId_usuario(usuarioFound.getId());
+        Usuarios usuarioFound = usuariosService.findById(averiaFound.getIdUsuario());
+        averiaFound.setIdUsuario(usuarioFound.getId());
         averiaFound.setCodigo(updateAveria.getCodigo());
         averiaFound.setDireccion(updateAveria.getDireccion());
         averiaFound.setMotivo(updateAveria.getMotivo());
