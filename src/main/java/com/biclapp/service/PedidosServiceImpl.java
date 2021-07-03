@@ -217,6 +217,7 @@ public class PedidosServiceImpl implements IPedidosService {
                 detallesPedidoRepository.save(detallesPedido);
             } catch (Exception e) {
                 e.printStackTrace();
+                System.out.println("e = " + e);
             }
         });
     }
@@ -263,6 +264,7 @@ public class PedidosServiceImpl implements IPedidosService {
                         }
 
                     } catch (Exception e) {
+                        System.out.println("e = " + e);
                         throw new RuntimeException(ExceptionUtils.getRootCauseMessage(e));
                     }
                     break;
@@ -284,6 +286,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                         }
                     } catch (Exception e) {
+                        System.out.println("e = " + e);
                         throw new RuntimeException(ExceptionUtils.getRootCauseMessage(e));
                     }
                     break;
@@ -312,6 +315,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             throw new Exception("No tienes puntos suficientes.");
                         }
                     } catch (Exception e) {
+                        System.out.println("e = " + e);
                         throw new RuntimeException(ExceptionUtils.getRootCauseMessage(e));
                     }
                     break;
