@@ -177,6 +177,7 @@ public class PedidosController {
             response.put("message", "¡Pedido registrado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println("e = " + e);
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -197,10 +198,9 @@ public class PedidosController {
         }
 
         try {
-            pedidosService.createPedidoUser(createPedidos);
+            Pedidos pedidoCreated = pedidosService.createPedidoUser(createPedidos);
 
-            Pedidos pedidoFound = pedidosService.findById(createPedidos.getId_pedido());
-            if (pedidoFound.getTipo_pedido().equals("B")) {
+            if (pedidoCreated.getTipo_pedido().equals("B")) {
                 response.put("pedido-bike", true);
             }
             response.put("message", "¡Pedido registrado!");
@@ -212,6 +212,7 @@ public class PedidosController {
             }
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", messageFormat);
+            System.out.println("e = " + e);
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

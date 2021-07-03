@@ -224,7 +224,7 @@ public class PedidosServiceImpl implements IPedidosService {
 
     @Override
     @Transactional(rollbackFor = {RuntimeException.class})
-    public void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
+    public Pedidos createPedidoUser(DTOCreatePedidos createPedidos) throws Exception {
         Map<String, Object> model = new HashMap<>();
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
@@ -329,6 +329,8 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("pedido", pedidoNew.getId());
         model.put("detalle-pedido", createPedidos);
         emailService.enviarEmail(model, "REGISTRO PEDIDO");
+
+        return pedidoNew;
     }
 
     @Transactional(rollbackFor = {Exception.class})

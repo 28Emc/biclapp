@@ -33,7 +33,7 @@ public interface IPedidosService {
 
     void save(DTOCreatePedidos createPedidos) throws Exception;
 
-    void createPedidoUser(DTOCreatePedidos createPedidos) throws Exception;
+    Pedidos createPedidoUser(DTOCreatePedidos createPedidos) throws Exception;
 
     void update(Long id, DTOUpdatePedidos updatePedidos) throws Exception;
 
