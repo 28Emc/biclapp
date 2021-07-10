@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +86,8 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
     @Transactional(rollbackFor = {Exception.class})
     public void updatePhotoAccesorio(Long id, MultipartFile photo) throws Exception {
         Accesorios accesorioFound = findById(id);
-        String namePhoto = "accesorio-".concat(accesorioFound.getId().toString().replace(" ", "-").toLowerCase());
+        //String namePhoto = "accesorio-".concat(accesorioFound.getId().toString().replace(" ", "-").toLowerCase());
+        String namePhoto = "accesorio-".concat(LocalDateTime.now().toString());
         String path = productImgfolder.concat(namePhoto).concat(".jpg");
         rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
         accesorioFound.setFoto(rutaFoto);
