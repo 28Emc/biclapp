@@ -422,34 +422,40 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoFound.setEstado(update.getEstado());
         pedidoFound.setFecha_actualizacion(LocalDateTime.now());
 
-        if (pedidoFound.getEstado().equals("E")) {
+        if (update.getEstado().equals("E")) {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
         }
 
-        if (pedidoFound.getEstado().equals("D")) {
+        if (update.getEstado().equals("D") && pedidoFound.getTipo_pedido().equals("B")) {
             pedidoFound.setFecha_devolucion(LocalDateTime.now());
             findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId()).forEach(element -> {
                 try {
-                    Bicicletas bicicletaFound = bicicletasService.findById(element.getId_producto());
-                    bicicletaFound.setStock(bicicletaFound.getStock() + element.getCantidad());
-                    bicicletasService.save(bicicletaFound);
+                    if (pedidoFound.getEstado().equals("E")) {
+                        Bicicletas bicicletaFound = bicicletasService.findById(element.getId_producto());
+                        bicicletaFound.setStock(bicicletaFound.getStock() + element.getCantidad());
+                        bicicletasService.save(bicicletaFound);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             });
         }
 
-        if (pedidoFound.getEstado().equals("B")) {
+        if (update.getEstado().equals("B")) {
             findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId()).forEach(element -> {
                 try {
                     if (pedidoFound.getTipo_pedido().equals("B")) {
-                        Bicicletas bicicletaFound = bicicletasService.findById(element.getId_producto());
-                        bicicletaFound.setStock(bicicletaFound.getStock() + element.getCantidad());
-                        bicicletasService.save(bicicletaFound);
+                        if (pedidoFound.getEstado().equals("E")) {
+                            Bicicletas bicicletaFound = bicicletasService.findById(element.getId_producto());
+                            bicicletaFound.setStock(bicicletaFound.getStock() + element.getCantidad());
+                            bicicletasService.save(bicicletaFound);
+                        }
                     } else if (pedidoFound.getTipo_pedido().equals("A")) {
-                        Accesorios accesorioFound = accesoriosService.findById(element.getId_producto());
-                        accesorioFound.setStock(accesorioFound.getStock() + element.getCantidad());
-                        accesoriosService.save(accesorioFound);
+                        if (pedidoFound.getEstado().equals("E")) {
+                            Accesorios accesorioFound = accesoriosService.findById(element.getId_producto());
+                            accesorioFound.setStock(accesorioFound.getStock() + element.getCantidad());
+                            accesoriosService.save(accesorioFound);
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
