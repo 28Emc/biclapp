@@ -86,8 +86,8 @@ public class AccesoriosServiceImpl implements IAccesoriosService {
     @Transactional(rollbackFor = {Exception.class})
     public void updatePhotoAccesorio(Long id, MultipartFile photo) throws Exception {
         Accesorios accesorioFound = findById(id);
-        //String namePhoto = "accesorio-".concat(accesorioFound.getId().toString().replace(" ", "-").toLowerCase());
-        String namePhoto = "accesorio-".concat(LocalDateTime.now().toString());
+        String namePhoto = "accesorio-".concat(accesorioFound.getId().toString().replace(" ", "-").toLowerCase());
+        //String namePhoto = "accesorio-".concat(LocalDateTime.now().toString());
         String path = productImgfolder.concat(namePhoto).concat(".jpg");
         rutaFoto = cloudStorageService.uploadImageToGCS(photo, path);
         accesorioFound.setFoto(rutaFoto);
