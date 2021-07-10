@@ -182,6 +182,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
         pedidoNew.setDireccion(createPedidos.getDireccion());
         pedidoNew.setFecha_registro(LocalDateTime.now());
+        pedidoNew.setFecha_devolucion(null);
         pedidoNew.setEstado("R");
         repository.save(pedidoNew);
 
@@ -239,6 +240,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setDireccion(createPedidos.getDireccion());
         pedidoNew.setFecha_registro(LocalDateTime.now());
         pedidoNew.setFecha_actualizacion(null);
+        pedidoNew.setFecha_devolucion(null);
         pedidoNew.setEstado("R");
         repository.save(pedidoNew);
 
@@ -422,6 +424,10 @@ public class PedidosServiceImpl implements IPedidosService {
 
         if (pedidoFound.getEstado().equals("E")) {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
+        }
+
+        if (pedidoFound.getEstado().equals("D")) {
+            pedidoFound.setFecha_devolucion(LocalDateTime.now());
         }
 
         repository.save(pedidoFound);
