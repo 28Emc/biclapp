@@ -339,6 +339,8 @@ public class PedidosServiceImpl implements IPedidosService {
     public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {
         int cantidadItems;
         int puntosCalculados;
+        String estadoPedidoDsc = "";
+        String tipoOperacionDsc = "";
         Pedidos pedidoFound = findById(idPedido);
         List<DetallesPedido> dList = detallesPedidoRepository.findByIdPedido(idPedido);
         cantidadItems = dList.size();
@@ -350,9 +352,23 @@ public class PedidosServiceImpl implements IPedidosService {
         switch (tipoOperacion) {
             case "COMPLETAR PEDIDO ACCESORIOS":
                 puntosCalculados = cantidadItems * 1000;
+                estadoPedidoDsc = "entregado!";
+                tipoOperacionDsc = "PEDIDO ENTREGADO";
                 break;
             case "COMPLETAR PEDIDO BICICLETA":
                 puntosCalculados = 15000;
+                estadoPedidoDsc = "entregado!";
+                tipoOperacionDsc = "PEDIDO ENTREGADO";
+                break;
+            case "ANULAR PEDIDO ACCESORIOS":
+                puntosCalculados = -(cantidadItems * 1000);
+                estadoPedidoDsc = "anulado!";
+                tipoOperacionDsc = "PEDIDO ANULADO";
+                break;
+            case "ANULAR PEDIDO BICICLETA":
+                puntosCalculados = -15000;
+                estadoPedidoDsc = "anulado!";
+                tipoOperacionDsc = "PEDIDO ANULADO";
                 break;
             default:
                 puntosCalculados = 0;
@@ -362,11 +378,11 @@ public class PedidosServiceImpl implements IPedidosService {
 
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
-        model.put("subject", "Biclapp - Pedido entregado");
-        model.put("titulo-cabecera", "¡Su pedido ha sido entregado!");
+        model.put("subject", "Biclapp - Pedido ".concat(estadoPedidoDsc));
+        model.put("titulo-cabecera", "¡Su pedido ha sido ".concat(estadoPedidoDsc));
         model.put("pedido", pedidoFound.getId());
         model.put("puntos", puntosCalculados);
-        emailService.enviarEmail(model, "PEDIDO ENTREGADO");
+        emailService.enviarEmail(model, tipoOperacionDsc);
     }
 
     @Override
@@ -426,6 +442,33 @@ public class PedidosServiceImpl implements IPedidosService {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
         }
 
+        if (update.getEstado().equals("B")) {
+            pedidoFound.setEstado("B");
+            repository.save(pedidoFound);
+            findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId()).forEach(element -> {
+                try {
+                    if (pedidoFound.getTipo_pedido().equals("A") || pedidoFound.getTipo_pedido().equals("C")) {
+                        Accesorios accesoriosFound = accesoriosService.findById(element.getId_producto());
+                        accesoriosFound.setStock(accesoriosFound.getStock() + element.getCantidad());
+                        accesoriosService.save(accesoriosFound);
+                    } else if (pedidoFound.getTipo_pedido().equals("B")) {
+                        Bicicletas bicicletaFound = bicicletasService.findById(element.getId_producto());
+                        bicicletaFound.setStock(bicicletaFound.getStock() + element.getCantidad());
+                        bicicletasService.save(bicicletaFound);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+
+            updatePointsByPedido(
+                    id,
+                    (pedidoFound.getTipo_pedido().equals("A") || pedidoFound.getTipo_pedido().equals("C"))
+                            ? "ANULAR PEDIDO ACCESORIOS"
+                            : "ANULAR PEDIDO BICICLETA"
+            );
+        }
+
         if (update.getEstado().equals("D") && pedidoFound.getTipo_pedido().equals("B")) {
             pedidoFound.setFecha_devolucion(LocalDateTime.now());
             findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId()).forEach(element -> {
@@ -469,11 +512,10 @@ public class PedidosServiceImpl implements IPedidosService {
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void delete(Long id) throws Exception {
-        Pedidos pedidoFound = findById(id);
+        //Pedidos pedidoFound = findById(id);
         List<DetallesPedido> detallesPedidos = detallesPedidoRepository.findByIdPedido(id);
+        //updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "ANULAR PEDIDO ACCESORIOS" : "ANULAR PEDIDO BICICLETA");
         detallesPedidos.forEach(p -> detallesPedidoRepository.deleteById(p.getId()));
-
-        updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "ANULAR PEDIDO ACCESORIOS" : "ANULAR PEDIDO BICICLETA");
 
         repository.deleteById(id);
     }
