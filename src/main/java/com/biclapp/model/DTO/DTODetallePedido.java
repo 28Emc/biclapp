@@ -1,5 +1,7 @@
 package com.biclapp.model.DTO;
 
+import java.time.LocalDateTime;
+
 public class DTODetallePedido {
     Long id;
     Long id_pedido;
@@ -19,10 +21,13 @@ public class DTODetallePedido {
     int puntos; // SOLO ARTICULO
     double total; // SOLO ARTICULO
 
+    LocalDateTime fechaRegistro;
+    LocalDateTime fechaDevolucion;
+
     public DTODetallePedido() {
     }
 
-    public DTODetallePedido(Long id, Long id_pedido, Long id_producto, String tipo_pedido, String marca_bicicleta, String modelo_bicicleta, String nombre_accesorio, String descripcion_accesorio, String tipo_accesorio, String foto, int cantidad, double precio, int puntos, double total) {
+    public DTODetallePedido(Long id, Long id_pedido, Long id_producto, String tipo_pedido, String marca_bicicleta, String modelo_bicicleta, String nombre_accesorio, String descripcion_accesorio, String tipo_accesorio, String foto, int cantidad, double precio, int puntos, double total, LocalDateTime fechaRegistro, LocalDateTime fechaDevolucion) {
         this.id = id;
         this.id_pedido = id_pedido;
         this.id_producto = id_producto;
@@ -37,6 +42,8 @@ public class DTODetallePedido {
         this.precio = precio;
         this.puntos = puntos;
         this.total = total;
+        this.fechaRegistro = fechaRegistro;
+        this.fechaDevolucion = fechaDevolucion;
     }
 
     public Long getId() {
@@ -149,5 +156,21 @@ public class DTODetallePedido {
 
     public void setTotal(double total) {
         this.total = total;
+    }
+
+    public LocalDateTime getFechaRegistro() {
+        return fechaRegistro;
+    }
+
+    public void setFechaRegistro(LocalDateTime fechaRegistro) {
+        this.fechaRegistro = fechaRegistro;
+    }
+
+    public LocalDateTime getFechaDevolucion() {
+        return fechaDevolucion;
+    }
+
+    public void setFechaDevolucion(LocalDateTime fechaDevolucion) {
+        this.fechaDevolucion = fechaDevolucion;
     }
 }
