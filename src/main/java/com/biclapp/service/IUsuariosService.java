@@ -42,4 +42,6 @@ public interface IUsuariosService {
 
     void delete(Long id) throws Exception;
 
+    void deleteTemporal(Long id) throws Exception;
+
 }

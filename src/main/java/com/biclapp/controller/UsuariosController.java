@@ -342,4 +342,18 @@ public class UsuariosController {
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @DeleteMapping("/usuarios-temp/{id}")
+    public ResponseEntity<?> deleteUsuarioTemporal(@PathVariable Long id) {
+        Map<String, Object> response = new HashMap<>();
+        try {
+            usuariosService.deleteTemporal(id);
+            response.put("message", "Acción anulada");
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -320,4 +320,15 @@ public class UsuariosServiceImpl implements IUsuariosService {
         findById(id);
         repository.deleteById(id);
     }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void deleteTemporal(Long id) throws Exception {
+        Usuarios usuarioFound = findById(id);
+        Monederos monederoFound = monederoService.findByUser(id);
+        monederoService.delete(monederoFound.getId());
+        List<Tokens> tokensFound = tokenService.findByEmail(usuarioFound.getUsername());
+        tokensFound.forEach(tokens -> tokenService.delete(tokens.getId()));
+        repository.deleteById(id);
+    }
 }
