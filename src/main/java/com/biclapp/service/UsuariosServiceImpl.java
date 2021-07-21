@@ -81,7 +81,8 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public void save(DTOCreateUsuarios createUsuarios) throws Exception {
+    public Long save(DTOCreateUsuarios createUsuarios) throws Exception {
+        Usuarios usuariosNew = new Usuarios();
         Optional<Usuarios> usuarioFound = repository.findByUsernameOrNroDocumentoOrCelular(createUsuarios.getUsername(), createUsuarios.getNro_documento(), createUsuarios.getCelular());
 
         if (usuarioFound.isPresent()) {
@@ -104,7 +105,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
             int contador = findAll().toArray().length;
             String encryptPassword = encoder.encode(createUsuarios.getPassword());
-            Usuarios usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
+            usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
                     createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
                     createUsuarios.getDireccion(), createUsuarios.getSexo(), createUsuarios.getPeso(), createUsuarios.getEstatura(),
                     createUsuarios.getUsername(), encryptPassword, "B", rutaFoto, false);
@@ -139,6 +140,8 @@ public class UsuariosServiceImpl implements IUsuariosService {
 
             emailService.enviarEmail(model, "VALIDAR CUENTA");
         }
+
+        return usuariosNew.getId();
     }
 
     @Override

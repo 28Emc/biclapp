@@ -20,7 +20,7 @@ public interface IUsuariosService {
 
     Optional<Usuarios> findByUsernameOrNroDocumentoOrCelular(String username, String nroDocumento, String celular) throws Exception;
 
-    void save(DTOCreateUsuarios createUsuarios) throws Exception;
+    Long save(DTOCreateUsuarios createUsuarios) throws Exception;
 
     void activateUserRequest(DTOUpdateToken updateToken) throws Exception;
 

@@ -121,8 +121,9 @@ public class UsuariosController {
         }
 
         try {
-            usuariosService.save(createDTO);
+            Long idUser = usuariosService.save(createDTO);
             response.put("message", "¡Usuario registrado!");
+            response.put("id", idUser);
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
