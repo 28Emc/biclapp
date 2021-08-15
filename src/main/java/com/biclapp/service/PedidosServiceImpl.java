@@ -229,8 +229,9 @@ public class PedidosServiceImpl implements IPedidosService {
         Map<String, Object> model = new HashMap<>();
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
+        Membresias membresiaFound = new Membresias();
         if (createPedidos.getTipo_pedido().equals("B")) {
-            Membresias membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
+            membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
             usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
         }
         pedidoNew.setIdUsuario(usuarioFound.getId());
@@ -330,6 +331,7 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("subject", "Biclapp - Pedido registrado");
         model.put("titulo-cabecera", "Su pedido ha sido registrado");
         model.put("pedido", pedidoNew.getId());
+        model.put("membresia", membresiaFound);
         model.put("detalle-pedido", createPedidos);
         emailService.enviarEmail(model, "REGISTRO PEDIDO");
 
@@ -446,11 +448,13 @@ public class PedidosServiceImpl implements IPedidosService {
 
             List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
             Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
+            Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
             model.put("from", emailFrom);
             model.put("to", usuarioFound.getUsername());
             model.put("subject", "Biclapp - Pedido en curso");
             model.put("titulo-cabecera", "¡Su pedido ha sido confirmado!");
             model.put("pedido", pedidoFound.getId());
+            model.put("membresia", membresiaFound);
             model.put("detalle-pedido", detallePedido);
             emailService.enviarEmail(model, "PEDIDO EN CURSO");
         }
