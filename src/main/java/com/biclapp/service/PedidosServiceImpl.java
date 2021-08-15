@@ -83,43 +83,48 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoFound = findById(id_pedido);
         List<DetallesPedido> detallePedidoList = findByUserAndPedido(id_usuario, id_pedido);
         List<DTODetallePedido> nDetallePedido = new ArrayList<>();
-        if (pedidoFound.getTipo_pedido().equals("B")) {
-            detallePedidoList.forEach(detP -> {
-                try {
-                    Bicicletas bicicletaFound = bicicletasService.findById(detP.getId_producto());
-                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, bicicletaFound.getId(),
-                            pedidoFound.getTipo_pedido(), bicicletaFound.getMarca(),
-                            bicicletaFound.getModelo(), null, null,
-                            null, bicicletaFound.getFoto(), detP.getCantidad(),
-                            detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        } else if (pedidoFound.getTipo_pedido().equals("A")) {
-            detallePedidoList.forEach(detP -> {
-                try {
-                    Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
-                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
-                            pedidoFound.getTipo_pedido(), null, null,
-                            accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
-                            accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
-        } else if (pedidoFound.getTipo_pedido().equals("C")) {
-            detallePedidoList.forEach(detP -> {
-                try {
-                    Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
-                    nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
-                            pedidoFound.getTipo_pedido(), null, null,
-                            accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
-                            accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getPuntos(), detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            });
+
+        switch (pedidoFound.getTipo_pedido()) {
+            case "B":
+                detallePedidoList.forEach(detP -> {
+                    try {
+                        Bicicletas bicicletaFound = bicicletasService.findById(detP.getId_producto());
+                        nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, bicicletaFound.getId(),
+                                pedidoFound.getTipo_pedido(), bicicletaFound.getMarca(),
+                                bicicletaFound.getModelo(), null, null,
+                                null, bicicletaFound.getFoto(), detP.getCantidad(),
+                                detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "A":
+                detallePedidoList.forEach(detP -> {
+                    try {
+                        Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
+                        nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
+                                pedidoFound.getTipo_pedido(), null, null,
+                                accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
+                                accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
+            case "C":
+                detallePedidoList.forEach(detP -> {
+                    try {
+                        Accesorios accesorioFound = accesoriosService.findById(detP.getId_producto());
+                        nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
+                                pedidoFound.getTipo_pedido(), null, null,
+                                accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
+                                accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getPuntos(), detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+                break;
         }
 
         return nDetallePedido;
@@ -136,8 +141,6 @@ public class PedidosServiceImpl implements IPedidosService {
                                 (bike.getEstado().equals("R") || bike.getEstado().equals("C") || bike.getEstado().equals("E"))
                 );
     }
-
-
 
     /*
     @Override
@@ -434,9 +437,25 @@ public class PedidosServiceImpl implements IPedidosService {
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
+        Map<String, Object> model = new HashMap<>();
         Pedidos pedidoFound = findById(id);
         pedidoFound.setEstado(update.getEstado());
         pedidoFound.setFecha_actualizacion(LocalDateTime.now());
+
+        if (update.getEstado().equals("C")) {
+            pedidoFound.setFecha_entrega(LocalDateTime.now());
+            repository.save(pedidoFound);
+
+            List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
+            Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
+            model.put("from", emailFrom);
+            model.put("to", usuarioFound.getUsername());
+            model.put("subject", "Biclapp - Pedido en curso");
+            model.put("titulo-cabecera", "¡Su pedido ha sido confirmado!");
+            model.put("pedido", pedidoFound.getId());
+            model.put("detalle-pedido", detallePedido);
+            emailService.enviarEmail(model, "PEDIDO EN CURSO");
+        }
 
         if (update.getEstado().equals("E")) {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
@@ -445,6 +464,7 @@ public class PedidosServiceImpl implements IPedidosService {
         if (update.getEstado().equals("B")) {
             pedidoFound.setEstado("B");
             repository.save(pedidoFound);
+
             findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId()).forEach(element -> {
                 try {
                     if (pedidoFound.getTipo_pedido().equals("A") || pedidoFound.getTipo_pedido().equals("C")) {

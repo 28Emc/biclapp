@@ -24,6 +24,8 @@ public class Pedidos {
 
     private LocalDateTime fecha_registro;
 
+    private LocalDateTime fecha_entrega;
+
     private LocalDateTime fecha_actualizacion;
 
     private LocalDateTime fecha_devolucion;
@@ -31,7 +33,7 @@ public class Pedidos {
     public Pedidos() {
     }
 
-    public Pedidos(Long id, Long idUsuario, Long id_empleado, Integer codigo, String estado, String tipo_pedido, String direccion, LocalDateTime fecha_registro, LocalDateTime fecha_actualizacion, LocalDateTime fecha_devolucion) {
+    public Pedidos(Long id, Long idUsuario, Long id_empleado, Integer codigo, String estado, String tipo_pedido, String direccion, LocalDateTime fecha_registro, LocalDateTime fecha_entrega, LocalDateTime fecha_actualizacion, LocalDateTime fecha_devolucion) {
         this.id = id;
         this.idUsuario = idUsuario;
         this.id_empleado = id_empleado;
@@ -40,6 +42,7 @@ public class Pedidos {
         this.tipo_pedido = tipo_pedido;
         this.direccion = direccion;
         this.fecha_registro = fecha_registro;
+        this.fecha_entrega = fecha_entrega;
         this.fecha_actualizacion = fecha_actualizacion;
         this.fecha_devolucion = fecha_devolucion;
     }
@@ -106,6 +109,14 @@ public class Pedidos {
 
     public void setFecha_registro(LocalDateTime fecha_registro) {
         this.fecha_registro = fecha_registro;
+    }
+
+    public LocalDateTime getFecha_entrega() {
+        return fecha_entrega;
+    }
+
+    public void setFecha_entrega(LocalDateTime fecha_entrega) {
+        this.fecha_entrega = fecha_entrega;
     }
 
     public LocalDateTime getFecha_actualizacion() {
