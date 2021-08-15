@@ -383,7 +383,7 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("to", usuarioFound.getUsername());
         model.put("subject", "Biclapp - Pedido ".concat(estadoPedidoDsc));
         model.put("titulo-cabecera", "¡Su pedido ha sido ".concat(estadoPedidoDsc));
-        model.put("pedido", pedidoFound.getId());
+        model.put("pedido", pedidoFound);
         model.put("puntos", puntosCalculados);
         emailService.enviarEmail(model, tipoOperacionDsc);
     }
@@ -443,7 +443,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoFound.setFecha_actualizacion(LocalDateTime.now());
 
         if (update.getEstado().equals("C")) {
-            pedidoFound.setFecha_entrega(LocalDateTime.now());
+            pedidoFound.setFecha_entrega(update.getFecha());
             repository.save(pedidoFound);
 
             List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
@@ -489,6 +489,17 @@ public class PedidosServiceImpl implements IPedidosService {
                             ? "ANULAR PEDIDO ACCESORIOS"
                             : "ANULAR PEDIDO BICICLETA"
             );
+        }
+
+        if (update.getEstado().equals("D")) {
+            Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
+
+            model.put("from", emailFrom);
+            model.put("to", usuarioFound.getUsername());
+            model.put("subject", "Biclapp - Pedido devuelto");
+            model.put("titulo-cabecera", "¡Su pedido ha sido devuelto!");
+            model.put("pedido", pedidoFound);
+            emailService.enviarEmail(model, "PEDIDO DEVUELTO");
         }
 
         if (update.getEstado().equals("D") && pedidoFound.getTipo_pedido().equals("B")) {

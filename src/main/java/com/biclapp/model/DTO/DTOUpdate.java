@@ -2,6 +2,7 @@ package com.biclapp.model.DTO;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
 public class DTOUpdate {
 
@@ -11,12 +12,15 @@ public class DTOUpdate {
     @NotEmpty(message = "Estado requerido")
     private String estado;
 
+    private LocalDateTime fecha;
+
     public DTOUpdate() {
     }
 
-    public DTOUpdate(Long id, String estado) {
+    public DTOUpdate(Long id, String estado, LocalDateTime fecha) {
         this.id = id;
         this.estado = estado;
+        this.fecha = fecha;
     }
 
     public Long getId() {
@@ -33,5 +37,13 @@ public class DTOUpdate {
 
     public void setEstado(String estado) {
         this.estado = estado;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
     }
 }
