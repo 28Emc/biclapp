@@ -330,7 +330,7 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("to", usuarioFound.getUsername());
         model.put("subject", "Biclapp - Pedido registrado");
         model.put("titulo-cabecera", "Su pedido ha sido registrado");
-        model.put("pedido", pedidoNew.getId());
+        model.put("pedido", pedidoNew);
         model.put("membresia", membresiaFound);
         model.put("detalle-pedido", createPedidos);
         emailService.enviarEmail(model, "REGISTRO PEDIDO");
