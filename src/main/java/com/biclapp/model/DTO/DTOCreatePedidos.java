@@ -3,6 +3,7 @@ package com.biclapp.model.DTO;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class DTOCreatePedidos {
     @Size(min = 1, max = 150, message = "La dirección debe tener entre 1 y 150 caracteres")
     private String direccion;
 
-    private Date fecha_registro;
+    private LocalDateTime fecha_registro;
 
     @NotNull(message = "Detalles pedido requeridos")
     private List<DTOUpdateDetallesPedido> detalles_pedido;
@@ -92,11 +93,11 @@ public class DTOCreatePedidos {
         this.direccion = direccion;
     }
 
-    public Date getFecha_registro() {
+    public LocalDateTime getFecha_registro() {
         return fecha_registro;
     }
 
-    public void setFecha_registro(Date fecha_registro) {
+    public void setFecha_registro(LocalDateTime fecha_registro) {
         this.fecha_registro = fecha_registro;
     }
 

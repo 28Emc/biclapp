@@ -12,10 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class PedidosServiceImpl implements IPedidosService {
@@ -242,6 +239,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setTipo_pedido(createPedidos.getTipo_pedido());
         pedidoNew.setDireccion(createPedidos.getDireccion());
         pedidoNew.setFecha_registro(LocalDateTime.now());
+        createPedidos.setFecha_registro(LocalDateTime.now());
         pedidoNew.setFecha_actualizacion(null);
         pedidoNew.setFecha_devolucion(null);
         pedidoNew.setEstado("R");
