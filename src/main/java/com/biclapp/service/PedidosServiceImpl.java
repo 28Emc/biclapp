@@ -453,7 +453,7 @@ public class PedidosServiceImpl implements IPedidosService {
             model.put("to", usuarioFound.getUsername());
             model.put("subject", "Biclapp - Pedido en curso");
             model.put("titulo-cabecera", "¡Su pedido ha sido confirmado!");
-            model.put("pedido", pedidoFound.getId());
+            model.put("pedido", pedidoFound);
             model.put("membresia", membresiaFound);
             model.put("detalle-pedido", detallePedido);
             emailService.enviarEmail(model, "PEDIDO EN CURSO");
