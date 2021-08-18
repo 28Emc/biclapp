@@ -138,6 +138,9 @@ public class EmailService {
             case "REGISTRO AVERIA":
                 body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/bucket-citybike-lima-delivery/app-images/logo-citybikelima-delivery.png' alt='registro-averia' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, se registró con éxito su solicitud de atención al cliente.</h3> <h3 class='texto'>Responderemos a su solicitud lo más pronto posible.</h3> <h3 class='texto'>Le recordamos además que están disponibles los siguientes números de contacto: </h3> <h3 class='texto-normal'>983422657</h3> <h3 class='texto-normal'>900120344</h3> </td> </tr> <tr> <td> <hr> </td> </tr>";
                 break;
+            case "ATENCION AVERIA":
+                body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/bucket-citybike-lima-delivery/app-images/logo-citybikelima-delivery.png' alt='registro-averia' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'>Saludos, atendió correctamente su incidencia.</h3> <h3 class='texto'>Si tuviese alguna otra duda, le invitamos a comunicarse con nosotros a los siguientes números de contacto: </h3> <h3 class='texto-normal'>983422657</h3> <h3 class='texto-normal'>900120344</h3> </td> </tr> <tr> <td> <hr> </td> </tr>";
+                break;
         }
 
         String footer = "<tr> <td id class='footer'> <p>Biclapp &copy;2021</p> </td> </tr> </table> </div> </body></html>";

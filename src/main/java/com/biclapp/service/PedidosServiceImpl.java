@@ -360,22 +360,22 @@ public class PedidosServiceImpl implements IPedidosService {
         switch (tipoOperacion) {
             case "COMPLETAR PEDIDO ACCESORIOS":
                 puntosCalculados = cantidadItems * 1000;
-                estadoPedidoDsc = "entregado!";
+                estadoPedidoDsc = "entregado";
                 tipoOperacionDsc = "PEDIDO ENTREGADO";
                 break;
             case "COMPLETAR PEDIDO BICICLETA":
                 puntosCalculados = 15000;
-                estadoPedidoDsc = "entregado!";
+                estadoPedidoDsc = "entregado";
                 tipoOperacionDsc = "PEDIDO ENTREGADO";
                 break;
             case "ANULAR PEDIDO ACCESORIOS":
                 puntosCalculados = -(cantidadItems * 1000);
-                estadoPedidoDsc = "anulado!";
+                estadoPedidoDsc = "anulado";
                 tipoOperacionDsc = "PEDIDO ANULADO";
                 break;
             case "ANULAR PEDIDO BICICLETA":
                 puntosCalculados = -15000;
-                estadoPedidoDsc = "anulado!";
+                estadoPedidoDsc = "anulado";
                 tipoOperacionDsc = "PEDIDO ANULADO";
                 break;
             default:
@@ -387,7 +387,7 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
         model.put("subject", "Biclapp - Pedido ".concat(estadoPedidoDsc));
-        model.put("titulo-cabecera", "¡Su pedido ha sido ".concat(estadoPedidoDsc));
+        model.put("titulo-cabecera", "Su pedido ha sido ".concat(estadoPedidoDsc));
         model.put("pedido", pedidoFound);
         model.put("puntos", puntosCalculados);
         emailService.enviarEmail(model, tipoOperacionDsc);
@@ -457,7 +457,7 @@ public class PedidosServiceImpl implements IPedidosService {
             model.put("from", emailFrom);
             model.put("to", usuarioFound.getUsername());
             model.put("subject", "Biclapp - Pedido en curso");
-            model.put("titulo-cabecera", "¡Su pedido ha sido confirmado!");
+            model.put("titulo-cabecera", "Su pedido ha sido confirmado");
             model.put("pedido", pedidoFound);
             model.put("membresia", membresiaFound);
             model.put("detalle-pedido", detallePedido);
@@ -502,7 +502,7 @@ public class PedidosServiceImpl implements IPedidosService {
             model.put("from", emailFrom);
             model.put("to", usuarioFound.getUsername());
             model.put("subject", "Biclapp - Pedido devuelto");
-            model.put("titulo-cabecera", "¡Su pedido ha sido devuelto!");
+            model.put("titulo-cabecera", "Su pedido ha sido devuelto");
             model.put("pedido", pedidoFound);
             emailService.enviarEmail(model, "PEDIDO DEVUELTO");
         }

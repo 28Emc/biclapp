@@ -1,6 +1,7 @@
 package com.biclapp.service;
 
 import com.biclapp.config.mail.EmailService;
+import com.biclapp.model.DTO.DTOCreateAveria;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateAverias;
 import com.biclapp.model.entity.Averias;
@@ -11,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.mail.MessagingException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +54,7 @@ public class AveriasServiceImpl implements IAveriasService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void save(Averias averia) throws Exception {
         Usuarios usuarioFound = usuariosService.findById(averia.getIdUsuario());
         int contador = findAll().toArray().length;
@@ -61,13 +65,35 @@ public class AveriasServiceImpl implements IAveriasService {
         Map<String, Object> model = new HashMap<>();
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
-        model.put("subject", "Biclapp - Avería registrada");
-        model.put("titulo-cabecera", "Avería registrada");
         model.put("averia", averia);
-        emailService.enviarEmail(model, "REGISTRO AVERIA");
+        enviarEmailAveria(averia, model);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
+    public void saveAdmin(DTOCreateAveria dtoCreateAveria) throws Exception {
+        Averias averia = new Averias();
+        Usuarios usuarioFound = usuariosService.findByUsernameOrNroDocumentoOrCelular(null,
+                        String.valueOf(dtoCreateAveria.getDniUsuario()), null)
+                .orElseThrow(() -> new Exception("El usuario no existe"));
+        int contador = findAll().toArray().length;
+        averia.setCodigo(contador + 1);
+        averia.setIdUsuario(usuarioFound.getId());
+        averia.setDireccion(dtoCreateAveria.getDireccion());
+        averia.setMotivo(dtoCreateAveria.getMotivo());
+        averia.setFecha_registro(LocalDateTime.now());
+        averia.setEstado("P");
+        averiasRepository.save(averia);
+
+        Map<String, Object> model = new HashMap<>();
+        model.put("from", emailFrom);
+        model.put("to", usuarioFound.getUsername());
+        model.put("averia", averia);
+        enviarEmailAveria(averia, model);
+    }
+
+    @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(Long id, DTOUpdateAverias updateAveria) throws Exception {
         Averias averiaFound = findById(id);
         Usuarios usuarioFound = usuariosService.findById(averiaFound.getIdUsuario());
@@ -76,11 +102,36 @@ public class AveriasServiceImpl implements IAveriasService {
         averiaFound.setDireccion(updateAveria.getDireccion());
         averiaFound.setMotivo(updateAveria.getMotivo());
         averiaFound.setFecha_registro(updateAveria.getFecha_registro()); // POR AHORA, ACEPTO LA FECHA DEL CLIENTE
+        averiaFound.setFecha_atencion(LocalDateTime.now());
         averiaFound.setEstado(updateAveria.getEstado());
         averiasRepository.save(averiaFound);
+
+        if (updateAveria.getEstado().equals("A")) {
+            Map<String, Object> model = new HashMap<>();
+            model.put("from", emailFrom);
+            model.put("to", usuarioFound.getUsername());
+            model.put("averia", averiaFound);
+            enviarEmailAveria(averiaFound, model);
+        }
+    }
+
+    private void enviarEmailAveria(Averias averia, Map<String, Object> model) throws MessagingException {
+        String tipoOperacion = "";
+        if (averia.getEstado().equals("P")) {
+            model.put("subject", "Biclapp - Avería registrada");
+            model.put("titulo-cabecera", "Avería registrada");
+            tipoOperacion = "REGISTRO AVERIA";
+        } else if (averia.getEstado().equals("A")) {
+            model.put("subject", "Biclapp - Avería atendida");
+            model.put("titulo-cabecera", "Avería atendida");
+            tipoOperacion = "ATENCION AVERIA";
+        }
+
+        emailService.enviarEmail(model, tipoOperacion);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void updateEstado(Long id, DTOUpdate update) throws Exception {
         Averias averiaFound = findById(id);
         averiaFound.setEstado(update.getEstado());
@@ -88,6 +139,7 @@ public class AveriasServiceImpl implements IAveriasService {
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void delete(Long id) throws Exception {
         findById(id);
         averiasRepository.deleteById(id);

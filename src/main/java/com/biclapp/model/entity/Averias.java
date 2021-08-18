@@ -5,6 +5,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
@@ -30,20 +31,23 @@ public class Averias {
     private String motivo;
 
     @NotNull(message = "Fecha registro requerida")
-    private Date fecha_registro;
+    private LocalDateTime fecha_registro;
+
+    private LocalDateTime fecha_atencion;
 
     private String estado;
 
     public Averias() {
     }
 
-    public Averias(Long id, Integer codigo, Long idUsuario, String direccion, String motivo, Date fecha_registro, String estado) {
+    public Averias(Long id, Integer codigo, Long idUsuario, String direccion, String motivo, LocalDateTime fecha_registro, LocalDateTime fecha_atencion, String estado) {
         this.id = id;
         this.codigo = codigo;
         this.idUsuario = idUsuario;
         this.direccion = direccion;
         this.motivo = motivo;
         this.fecha_registro = fecha_registro;
+        this.fecha_atencion = fecha_atencion;
         this.estado = estado;
     }
 
@@ -87,12 +91,20 @@ public class Averias {
         this.motivo = motivo;
     }
 
-    public Date getFecha_registro() {
+    public LocalDateTime getFecha_registro() {
         return fecha_registro;
     }
 
-    public void setFecha_registro(Date fecha_registro) {
+    public void setFecha_registro(LocalDateTime fecha_registro) {
         this.fecha_registro = fecha_registro;
+    }
+
+    public LocalDateTime getFecha_atencion() {
+        return fecha_atencion;
+    }
+
+    public void setFecha_atencion(LocalDateTime fecha_atencion) {
+        this.fecha_atencion = fecha_atencion;
     }
 
     public String getEstado() {

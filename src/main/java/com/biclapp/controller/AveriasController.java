@@ -1,5 +1,6 @@
 package com.biclapp.controller;
 
+import com.biclapp.model.DTO.DTOCreateAveria;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateAverias;
 import com.biclapp.model.entity.Averias;
@@ -82,6 +83,21 @@ public class AveriasController {
 
         try {
             averiasService.save(averia);
+            response.put("message", "¡Avería registrada!");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            response.put("error", ExceptionUtils.getRootCauseMessage(e));
+            response.put("message", e.getMessage());
+            return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/averias-admin")
+    public ResponseEntity<?> createAveriaAdmin(@RequestBody DTOCreateAveria dtoCreateAveria, BindingResult result) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            averiasService.saveAdmin(dtoCreateAveria);
             response.put("message", "¡Avería registrada!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {

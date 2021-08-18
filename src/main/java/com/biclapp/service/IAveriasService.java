@@ -1,9 +1,9 @@
 package com.biclapp.service;
 
+import com.biclapp.model.DTO.DTOCreateAveria;
 import com.biclapp.model.DTO.DTOUpdate;
 import com.biclapp.model.DTO.DTOUpdateAverias;
 import com.biclapp.model.entity.Averias;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,10 +13,11 @@ public interface IAveriasService {
 
     Averias findById(Long id) throws Exception;
 
-    @Transactional(readOnly = true)
     List<Averias> findByIdUsuario(Long idUsuario) throws Exception;
 
     void save(Averias averia) throws Exception;
+
+    void saveAdmin(DTOCreateAveria dtoCreateAveria) throws Exception;
 
     void update(Long id, DTOUpdateAverias updateAveria) throws Exception;
 
