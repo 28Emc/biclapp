@@ -22,12 +22,13 @@ public class DTODetallePedido {
     double total; // SOLO ARTICULO
 
     LocalDateTime fechaRegistro;
+    LocalDateTime fechaEntrega;
     LocalDateTime fechaDevolucion;
 
     public DTODetallePedido() {
     }
 
-    public DTODetallePedido(Long id, Long id_pedido, Long id_producto, String tipo_pedido, String marca_bicicleta, String modelo_bicicleta, String nombre_accesorio, String descripcion_accesorio, String tipo_accesorio, String foto, int cantidad, double precio, int puntos, double total, LocalDateTime fechaRegistro, LocalDateTime fechaDevolucion) {
+    public DTODetallePedido(Long id, Long id_pedido, Long id_producto, String tipo_pedido, String marca_bicicleta, String modelo_bicicleta, String nombre_accesorio, String descripcion_accesorio, String tipo_accesorio, String foto, int cantidad, double precio, int puntos, double total, LocalDateTime fechaRegistro, LocalDateTime fechaEntrega, LocalDateTime fechaDevolucion) {
         this.id = id;
         this.id_pedido = id_pedido;
         this.id_producto = id_producto;
@@ -43,6 +44,7 @@ public class DTODetallePedido {
         this.puntos = puntos;
         this.total = total;
         this.fechaRegistro = fechaRegistro;
+        this.fechaEntrega = fechaEntrega;
         this.fechaDevolucion = fechaDevolucion;
     }
 
@@ -164,6 +166,14 @@ public class DTODetallePedido {
 
     public void setFechaRegistro(LocalDateTime fechaRegistro) {
         this.fechaRegistro = fechaRegistro;
+    }
+
+    public LocalDateTime getFechaEntrega() {
+        return fechaEntrega;
+    }
+
+    public void setFechaEntrega(LocalDateTime fechaEntrega) {
+        this.fechaEntrega = fechaEntrega;
     }
 
     public LocalDateTime getFechaDevolucion() {

@@ -90,7 +90,8 @@ public class PedidosServiceImpl implements IPedidosService {
                                 pedidoFound.getTipo_pedido(), bicicletaFound.getMarca(),
                                 bicicletaFound.getModelo(), null, null,
                                 null, bicicletaFound.getFoto(), detP.getCantidad(),
-                                detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
+                                detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(),
+                                pedidoFound.getFecha_entrega(), pedidoFound.getFecha_devolucion()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -103,7 +104,9 @@ public class PedidosServiceImpl implements IPedidosService {
                         nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
                                 pedidoFound.getTipo_pedido(), null, null,
                                 accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
-                                accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), 0, detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
+                                accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), 0, detP.getTotal(),
+                                pedidoFound.getFecha_registro(), pedidoFound.getFecha_entrega(),
+                                pedidoFound.getFecha_devolucion()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -116,7 +119,9 @@ public class PedidosServiceImpl implements IPedidosService {
                         nDetallePedido.add(new DTODetallePedido(detP.getId(), id_pedido, accesorioFound.getId(),
                                 pedidoFound.getTipo_pedido(), null, null,
                                 accesorioFound.getNombre(), accesorioFound.getDescripcion(), accesorioFound.getTipo(),
-                                accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getPuntos(), detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_devolucion()));
+                                accesorioFound.getFoto(), detP.getCantidad(), detP.getPrecio(), detP.getPuntos(),
+                                detP.getTotal(), pedidoFound.getFecha_registro(), pedidoFound.getFecha_entrega(),
+                                pedidoFound.getFecha_devolucion()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
