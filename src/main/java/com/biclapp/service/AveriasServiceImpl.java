@@ -59,6 +59,7 @@ public class AveriasServiceImpl implements IAveriasService {
         Usuarios usuarioFound = usuariosService.findById(averia.getIdUsuario());
         int contador = findAll().toArray().length;
         averia.setCodigo(contador + 1);
+        //averia.setFecha_registro(LocalDateTime.now());
         averia.setEstado("P");
         averiasRepository.save(averia);
 
@@ -73,8 +74,8 @@ public class AveriasServiceImpl implements IAveriasService {
     @Transactional(rollbackFor = {Exception.class})
     public void saveAdmin(DTOCreateAveria dtoCreateAveria) throws Exception {
         Averias averia = new Averias();
-        Usuarios usuarioFound = usuariosService.findByUsernameOrNroDocumentoOrCelular(null,
-                        String.valueOf(dtoCreateAveria.getDniUsuario()), null)
+        Usuarios usuarioFound = usuariosService.findByUsernameOrNroDocumentoOrCelular("",
+                        String.valueOf(dtoCreateAveria.getDniUsuario()), "")
                 .orElseThrow(() -> new Exception("El usuario no existe"));
         int contador = findAll().toArray().length;
         averia.setCodigo(contador + 1);
