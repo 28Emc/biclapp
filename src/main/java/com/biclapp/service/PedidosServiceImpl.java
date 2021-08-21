@@ -215,11 +215,16 @@ public class PedidosServiceImpl implements IPedidosService {
                         throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                     }
                 }
+                System.out.println("detallesPedido = " + detallesPedido);
                 detallesPedido.setIdPedido(pedidoNew.getId());
+                System.out.println("pedidoNew.getId() = " + pedidoNew.getId());
                 detallesPedido.setCantidad(p.getCantidad());
+                System.out.println("p.getCantidad() = " + p.getCantidad());
                 detallesPedido.setPrecio(p.getPrecio());
+                System.out.println("p.getPrecio() = " + p.getPrecio());
                 detallesPedido.setPuntos(0);
                 detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
+                System.out.println("p.getCantidad() * p.getPrecio() = " + p.getCantidad() * p.getPrecio());
                 detallesPedidoRepository.save(detallesPedido);
             } catch (Exception e) {
                 e.printStackTrace();
