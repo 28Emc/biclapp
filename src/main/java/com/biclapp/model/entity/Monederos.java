@@ -18,8 +18,8 @@ public class Monederos {
     @Column(name = "id_usuario")
     private Long idUsuario;
 
-    @NotNull(message = "Puntos requeridos")
-    @PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
+    //@NotNull(message = "Puntos requeridos")
+    //@PositiveOrZero(message = "El valor del stock debe ser mayor o igual a 0")
     private Integer puntos;
 
     public Monederos() {

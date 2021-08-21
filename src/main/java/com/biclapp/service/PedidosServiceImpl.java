@@ -481,7 +481,7 @@ public class PedidosServiceImpl implements IPedidosService {
                         accesoriosService.save(accesoriosFound);
                     } else if (pedidoFound.getTipo_pedido().equals("B")) {
                         Bicicletas bicicletaFound = bicicletasService.findById(element.getId_producto());
-                        bicicletaFound.setStock(bicicletaFound.getStock() + element.getCantidad());
+                        bicicletaFound.setStock(bicicletaFound.getStock() + 1);
                         bicicletasService.save(bicicletaFound);
                     }
                 } catch (Exception e) {
