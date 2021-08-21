@@ -21,8 +21,8 @@ public class DTOUpdateDetallesPedido {
     @DecimalMax(value = "999999.99", message = "El precio tiene un valor no admitido")
     private Double precio;
 
-    @PositiveOrZero(message = "El valor de los puntos debe ser mayor o igual a 0")
-    @DecimalMax(value = "999999", message = "El punto tiene un valor no admitido")
+    //@PositiveOrZero(message = "El valor de los puntos debe ser mayor o igual a 0")
+    //@DecimalMax(value = "999999", message = "El punto tiene un valor no admitido")
     private Integer puntos;
 
     @PositiveOrZero(message = "El valor del total debe ser mayor o igual a 0")
