@@ -207,12 +207,13 @@ public class PedidosController {
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
             String messageFormat = e.getMessage();
-            if (messageFormat.contains("Exception:")) {
+            /*if (messageFormat.contains("Exception:")) {
                 messageFormat = messageFormat.substring(messageFormat.indexOf(": ")).replace(":", "").trim();
-            }
+            }*/
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", messageFormat);
             System.out.println("e = " + e);
+            e.printStackTrace();
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -235,6 +236,8 @@ public class PedidosController {
             response.put("message", "¡Pedido actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println("e = " + e);
+            e.printStackTrace();
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -264,6 +267,8 @@ public class PedidosController {
             response.put("message", "¡Estado del pedido actualizado!");
             return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println("e = " + e);
+            e.printStackTrace();
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -278,6 +283,8 @@ public class PedidosController {
             response.put("message", "¡Pedido eliminado!");
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println("e = " + e);
+            e.printStackTrace();
             response.put("error", ExceptionUtils.getRootCauseMessage(e));
             response.put("message", e.getMessage());
             return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
