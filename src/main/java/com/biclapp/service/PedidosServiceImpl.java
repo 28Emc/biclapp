@@ -455,7 +455,19 @@ public class PedidosServiceImpl implements IPedidosService {
             List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
             Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
             Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
+            model.put("from", emailFrom);
+            model.put("to", usuarioFound.getUsername());
+            model.put("subject", "Biclapp - Pedido en curso");
+            model.put("titulo-cabecera", "Su pedido ha sido confirmado");
+            model.put("pedido", pedidoFound);
+            model.put("membresia", membresiaFound);
+            model.put("detalle-pedido", detallePedido);
+            emailService.enviarEmail(model, "PEDIDO EN CURSO");
+        }
 
+        if (update.getEstado().equals("E")) {
+            Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
+            Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
             switch (membresiaFound.getTipo()) {
                 case "SEMANAL":
                     pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusDays(7L));
@@ -468,17 +480,6 @@ public class PedidosServiceImpl implements IPedidosService {
                     break;
             }
 
-            model.put("from", emailFrom);
-            model.put("to", usuarioFound.getUsername());
-            model.put("subject", "Biclapp - Pedido en curso");
-            model.put("titulo-cabecera", "Su pedido ha sido confirmado");
-            model.put("pedido", pedidoFound);
-            model.put("membresia", membresiaFound);
-            model.put("detalle-pedido", detallePedido);
-            emailService.enviarEmail(model, "PEDIDO EN CURSO");
-        }
-
-        if (update.getEstado().equals("E")) {
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
         }
 
