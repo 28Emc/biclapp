@@ -247,7 +247,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setFecha_registro(LocalDateTime.now());
         createPedidos.setFecha_registro(LocalDateTime.now());
         pedidoNew.setFecha_actualizacion(null);
-        pedidoNew.setFecha_devolucion(null);
+        //pedidoNew.setFecha_devolucion(null);
         pedidoNew.setEstado("R");
         repository.save(pedidoNew);
 
@@ -455,6 +455,19 @@ public class PedidosServiceImpl implements IPedidosService {
             List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
             Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
             Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
+
+            switch (membresiaFound.getTipo()) {
+                case "SEMANAL":
+                    pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusDays(7L));
+                    break;
+                case "QUINCENAL":
+                    pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusDays(15L));
+                    break;
+                case "MENSUAL":
+                    pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusMonths(1L));
+                    break;
+            }
+
             model.put("from", emailFrom);
             model.put("to", usuarioFound.getUsername());
             model.put("subject", "Biclapp - Pedido en curso");
