@@ -236,6 +236,7 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         Membresias membresiaFound = new Membresias();
+        ArrayList<Double> totales = new ArrayList<>();
         if (createPedidos.getTipo_pedido().equals("B")) {
             membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
             usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
@@ -269,6 +270,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
+                            totales.add(detallesPedido.getTotal());
                         } else {
                             throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                         }
@@ -295,6 +297,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
                             //model.put("total", detallesPedido.getTotal());
+                            totales.add(detallesPedido.getTotal());
                         } else {
                             throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                         }
@@ -336,9 +339,8 @@ public class PedidosServiceImpl implements IPedidosService {
             }
         });
 
-        double totalAcc = createPedidos.getDetalles_pedido().stream().mapToDouble(DTOUpdateDetallesPedido::getTotal).sum();
+        double totalAcc = totales.stream().mapToDouble(value -> value).sum();
         model.put("total", totalAcc);
-        System.out.println("totalAcc = " + totalAcc);
 
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
