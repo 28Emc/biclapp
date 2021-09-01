@@ -27,6 +27,9 @@ public class EmailService {
         String remitente = model.get("from").toString();
         String destinatario = model.get("to").toString();
         String tituloEmail = model.get("subject").toString();
+        if (model.get("otros-datos") != null) {
+            tituloEmail = "Biclapp - Pedido extendido";
+        }
         String plantilla = armarPlantilla(model, tipoOperacion);
 
         MimeMessage message = sender.createMimeMessage();
