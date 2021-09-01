@@ -132,15 +132,17 @@ public class EmailService {
                 body = body.concat("<td> <hr> </td>");
                 break;
             case "PEDIDO ENTREGADO":
+                String tituloEmail = model.get("titulo-cabecera").toString();
                 pedidoFound = (Pedidos) model.get("pedido");
                 String texto = "Saludos, le informamos que su pedido Nro. " + pedidoFound.getId() + " ha sido entregado.";
                 if(model.get("otros-datos") != null) {
+                    tituloEmail = "Pedido extendido";
                     Map<String, Object> otrosDatos = (Map<String, Object>) model.get("otros-datos");
                     String tiempo = otrosDatos.get("tiempo-extension").toString();
                     String fechaExt = otrosDatos.get("fecha-devolucion").toString();
                     texto = "Saludos, le informamos que su pedido Nro. " + pedidoFound.getId() + " se ha extendido con éxito por " + tiempo + ". La nueva fecha de devolución es " + fechaExt + ".";
                 }
-                body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/bucket-citybike-lima-delivery/app-images/logo-citybikelima-delivery.png' alt='pedido-entregado' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + model.get("titulo-cabecera").toString() + "</h3> <h3 class='texto'> " + texto + " </h3> <h3 class='texto'>Gracias por confiar en nosotros. </h3> </td> </tr> <td> <hr> </td>";
+                body = "<body> <div class='container'> <table aria-hidden='true'> <tr> <td id class='imagen'> <img src='https://storage.googleapis.com/bucket-citybike-lima-delivery/app-images/logo-citybikelima-delivery.png' alt='pedido-entregado' width='50%' /> </td> </tr> <tr> <td> <hr> </td> </tr> <tr> <td id class='content'> <h3 class='titulo'>" + tituloEmail + "</h3> <h3 class='texto'> " + texto + " </h3> <h3 class='texto'>Gracias por confiar en nosotros. </h3> </td> </tr> <td> <hr> </td>";
                 break;
             case "PEDIDO DEVUELTO":
                 pedidoFound = (Pedidos) model.get("pedido");
