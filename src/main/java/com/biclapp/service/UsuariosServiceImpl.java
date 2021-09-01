@@ -83,62 +83,68 @@ public class UsuariosServiceImpl implements IUsuariosService {
     @Transactional(rollbackFor = {Exception.class})
     public Long save(DTOCreateUsuarios createUsuarios) throws Exception {
         Usuarios usuariosNew = new Usuarios();
-        Optional<Usuarios> usuarioFound = repository.findByUsernameOrNroDocumentoOrCelular(createUsuarios.getUsername(), createUsuarios.getNro_documento(), createUsuarios.getCelular());
+        try {
+            Optional<Usuarios> usuarioFound = repository.findByUsernameOrNroDocumentoOrCelular(createUsuarios.getUsername(), createUsuarios.getNro_documento(), createUsuarios.getCelular());
 
-        if (usuarioFound.isPresent()) {
-            if (usuarioFound.get().getNroDocumento().trim().equals(createUsuarios.getNro_documento().trim())) {
-                throw new Exception("¡El nro de documento ya está registrado en el sistema!");
-            } else if (usuarioFound.get().getCelular().trim().equals(createUsuarios.getCelular().trim())) {
-                throw new Exception("¡El número de celular ya está siendo utilizado por otra persona!");
-            } else if (usuarioFound.get().getUsername().trim().equals(createUsuarios.getUsername().trim())) {
-                throw new Exception("¡El nombre de usuario ya está siendo utilizado por otra persona!");
+            if (usuarioFound.isPresent()) {
+                if (usuarioFound.get().getNroDocumento().trim().equals(createUsuarios.getNro_documento().trim())) {
+                    throw new Exception("¡El nro de documento ya está registrado en el sistema!");
+                } else if (usuarioFound.get().getCelular().trim().equals(createUsuarios.getCelular().trim())) {
+                    throw new Exception("¡El número de celular ya está siendo utilizado por otra persona!");
+                } else if (usuarioFound.get().getUsername().trim().equals(createUsuarios.getUsername().trim())) {
+                    throw new Exception("¡El nombre de usuario ya está siendo utilizado por otra persona!");
+                }
+            } else {
+                Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
+                Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
+
+                if (createUsuarios.getFoto() != null) {
+                    String namePhoto = createUsuarios.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
+                    String path = userImgfolder.concat(namePhoto).concat(".jpg");
+                    rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), path);
+                }
+
+                int contador = findAll().toArray().length;
+                String encryptPassword = encoder.encode(createUsuarios.getPassword());
+                usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
+                        createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
+                        createUsuarios.getDireccion(), createUsuarios.getSexo(), createUsuarios.getPeso(), createUsuarios.getEstatura(),
+                        createUsuarios.getUsername(), encryptPassword, "B", rutaFoto, false);
+                repository.save(usuariosNew);
+
+                int codigoMonedero = monederoService.findAll().toArray().length;
+                Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 1000);
+                monederoService.save(monedero);
+
+                DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
+                        0, null);
+
+                Map<String, Object> model = new HashMap<>();
+                model.put("from", emailFrom);
+                model.put("to", createUsuarios.getUsername());
+                model.put("subject", "Biclapp - Verificación cuenta");
+                model.put("titulo-cabecera", "Verificación cuenta");
+
+                int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
+                String codStr = String.valueOf(codigoRandom);
+
+                while (codStr.length() < 4) {
+                    codStr = codStr.concat("0");
+                }
+
+                codigoRandom = Integer.parseInt(codStr);
+                Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
+                        codigoRandom, LocalDateTime.now());
+                tokenService.save(activateToken);
+
+                model.put("codigo-verificacion", activateToken.getCodigo());
+
+                emailService.enviarEmail(model, "VALIDAR CUENTA");
             }
-        } else {
-            Roles rolFound = rolesService.findByRol("ROLE_USUARIO");
-            Membresias membresiaFound = membresiasService.findById(createUsuarios.getId_membresia());
 
-            if (createUsuarios.getFoto() != null) {
-                String namePhoto = createUsuarios.getUsername().split("@")[0].replace(" ", "-").toLowerCase();
-                String path = userImgfolder.concat(namePhoto).concat(".jpg");
-                rutaFoto = cloudStorageService.uploadImageToGCS(createUsuarios.getFoto(), path);
-            }
-
-            int contador = findAll().toArray().length;
-            String encryptPassword = encoder.encode(createUsuarios.getPassword());
-            usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
-                    createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
-                    createUsuarios.getDireccion(), createUsuarios.getSexo(), createUsuarios.getPeso(), createUsuarios.getEstatura(),
-                    createUsuarios.getUsername(), encryptPassword, "B", rutaFoto, false);
-            repository.save(usuariosNew);
-
-            int codigoMonedero = monederoService.findAll().toArray().length;
-            Monederos monedero = new Monederos(codigoMonedero + 1, usuariosNew.getId(), 1000);
-            monederoService.save(monedero);
-
-            DTOUpdateToken updateToken = new DTOUpdateToken(createUsuarios.getUsername(), null, null,
-                    0, null);
-
-            Map<String, Object> model = new HashMap<>();
-            model.put("from", emailFrom);
-            model.put("to", createUsuarios.getUsername());
-            model.put("subject", "Biclapp - Verificación cuenta");
-            model.put("titulo-cabecera", "Verificación cuenta");
-
-            int codigoRandom = (int) Math.floor(Math.random() * (1 - 9999 + 1) + 9999);
-            String codStr = String.valueOf(codigoRandom);
-
-            while (codStr.length() < 4) {
-                codStr = codStr.concat("0");
-            }
-
-            codigoRandom = Integer.parseInt(codStr);
-            Tokens activateToken = new Tokens(updateToken.getEmail(), "ACT-1", null,
-                    codigoRandom, LocalDateTime.now());
-            tokenService.save(activateToken);
-
-            model.put("codigo-verificacion", activateToken.getCodigo());
-
-            emailService.enviarEmail(model, "VALIDAR CUENTA");
+            return usuariosNew.getId();
+        } catch (Exception e) {
+            System.out.println("e = " + e);
         }
 
         return usuariosNew.getId();
