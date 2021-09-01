@@ -524,6 +524,10 @@ public class PedidosServiceImpl implements IPedidosService {
                 map2 = null;
             }
 
+            if (pedidoFound.getTipo_pedido().equals("A")){
+                pedidoFound.setFecha_devolucion(null);
+            }
+
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA", map2);
         }
 
