@@ -87,6 +87,10 @@ public class EmailService {
                             .append("</td> </tr> <tr></tr><tr></tr><tr></tr><tr></tr>");
                 });
 
+                if (pedidoDet.getTipo_pedido().equals("B")) {
+                    total = (double) model.get("total");
+                }
+
                 detail
                         .append("<tr> <td colspan='1'>TOTAL</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/. " : "").append(total)
                         .append("</table></td></tr>");

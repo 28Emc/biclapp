@@ -294,6 +294,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
+                            model.put("total", detallesPedido.getTotal());
                         } else {
                             throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                         }
