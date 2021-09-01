@@ -270,7 +270,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
-                            totales.add(detallesPedido.getTotal());
+                            totales.add(detallesPedido.getPrecio());
                         } else {
                             throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                         }
