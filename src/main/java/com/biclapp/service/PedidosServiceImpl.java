@@ -338,6 +338,7 @@ public class PedidosServiceImpl implements IPedidosService {
 
         double totalAcc = createPedidos.getDetalles_pedido().stream().mapToDouble(DTOUpdateDetallesPedido::getTotal).sum();
         model.put("total", totalAcc);
+        System.out.println("totalAcc = " + totalAcc);
 
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
