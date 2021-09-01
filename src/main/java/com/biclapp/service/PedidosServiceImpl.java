@@ -269,8 +269,6 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
-                            double totalAcc = createPedidos.getDetalles_pedido().stream().mapToDouble(DTOUpdateDetallesPedido::getTotal).sum();
-                            model.put("total", totalAcc);
                         } else {
                             throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                         }
@@ -296,7 +294,7 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
-                            model.put("total", detallesPedido.getTotal());
+                            //model.put("total", detallesPedido.getTotal());
                         } else {
                             throw new Exception("El stock de la bicicleta ".concat(bicicletaFound.getMarca().concat(" seleccionada no es suficiente.")));
                         }
@@ -337,6 +335,9 @@ public class PedidosServiceImpl implements IPedidosService {
                     break;
             }
         });
+
+        double totalAcc = createPedidos.getDetalles_pedido().stream().mapToDouble(DTOUpdateDetallesPedido::getTotal).sum();
+        model.put("total", totalAcc);
 
         model.put("from", emailFrom);
         model.put("to", usuarioFound.getUsername());
