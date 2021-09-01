@@ -395,7 +395,9 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("titulo-cabecera", "Su pedido ha sido ".concat(estadoPedidoDsc));
         model.put("pedido", pedidoFound);
         model.put("puntos", puntosCalculados);
-        model.put("otros-datos", otrosDatos);
+        if (otrosDatos != null) {
+            model.put("otros-datos", otrosDatos);
+        }
         emailService.enviarEmail(model, tipoOperacionDsc);
     }
 
@@ -471,36 +473,50 @@ public class PedidosServiceImpl implements IPedidosService {
         }
 
         if (update.getEstado().equals("E")) {
+            String tiempoExtension = "";
             LocalDateTime fechaUpdate = LocalDateTime.now();
             Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
             Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
 
             pedidoFound.setFecha_entrega(LocalDateTime.now());
 
+            Map<String, Object> map2 = new HashMap<>();
+
             if (update.getMembresia() != null) {
                 fechaUpdate = pedidoFound.getFecha_devolucion();
                 membresiaFound = membresiaService.findById(update.getMembresia());
-            }
 
-            String tiempoExtension = "";
-            switch (membresiaFound.getTipo()) {
-                case "SEMANAL":
-                    pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(7L));
-                    tiempoExtension = "7 días";
-                    break;
-                case "QUINCENAL":
-                    pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(15L));
-                    tiempoExtension = "15 días";
-                    break;
-                case "MENSUAL":
-                    pedidoFound.setFecha_devolucion(fechaUpdate.plusMonths(1L));
-                    tiempoExtension = "1 mes";
-                    break;
-            }
+                switch (membresiaFound.getTipo()) {
+                    case "SEMANAL":
+                        pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(7L));
+                        tiempoExtension = "7 días";
+                        break;
+                    case "QUINCENAL":
+                        pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(15L));
+                        tiempoExtension = "15 días";
+                        break;
+                    case "MENSUAL":
+                        pedidoFound.setFecha_devolucion(fechaUpdate.plusMonths(1L));
+                        tiempoExtension = "1 mes";
+                        break;
+                }
 
-            Map<String, Object> map2 = new HashMap<>();
-            map2.put("fecha-devolucion", pedidoFound.getFecha_devolucion().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
-            map2.put("tiempo-extension", tiempoExtension);
+                map2.put("fecha-devolucion", pedidoFound.getFecha_devolucion().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+                map2.put("tiempo-extension", tiempoExtension);
+            } else {
+                switch (membresiaFound.getTipo()) {
+                    case "SEMANAL":
+                        pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(7L));
+                        break;
+                    case "QUINCENAL":
+                        pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(15L));
+                        break;
+                    case "MENSUAL":
+                        pedidoFound.setFecha_devolucion(fechaUpdate.plusMonths(1L));
+                        break;
+                }
+                map2 = null;
+            }
 
             updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA", map2);
         }
