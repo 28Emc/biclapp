@@ -471,13 +471,13 @@ public class PedidosServiceImpl implements IPedidosService {
             pedidoFound.setFecha_entrega(LocalDateTime.now());
             switch (membresiaFound.getTipo()) {
                 case "SEMANAL":
-                    pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusDays(7L));
+                    pedidoFound.setFecha_devolucion(LocalDateTime.now().plusDays(7L));
                     break;
                 case "QUINCENAL":
-                    pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusDays(15L));
+                    pedidoFound.setFecha_devolucion(LocalDateTime.now().plusDays(15L));
                     break;
                 case "MENSUAL":
-                    pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusMonths(1L));
+                    pedidoFound.setFecha_devolucion(LocalDateTime.now().plusMonths(1L));
                     break;
             }
 
