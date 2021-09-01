@@ -83,7 +83,7 @@ public class EmailService {
                     detail
                             .append("<tr> <td colspan='1'>PRODUCTO</td> <td colspan='1'>").append(item.getProducto())
                             .append("</td> </tr> <tr> <td colspan='1'>CANTIDAD</td> <td colspan='1'>").append(item.getCantidad())
-                            .append("</td> </tr> <tr> <td colspan='1'>PRECIO</td> <td colspan='1'>").append((!pedidoDet.getTipo_pedido().equals("C")) ? "S/. " : "").append(costo)
+                            .append("</td> </tr> <tr> <td colspan='1'>PRECIO</td> <td colspan='1'>").append((!pedidoDet.getTipo_pedido().equals("C")) ? "S/ " : "").append(costo)
                             .append("</td> </tr> <tr></tr><tr></tr><tr></tr><tr></tr>");
                 });
 
@@ -92,7 +92,7 @@ public class EmailService {
                 }
 
                 detail
-                        .append("<tr> <td colspan='1'>TOTAL</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/. " : "").append(total)
+                        .append("<tr> <td colspan='1'>TOTAL</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/ " : "").append(total)
                         .append("</table></td></tr>");
                 body = body.concat(detail.toString().concat((!pedidoDet.getTipo_pedido().equals("C")) ? "<tr style='text-align: center'> <td> <h3 class='texto'>Para poder hacer efectiva su compra, enviar el voucher de pago a uno de los siguientes nro de teléfono a continuación</h3> </td> </tr> <tr style='text-align: center'> <td> <h3 class='texto-normal'>983422657</h3> <h3 class='texto-normal'>900120344</h3> </td> </tr> <tr style='text-align: center'> <td> <h3 class='texto'>Aceptamos pagos vía transferencia bancaria a las siguientes cuentas:</h3> <h3 class='texto-normal'>BCP SOLES - 191-0939560-0-04</h3> <h3 class='texto-normal'>BBVA SOLES - 0011-0686-0100023327</h3> </td> </tr> </td> </tr>" : ""));
                 body = body.concat("<td> <hr> </td>");
@@ -121,12 +121,12 @@ public class EmailService {
                     detail
                             .append("<tr> <td colspan='1'>PRODUCTO</td> <td colspan='1'>").append(producto)
                             .append("</td> </tr> <tr> <td colspan='1'>CANTIDAD</td> <td colspan='1'>").append(item.getCantidad())
-                            .append("</td> </tr> <tr> <td colspan='1'>PRECIO</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/. " : "").append(costo)
+                            .append("</td> </tr> <tr> <td colspan='1'>PRECIO</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/ " : "").append(costo)
                             .append("</td> </tr> <tr></tr><tr></tr><tr></tr><tr></tr>");
                 }
 
                 detail
-                        .append("<tr> <td colspan='1'>TOTAL</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/. " : "").append(total)
+                        .append("<tr> <td colspan='1'>TOTAL</td> <td colspan='1'>").append((!pedidoFound.getTipo_pedido().equals("C")) ? "S/ " : "").append(total)
                         .append("</table></td></tr>");
                 body = body.concat(detail.toString());
                 body = body.concat("<td> <hr> </td>");
