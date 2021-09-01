@@ -282,16 +282,16 @@ public class PedidosServiceImpl implements IPedidosService {
                     try {
                         Bicicletas bicicletaFound = bicicletasService.findById(p.getId_producto());
                         if (bicicletaFound.getStock() > 0 || bicicletaFound.getStock() >= p.getCantidad()) {
+                            p.setPrecio(finalMembresiaFound.getCuota());
                             p.setProducto(bicicletaFound.getMarca().concat(" - ").concat(bicicletaFound.getModelo()));
                             bicicletaFound.setStock(bicicletaFound.getStock() - p.getCantidad());
                             bicicletasService.save(bicicletaFound);
 
                             detallesPedido.setId_producto(bicicletaFound.getId());
                             detallesPedido.setPuntos(0);
-                            //detallesPedido.setPrecio(p.getPrecio());
-                            detallesPedido.setPrecio(finalMembresiaFound.getCuota());
+                            detallesPedido.setPrecio(p.getPrecio());
                             detallesPedido.setCantidad(p.getCantidad());
-                            detallesPedido.setTotal(p.getCantidad() * detallesPedido.getPrecio());
+                            detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
                         } else {
