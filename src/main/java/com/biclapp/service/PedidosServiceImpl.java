@@ -488,7 +488,7 @@ public class PedidosServiceImpl implements IPedidosService {
 
             Map<String, Object> map2 = new HashMap<>();
 
-            if (update.getMembresia() != null) {
+            if (update.getMembresia() != null && pedidoFound.getTipo_pedido().equals("B")) {
                 fechaUpdate = pedidoFound.getFecha_devolucion();
                 membresiaFound = membresiaService.findById(update.getMembresia());
 
