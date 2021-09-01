@@ -12,12 +12,14 @@ public class DTOUpdate {
     @NotEmpty(message = "Estado requerido")
     private String estado;
 
+    private Long membresia;
+
     private LocalDateTime fecha;
 
     public DTOUpdate() {
     }
 
-    public DTOUpdate(Long id, String estado, LocalDateTime fecha) {
+    public DTOUpdate(Long id, String estado, Long membresia, LocalDateTime fecha) {
         this.id = id;
         this.estado = estado;
         this.fecha = fecha;
@@ -45,5 +47,13 @@ public class DTOUpdate {
 
     public void setFecha(LocalDateTime fecha) {
         this.fecha = fecha;
+    }
+
+    public Long getMembresia() {
+        return membresia;
+    }
+
+    public void setMembresia(Long membresia) {
+        this.membresia = membresia;
     }
 }

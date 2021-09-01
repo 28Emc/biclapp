@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -345,7 +346,7 @@ public class PedidosServiceImpl implements IPedidosService {
     }
 
     @Transactional(rollbackFor = {Exception.class})
-    public void updatePointsByPedido(Long idPedido, String tipoOperacion) throws Exception {
+    public void updatePointsByPedido(Long idPedido, String tipoOperacion, Map<String, Object> otrosDatos) throws Exception {
         int cantidadItems;
         int puntosCalculados;
         String estadoPedidoDsc = "";
@@ -391,6 +392,7 @@ public class PedidosServiceImpl implements IPedidosService {
         model.put("titulo-cabecera", "Su pedido ha sido ".concat(estadoPedidoDsc));
         model.put("pedido", pedidoFound);
         model.put("puntos", puntosCalculados);
+        model.put("otros-datos", otrosDatos);
         emailService.enviarEmail(model, tipoOperacionDsc);
     }
 
@@ -466,22 +468,38 @@ public class PedidosServiceImpl implements IPedidosService {
         }
 
         if (update.getEstado().equals("E")) {
+            LocalDateTime fechaUpdate = LocalDateTime.now();
             Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
             Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
+
             pedidoFound.setFecha_entrega(LocalDateTime.now());
+
+            if (update.getMembresia() != null) {
+                fechaUpdate = pedidoFound.getFecha_devolucion();
+                membresiaFound = membresiaService.findById(update.getMembresia());
+            }
+
+            String tiempoExtension = "";
             switch (membresiaFound.getTipo()) {
                 case "SEMANAL":
-                    pedidoFound.setFecha_devolucion(LocalDateTime.now().plusDays(7L));
+                    pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(7L));
+                    tiempoExtension = "7 días";
                     break;
                 case "QUINCENAL":
-                    pedidoFound.setFecha_devolucion(LocalDateTime.now().plusDays(15L));
+                    pedidoFound.setFecha_devolucion(fechaUpdate.plusDays(15L));
+                    tiempoExtension = "15 días";
                     break;
                 case "MENSUAL":
-                    pedidoFound.setFecha_devolucion(LocalDateTime.now().plusMonths(1L));
+                    pedidoFound.setFecha_devolucion(fechaUpdate.plusMonths(1L));
+                    tiempoExtension = "1 mes";
                     break;
             }
 
-            updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA");
+            Map<String, Object> map2 = new HashMap<>();
+            map2.put("fecha-devolucion", pedidoFound.getFecha_devolucion().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")));
+            map2.put("tiempo-extension", tiempoExtension);
+
+            updatePointsByPedido(id, pedidoFound.getTipo_pedido().equals("A") ? "COMPLETAR PEDIDO ACCESORIOS" : "COMPLETAR PEDIDO BICICLETA", map2);
         }
 
         if (update.getEstado().equals("B")) {
@@ -508,7 +526,8 @@ public class PedidosServiceImpl implements IPedidosService {
                     id,
                     (pedidoFound.getTipo_pedido().equals("A") || pedidoFound.getTipo_pedido().equals("C"))
                             ? "ANULAR PEDIDO ACCESORIOS"
-                            : "ANULAR PEDIDO BICICLETA"
+                            : "ANULAR PEDIDO BICICLETA",
+                    null
             );
         }
 
