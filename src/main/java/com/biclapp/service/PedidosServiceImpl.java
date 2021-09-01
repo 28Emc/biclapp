@@ -449,7 +449,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoFound.setFecha_actualizacion(LocalDateTime.now());
 
         if (update.getEstado().equals("C")) {
-            //pedidoFound.setFecha_entrega(update.getFecha());
+            pedidoFound.setFecha_entrega(null);
             repository.save(pedidoFound);
 
             List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
