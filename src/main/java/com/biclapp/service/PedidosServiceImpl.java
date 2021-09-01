@@ -269,7 +269,8 @@ public class PedidosServiceImpl implements IPedidosService {
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
                             detallesPedidoRepository.save(detallesPedido);
-                            model.put("total", detallesPedido.getTotal());
+                            double totalAcc = createPedidos.getDetalles_pedido().stream().mapToDouble(DTOUpdateDetallesPedido::getTotal).sum();
+                            model.put("total", totalAcc);
                         } else {
                             throw new Exception("El stock del accesorio ".concat(accesorioFound.getNombre()).concat(" no es suficiente."));
                         }
