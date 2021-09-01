@@ -449,7 +449,7 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoFound.setFecha_actualizacion(LocalDateTime.now());
 
         if (update.getEstado().equals("C")) {
-            pedidoFound.setFecha_entrega(update.getFecha());
+            //pedidoFound.setFecha_entrega(update.getFecha());
             repository.save(pedidoFound);
 
             List<DTODetallePedido> detallePedido = findByUserAndPedidoWithDetail(pedidoFound.getIdUsuario(), pedidoFound.getId());
@@ -468,6 +468,7 @@ public class PedidosServiceImpl implements IPedidosService {
         if (update.getEstado().equals("E")) {
             Usuarios usuarioFound = usuariosService.findById(pedidoFound.getIdUsuario());
             Membresias membresiaFound = membresiaService.findById(usuarioFound.getId_membresia());
+            pedidoFound.setFecha_entrega(LocalDateTime.now());
             switch (membresiaFound.getTipo()) {
                 case "SEMANAL":
                     pedidoFound.setFecha_devolucion(pedidoFound.getFecha_entrega().plusDays(7L));
