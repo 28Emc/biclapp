@@ -236,9 +236,11 @@ public class PedidosServiceImpl implements IPedidosService {
         Pedidos pedidoNew = new Pedidos();
         Usuarios usuarioFound = usuariosService.findById(createPedidos.getId_usuario());
         Membresias membresiaFound = new Membresias();
+        double cuota = 0.00;
         if (createPedidos.getTipo_pedido().equals("B")) {
             membresiaFound = membresiaService.findById(createPedidos.getId_membresia());
             usuariosService.updateMembresia(usuarioFound.getId(), membresiaFound.getId());
+            cuota = membresiaFound.getCuota();
         }
         pedidoNew.setIdUsuario(usuarioFound.getId());
         int contador = findAll().toArray().length;
@@ -248,10 +250,10 @@ public class PedidosServiceImpl implements IPedidosService {
         pedidoNew.setFecha_registro(LocalDateTime.now());
         createPedidos.setFecha_registro(LocalDateTime.now());
         pedidoNew.setFecha_actualizacion(null);
-        //pedidoNew.setFecha_devolucion(null);
         pedidoNew.setEstado("R");
         repository.save(pedidoNew);
 
+        Membresias finalMembresiaFound = membresiaFound;
         createPedidos.getDetalles_pedido().forEach(p -> {
             DetallesPedido detallesPedido = new DetallesPedido();
             switch (createPedidos.getTipo_pedido()) {
@@ -285,9 +287,11 @@ public class PedidosServiceImpl implements IPedidosService {
                             p.setProducto(bicicletaFound.getMarca().concat(" - ").concat(bicicletaFound.getModelo()));
                             bicicletaFound.setStock(bicicletaFound.getStock() - p.getCantidad());
                             bicicletasService.save(bicicletaFound);
+
                             detallesPedido.setId_producto(bicicletaFound.getId());
                             detallesPedido.setPuntos(0);
-                            detallesPedido.setPrecio(p.getPrecio());
+                            //detallesPedido.setPrecio(p.getPrecio());
+                            detallesPedido.setPrecio(finalMembresiaFound.getCuota());
                             detallesPedido.setCantidad(p.getCantidad());
                             detallesPedido.setTotal(p.getCantidad() * p.getPrecio());
                             detallesPedido.setIdPedido(pedidoNew.getId());
