@@ -107,7 +107,7 @@ public class UsuariosServiceImpl implements IUsuariosService {
             String encryptPassword = encoder.encode(createUsuarios.getPassword());
             usuariosNew = new Usuarios(contador + 1, rolFound, membresiaFound.getId(), createUsuarios.getNombres(),
                     createUsuarios.getApellidos(), createUsuarios.getNro_documento(), createUsuarios.getCelular(),
-                    createUsuarios.getDireccion(), createUsuarios.getSexo(), createUsuarios.getPeso(), createUsuarios.getEstatura(),
+                    createUsuarios.getDireccion(), createUsuarios.getSexo(), "0.00", "0.00",
                     createUsuarios.getUsername(), encryptPassword, "B", rutaFoto, false);
             repository.save(usuariosNew);
 
