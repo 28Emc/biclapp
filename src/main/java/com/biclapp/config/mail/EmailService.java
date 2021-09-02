@@ -135,7 +135,10 @@ public class EmailService {
             case "PEDIDO ENTREGADO":
                 String tituloEmail = model.get("titulo-cabecera").toString();
                 pedidoFound = (Pedidos) model.get("pedido");
-                String texto = "Saludos, le informamos que su pedido Nro. " + pedidoFound.getId() + " ha sido entregado. La fecha de entrega es " + pedidoFound.getFecha_entrega().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " y la fecha estimada de devolución es " + pedidoFound.getFecha_devolucion().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ".";
+                String texto = "Saludos, le informamos que su pedido Nro. " + pedidoFound.getId() + " ha sido entregado. La fecha de entrega es " + pedidoFound.getFecha_entrega().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ".";
+                if (pedidoFound.getTipo_pedido().equals("B")) {
+                    texto = "Saludos, le informamos que su pedido Nro. " + pedidoFound.getId() + " ha sido entregado. La fecha de entrega es " + pedidoFound.getFecha_entrega().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + " y la fecha estimada de devolución es " + pedidoFound.getFecha_devolucion().format(DateTimeFormatter.ofPattern("dd-MM-yyyy")) + ".";
+                }
                 if(model.get("otros-datos") != null) {
                     tituloEmail = "Pedido extendido";
                     Map<String, Object> otrosDatos = (Map<String, Object>) model.get("otros-datos");
